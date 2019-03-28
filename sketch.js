@@ -1,3 +1,10 @@
+/*
+This code uses 2 libraries :
+  QuickSettings : http://bit101.github.io/quicksettings/doc/module-QuickSettings.html
+  P5 : https://p5js.org/reference/
+*/
+
+//Begin variable listing
 var x1=0,y1=0,x2=0,y2=0,init=0;
 var shape='';
 var tableimg
@@ -7,26 +14,31 @@ var doorimg
 var windowimg
 var inc=0;
 
-
+//An array will contain all the objects on the map -canvas-
 var tables = []
 
+//A panel lists the names of the created objects
 var master
 
+//p5 function: used to handle asynchronous loading of external files
 function preload() {
-  tableimg = loadImage('table.png');
-  chairimg = loadImage('chair.png');
-  sofaimg = loadImage('sofa.png');
-  doorimg = loadImage('door.png');
-  windowimg = loadImage('window.png');
-  sinkimg = loadImage('sink.png');
-  toiletimg = loadImage('toilet.png');
-  tvimg = loadImage('TV.png');
+  tableimg = loadImage('images/table.png');
+  chairimg = loadImage('images/chair.png');
+  sofaimg = loadImage('images/sofa.png');
+  doorimg = loadImage('images/door.png');
+  windowimg = loadImage('images/window.png');
+  sinkimg = loadImage('images/sink.png');
+  toiletimg = loadImage('images/toilet.png');
+  tvimg = loadImage('images/TV.png');
 }
 
+//p5 function: called once when the program starts
 function setup() {
   master = QuickSettings.create(0, 0, "Master")
 
+  //p5: Creates a canvas element in the document, and sets the dimensions of it in pixels
   var canv=createCanvas(windowWidth-210, windowHeight-50);
+  //p5: Set its postion
   canv.position(210,50)
 
   button = createButton('Rect');
@@ -41,7 +53,11 @@ function setup() {
   button.position(canv.x+83,canv.y-25);
   button.mousePressed(function() {
 
+    //To differentiate between names in -master-'s list
+    //i'll use "shape name"+inc as a title of objects (table1 line2 door3 ....)
     inc++
+
+    //Our object
     var tablee = {}
     tablee["numPlace"]=2
     tablee["type"]='chair'
@@ -49,18 +65,25 @@ function setup() {
     tablee["positiony"]=70
     tablee["shape"]="table"
     tablee["title"]="table "+inc
+    //Add it to -master- array
     tables.push(tablee)
+    //The current object is a table
     shape="table";
     var l=tables.length
+    //QuickSettings: panel to configure our object's properties
     var panel=QuickSettings.create(windowWidth-210, 0, tables[l-1]["title"])
     .addRange("numPlace", 0, 10, 2, 1, function(value) { tables[l-1]["numPlace"] = value})
     .addRange("positionx", 0, windowWidth, 70, 1, function(value) { tables[l-1]["positionx"] = value})
     .addRange("positiony", 0, windowHeight, 70, 1, function(value) { tables[l-1]["positiony"] = value})
     .addDropDown("type", ['chair','sofa'], function(value) { tables[l-1]["type"] = value.value})
-    .addButton("supprimer", function(value) { master.removeControl(tables[l-1]["title"]); tables[l-1]["shape"]=""; panel.destroy(); })
+    //Destroy the object's panel, remove it from the -master-'s pannel.
+    //tables[l-1]["shape"]="" : to not draw it in the map - go to "function draw()"
+    .addButton("Remove", function(value) { master.removeControl(tables[l-1]["title"]); tables[l-1]["shape"]=""; panel.destroy(); })
     .hide()
 
-    master.addBoolean("table "+inc, false, function(value) {
+    //Adds a checkbox to -master-'s pannel to show/hide the object's panel
+    panel.show();
+    master.addBoolean("table "+inc, true, function(value) {
       if(value) {
         panel.show();
       }
@@ -88,10 +111,11 @@ function setup() {
     .addRange("positionx", 0, windowWidth, 70, 1, function(value) { tables[l-1]["positionx"] = value})
     .addRange("positiony", 0, windowHeight, 70, 1, function(value) { tables[l-1]["positiony"] = value})
     .addRange("rotation", 0, 3*PI/2, 0, PI/2, function(value) { tables[l-1]["rotation"] = value})
-    .addButton("supprimer", function(value) { master.removeControl(tables[l-1]["title"]); tables[l-1]["shape"]=""; panel.destroy(); })
+    .addButton("Remove", function(value) { master.removeControl(tables[l-1]["title"]); tables[l-1]["shape"]=""; panel.destroy(); })
     .hide()
 
-    master.addBoolean("door "+inc, false, function(value) {
+    panel.show();
+    master.addBoolean("door "+inc, true, function(value) {
       if(value) {
         panel.show();
       }
@@ -119,10 +143,11 @@ function setup() {
     .addRange("positionx", 0, windowWidth, 70, 1, function(value) { tables[l-1]["positionx"] = value})
     .addRange("positiony", 0, windowHeight, 70, 1, function(value) { tables[l-1]["positiony"] = value})
     .addRange("rotation", 0, 3*PI/2, 0, PI/2, function(value) { tables[l-1]["rotation"] = value})
-    .addButton("supprimer", function(value) { master.removeControl(tables[l-1]["title"]); tables[l-1]["shape"]=""; panel.destroy(); })
+    .addButton("Remove", function(value) { master.removeControl(tables[l-1]["title"]); tables[l-1]["shape"]=""; panel.destroy(); })
     .hide()
 
-    master.addBoolean("window "+inc, false, function(value) {
+    panel.show();
+    master.addBoolean("window "+inc, true, function(value) {
       if(value) {
         panel.show();
       }
@@ -150,10 +175,11 @@ function setup() {
     .addRange("positionx", 0, windowWidth, 70, 1, function(value) { tables[l-1]["positionx"] = value})
     .addRange("positiony", 0, windowHeight, 70, 1, function(value) { tables[l-1]["positiony"] = value})
     .addRange("rotation", 0, 3*PI/2, 0, PI/2, function(value) { tables[l-1]["rotation"] = value})
-    .addButton("supprimer", function(value) { master.removeControl(tables[l-1]["title"]); tables[l-1]["shape"]=""; panel.destroy(); })
+    .addButton("Remove", function(value) { master.removeControl(tables[l-1]["title"]); tables[l-1]["shape"]=""; panel.destroy(); })
     .hide()
 
-    master.addBoolean("tv "+inc, false, function(value) {
+    panel.show();
+    master.addBoolean("tv "+inc, true, function(value) {
       if(value) {
         panel.show();
       }
@@ -181,10 +207,11 @@ function setup() {
     .addRange("positionx", 0, windowWidth, 70, 1, function(value) { tables[l-1]["positionx"] = value})
     .addRange("positiony", 0, windowHeight, 70, 1, function(value) { tables[l-1]["positiony"] = value})
     .addRange("rotation", 0, 3*PI/2, 0, PI/2, function(value) { tables[l-1]["rotation"] = value})
-    .addButton("supprimer", function(value) { master.removeControl(tables[l-1]["title"]); tables[l-1]["shape"]=""; panel.destroy(); })
+    .addButton("Remove", function(value) { master.removeControl(tables[l-1]["title"]); tables[l-1]["shape"]=""; panel.destroy(); })
     .hide()
 
-    master.addBoolean("toilet "+inc, false, function(value) {
+    panel.show();
+    master.addBoolean("toilet "+inc, true, function(value) {
       if(value) {
         panel.show();
       }
@@ -212,10 +239,11 @@ function setup() {
     .addRange("positionx", 0, windowWidth, 70, 1, function(value) { tables[l-1]["positionx"] = value})
     .addRange("positiony", 0, windowHeight, 70, 1, function(value) { tables[l-1]["positiony"] = value})
     .addRange("rotation", 0, 3*PI/2, 0, PI/2, function(value) { tables[l-1]["rotation"] = value})
-    .addButton("supprimer", function(value) { master.removeControl(tables[l-1]["title"]); tables[l-1]["shape"]=""; panel.destroy(); })
+    .addButton("Remove", function(value) { master.removeControl(tables[l-1]["title"]); tables[l-1]["shape"]=""; panel.destroy(); })
     .hide()
 
-    master.addBoolean("sink "+inc, false, function(value) {
+    panel.show();
+    master.addBoolean("sink "+inc, true, function(value) {
       if(value) {
         panel.show();
       }
@@ -247,10 +275,11 @@ function setup() {
     .addRange("size", 0, 100, 32, 1, function(value) { tables[l-1]["size"] = value})
     .addRange("positionx", 0, windowWidth, 70, 1, function(value) { tables[l-1]["positionx"] = value})
     .addRange("positiony", 0, windowHeight, 70, 1, function(value) { tables[l-1]["positiony"] = value})
-    .addButton("supprimer", function(value) { master.removeControl(tables[l-1]["title"]); tables[l-1]["shape"]=""; panel.destroy(); })
+    .addButton("Remove", function(value) { master.removeControl(tables[l-1]["title"]); tables[l-1]["shape"]=""; panel.destroy(); })
     .hide()
 
-    master.addBoolean("text "+inc, false, function(value) {
+    panel.show();
+    master.addBoolean("text "+inc, true, function(value) {
       if(value) {
         panel.show();
       }
@@ -260,16 +289,20 @@ function setup() {
     });
   });
 }
+
+
+//p5 function: continuously executes the lines of code contained inside its block until the program is stopped
 function draw() {
+  //p5 function: sets the color used for the background of the canvas
   background(255)
-  noFill()
-  stroke(0)
+
   if(tables.length) {
+    //browse all objects
     for(var j = 0; j < tables.length; j++) {
       if(tables[j]["shape"]==="table"){
         image(tableimg,tables[j]["positionx"],tables[j]["positiony"],100,73)
 
-        // draw tables arranged in a circle
+        // draw chairs arranged in a circle
         for(var i = 0; i < tables[j]["numPlace"]; i++) {
 
           var angle = TWO_PI / tables[j]["numPlace"] * i;
@@ -279,6 +312,7 @@ function draw() {
           switch(tables[j]["type"]) {
 
             case 'chair':
+            //p5: The push() function saves the current drawing style settings and transformations, while pop() restores these settings
               push()
               imageMode(CENTER);
               translate(x+100, y+65);
@@ -342,7 +376,8 @@ function draw() {
         push()
         strokeWeight(4)
         stroke(tables[j]["stroke color"])
-        fill(tables[j]["fill color"])
+        if(tables[j]["fill color"]=="white" || tables[j]["fill color"]=="#FFFFFF" || tables[j]["fill color"]=="#ffffff") noFill()
+        else fill(tables[j]["fill color"])
         rect(min(tables[j]["x1"],tables[j]["x2"]),min(tables[j]["y1"],tables[j]["y2"]),
           abs(tables[j]["x2"]-tables[j]["x1"]),abs(tables[j]["y2"]-tables[j]["y1"]))
         pop()
@@ -353,6 +388,7 @@ function draw() {
         line(tables[j]["x1"],tables[j]["y1"],tables[j]["x2"],tables[j]["y2"])
       }
       else if(tables[j]["shape"]==="ellipse"){
+        //Two points before rect/line drawn - go to "function mouseClicked()"
         ellipse(tables[j]["x"],tables[j]["y"],2,2)
       }
       else if(tables[j]["shape"]==="text"){
@@ -368,11 +404,14 @@ function draw() {
 
 }
 
+//p5 function: called once after a mouse button has been pressed and then released.
 function mouseClicked(){
   if(shape=='rect' || shape=='line'){
+    //when you click on the button rect / li, this click is counted
     if(init==0 ){
       init=1
     }
+    //first point
     else if(x1==0 && y1==0){
       x1=mouseX
       y1=mouseY
@@ -382,6 +421,7 @@ function mouseClicked(){
       ellipse["shape"]="ellipse"
       tables.push(ellipse)
     }
+    //second point
     else if(x2==0 && y2==0){
       x2=mouseX
       y2=mouseY
@@ -394,8 +434,12 @@ function mouseClicked(){
   }
 }
 
+//p5 function: called once every time a key is pressed
 function keyTyped() {
+  //Type c to finish drawing your shape
   if(key==='c' && x1 && x2 && y1 && y2){
+
+    //remove the two points from the map -canvas-
     tables.pop()
     tables.pop()
 
@@ -420,10 +464,11 @@ function keyTyped() {
       .addRange("y2", 0, windowHeight , y2, 1, function(value) { tables[l-1]["y2"] = value})
       .addColor("stroke color", "brown",function(color) { tables[l-1]["stroke color"] = color})
       .addColor("fill color","white",function(color) { tables[l-1]["fill color"] = color})
-      .addButton("supprimer", function(value) { master.removeControl(tables[l-1]["title"]); tables[l-1]["shape"]=""; panel.destroy(); })
+      .addButton("Remove", function(value) { master.removeControl(tables[l-1]["title"]); tables[l-1]["shape"]=""; panel.destroy(); })
       .hide()
 
-      master.addBoolean("rect "+inc, false, function(value) {
+      panel.show();
+      master.addBoolean("rect "+inc, true, function(value) {
         if(value) {
           panel.show();
         }
@@ -453,10 +498,11 @@ function keyTyped() {
       .addRange("y2", 0, windowHeight , y2, 1, function(value) { tables[l-1]["y2"] = value})
       .addRange("width", 0, 100, 2, 1, function(value) { tables[l-1]["width"] = value})
       .addColor("color", "black",function(color) { tables[l-1]["color"] = color})
-      .addButton("supprimer", function(value) { master.removeControl(tables[l-1]["title"]); tables[l-1]["shape"]=""; panel.destroy(); })
+      .addButton("Remove", function(value) { master.removeControl(tables[l-1]["title"]); tables[l-1]["shape"]=""; panel.destroy(); })
       .hide()
 
-      master.addBoolean("line "+inc, false, function(value) {
+      panel.show();
+      master.addBoolean("line "+inc, true, function(value) {
         if(value) {
           panel.show();
         }
