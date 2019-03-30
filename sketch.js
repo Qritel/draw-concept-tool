@@ -72,13 +72,13 @@ function setup() {
     var l=tables.length;
     //QuickSettings: panel to configure our object's properties
     var panel=QuickSettings.create(windowWidth-210, 0, tables[l-1]["title"])
-    .addRange("numPlace", 0, 10, 2, 1, function(value) { tables[l-1]["numPlace"] = value})
-    .addRange("positionx", 0, windowWidth, 70, 1, function(value) { tables[l-1]["positionx"] = value})
-    .addRange("positiony", 0, windowHeight, 70, 1, function(value) { tables[l-1]["positiony"] = value})
-    .addDropDown("type", ['chair','sofa'], function(value) { tables[l-1]["type"] = value.value})
-    //Destroy the object's panel, remove it from the -master-'s pannel.
+    .addRange("numPlace", 0, 10, 2, 1, function(value) { tables[l-1]["numPlace"] = value; redraw();})
+    .addRange("positionx", 0, windowWidth, 70, 1, function(value) { tables[l-1]["positionx"] = value; redraw();})
+    .addRange("positiony", 0, windowHeight, 70, 1, function(value) { tables[l-1]["positiony"] = value; redraw();})
+    .addDropDown("type", ['chair','sofa'], function(value) { tables[l-1]["type"] = value.value; redraw();})
+    //Add button to destroy the object's panel and remove it from the -master-'s pannel.
     //tables[l-1]["shape"]="" : to not draw it in the map - go to "function draw()"
-    .addButton("Remove", function(value) { master.removeControl(tables[l-1]["title"]); tables[l-1]["shape"]=""; panel.destroy(); });
+    .addButton("Remove", function(value) { master.removeControl(tables[l-1]["title"]); tables[l-1]["shape"]=""; panel.destroy(); redraw();});
 
 
 
@@ -91,6 +91,8 @@ function setup() {
         panel.hide();
       }
     });
+
+    redraw();
   });
 
   button = createButton('Door');
@@ -108,10 +110,10 @@ function setup() {
     shape="door";
     var l=tables.length;
     var panel=QuickSettings.create(windowWidth-210, 0, tables[l-1]["title"])
-    .addRange("positionx", 0, windowWidth, 70, 1, function(value) { tables[l-1]["positionx"] = value})
-    .addRange("positiony", 0, windowHeight, 70, 1, function(value) { tables[l-1]["positiony"] = value})
-    .addRange("rotation", 0,  180, 0, 5, function(value) { tables[l-1]["rotation"] = value})
-    .addButton("Remove", function(value) { master.removeControl(tables[l-1]["title"]); tables[l-1]["shape"]=""; panel.destroy(); });
+    .addRange("positionx", 0, windowWidth, 70, 1, function(value) { tables[l-1]["positionx"] = value; redraw();})
+    .addRange("positiony", 0, windowHeight, 70, 1, function(value) { tables[l-1]["positiony"] = value; redraw();})
+    .addRange("rotation", 0,  180, 0, 5, function(value) { tables[l-1]["rotation"] = value; redraw();})
+    .addButton("Remove", function(value) { master.removeControl(tables[l-1]["title"]); tables[l-1]["shape"]=""; panel.destroy(); redraw();});
 
 
     master.addBoolean("door "+inc, true, function(value) {
@@ -122,6 +124,8 @@ function setup() {
         panel.hide();
       }
     });
+
+    redraw();
   });
 
   button = createButton('Window');
@@ -139,10 +143,10 @@ function setup() {
     shape="window";
     var l=tables.length;
     var panel=QuickSettings.create(windowWidth-210, 0, tables[l-1]["title"])
-    .addRange("positionx", 0, windowWidth, 70, 1, function(value) { tables[l-1]["positionx"] = value})
-    .addRange("positiony", 0, windowHeight, 70, 1, function(value) { tables[l-1]["positiony"] = value})
-    .addRange("rotation",  0,  180, 0, 5, function(value) { tables[l-1]["rotation"] = value})
-    .addButton("Remove", function(value) { master.removeControl(tables[l-1]["title"]); tables[l-1]["shape"]=""; panel.destroy(); })
+    .addRange("positionx", 0, windowWidth, 70, 1, function(value) { tables[l-1]["positionx"] = value; redraw();})
+    .addRange("positiony", 0, windowHeight, 70, 1, function(value) { tables[l-1]["positiony"] = value; redraw();})
+    .addRange("rotation",  0,  180, 0, 5, function(value) { tables[l-1]["rotation"] = value; redraw();})
+    .addButton("Remove", function(value) { master.removeControl(tables[l-1]["title"]); tables[l-1]["shape"]=""; panel.destroy(); redraw();})
 
 
     master.addBoolean("window "+inc, true, function(value) {
@@ -153,6 +157,8 @@ function setup() {
         panel.hide();
       }
     });
+
+    redraw();
   });
 
   button = createButton('TV');
@@ -170,10 +176,10 @@ function setup() {
     shape="tv";
     var l=tables.length;
     var panel=QuickSettings.create(windowWidth-210, 0, tables[l-1]["title"])
-    .addRange("positionx", 0, windowWidth, 70, 1, function(value) { tables[l-1]["positionx"] = value})
-    .addRange("positiony", 0, windowHeight, 70, 1, function(value) { tables[l-1]["positiony"] = value})
-    .addRange("rotation",  0,  180, 0, 5, function(value) { tables[l-1]["rotation"] = value})
-    .addButton("Remove", function(value) { master.removeControl(tables[l-1]["title"]); tables[l-1]["shape"]=""; panel.destroy(); })
+    .addRange("positionx", 0, windowWidth, 70, 1, function(value) { tables[l-1]["positionx"] = value; redraw();})
+    .addRange("positiony", 0, windowHeight, 70, 1, function(value) { tables[l-1]["positiony"] = value; redraw();})
+    .addRange("rotation",  0,  180, 0, 5, function(value) { tables[l-1]["rotation"] = value; redraw();})
+    .addButton("Remove", function(value) { master.removeControl(tables[l-1]["title"]); tables[l-1]["shape"]=""; panel.destroy(); redraw();})
 
 
     master.addBoolean("tv "+inc, true, function(value) {
@@ -184,6 +190,8 @@ function setup() {
         panel.hide();
       }
     });
+
+    redraw();
   });
 
   button = createButton('Toilet');
@@ -201,10 +209,10 @@ function setup() {
     shape="toilet";
     var l=tables.length;
     var panel=QuickSettings.create(windowWidth-210, 0, tables[l-1]["title"])
-    .addRange("positionx", 0, windowWidth, 70, 1, function(value) { tables[l-1]["positionx"] = value})
-    .addRange("positiony", 0, windowHeight, 70, 1, function(value) { tables[l-1]["positiony"] = value})
-    .addRange("rotation", 0, 180, 0, 5, function(value) { tables[l-1]["rotation"] = value})
-    .addButton("Remove", function(value) { master.removeControl(tables[l-1]["title"]); tables[l-1]["shape"]=""; panel.destroy(); })
+    .addRange("positionx", 0, windowWidth, 70, 1, function(value) { tables[l-1]["positionx"] = value; redraw();})
+    .addRange("positiony", 0, windowHeight, 70, 1, function(value) { tables[l-1]["positiony"] = value; redraw();})
+    .addRange("rotation", 0, 180, 0, 5, function(value) { tables[l-1]["rotation"] = value; redraw();})
+    .addButton("Remove", function(value) { master.removeControl(tables[l-1]["title"]); tables[l-1]["shape"]=""; panel.destroy(); redraw();})
 
 
     master.addBoolean("toilet "+inc, true, function(value) {
@@ -215,6 +223,8 @@ function setup() {
         panel.hide();
       }
     });
+
+    redraw();
   });
 
   button = createButton('Sink');
@@ -232,10 +242,10 @@ function setup() {
     shape="sink";
     var l=tables.length;
     var panel=QuickSettings.create(windowWidth-210, 0, tables[l-1]["title"])
-    .addRange("positionx", 0, windowWidth, 70, 1, function(value) { tables[l-1]["positionx"] = value})
-    .addRange("positiony", 0, windowHeight, 70, 1, function(value) { tables[l-1]["positiony"] = value})
-    .addRange("rotation",  0,  180, 0, 5, function(value) { tables[l-1]["rotation"] = value})
-    .addButton("Remove", function(value) { master.removeControl(tables[l-1]["title"]); tables[l-1]["shape"]=""; panel.destroy(); })
+    .addRange("positionx", 0, windowWidth, 70, 1, function(value) { tables[l-1]["positionx"] = value; redraw();})
+    .addRange("positiony", 0, windowHeight, 70, 1, function(value) { tables[l-1]["positiony"] = value; redraw();})
+    .addRange("rotation",  0,  180, 0, 5, function(value) { tables[l-1]["rotation"] = value; redraw();})
+    .addButton("Remove", function(value) { master.removeControl(tables[l-1]["title"]); tables[l-1]["shape"]=""; panel.destroy(); redraw();})
 
 
     master.addBoolean("sink "+inc, true, function(value) {
@@ -246,6 +256,8 @@ function setup() {
         panel.hide();
       }
     });
+
+    redraw();
   });
 
   button = createButton('Text');
@@ -265,12 +277,12 @@ function setup() {
     shape="text";
     var l=tables.length;
     var panel=QuickSettings.create(windowWidth-210, 0, tables[l-1]["title"])
-    .addText("text","Your text", function(value) { tables[l-1]["text"] = value})
-    .addColor("color", 'black',function(value) { tables[l-1]["color"] = value})
-    .addRange("size", 0, 100, 32, 1, function(value) { tables[l-1]["size"] = value})
-    .addRange("positionx", 0, windowWidth, 70, 1, function(value) { tables[l-1]["positionx"] = value})
-    .addRange("positiony", 0, windowHeight, 70, 1, function(value) { tables[l-1]["positiony"] = value})
-    .addButton("Remove", function(value) { master.removeControl(tables[l-1]["title"]); tables[l-1]["shape"]=""; panel.destroy(); })
+    .addText("text","Your text", function(value) { tables[l-1]["text"] = value; redraw();})
+    .addColor("color", 'black',function(value) { tables[l-1]["color"] = value; redraw();})
+    .addRange("size", 0, 100, 32, 1, function(value) { tables[l-1]["size"] = value; redraw();})
+    .addRange("positionx", 0, windowWidth, 70, 1, function(value) { tables[l-1]["positionx"] = value; redraw();})
+    .addRange("positiony", 0, windowHeight, 70, 1, function(value) { tables[l-1]["positiony"] = value; redraw();})
+    .addButton("Remove", function(value) { master.removeControl(tables[l-1]["title"]); tables[l-1]["shape"]=""; panel.destroy(); redraw();})
 
 
     master.addBoolean("text "+inc, true, function(value) {
@@ -281,12 +293,15 @@ function setup() {
         panel.hide();
       }
     });
+
+    redraw();
   });
 
+  noLoop();
 }
 
-
-//p5 function: continuously executes the lines of code contained inside its block until the program is stopped
+//p5 function: continuously executes the lines of code contained inside its block until the program is stopped or noLoop() is called(as our case)
+//draw() will be executed one time, when an object is added or its properties is changed.
 function draw() {
   //p5 function: sets the color used for the background of the canvas
   background(255);
@@ -380,9 +395,11 @@ function draw() {
         pop();
       }
       else if(tables[j]["shape"]==="line"){
+        push();
         strokeWeight(tables[j]["width"]);
         stroke(tables[j]["color"]);
         line(tables[j]["x1"],tables[j]["y1"],tables[j]["x2"],tables[j]["y2"]);
+        pop();
       }
       else if(tables[j]["shape"]==="ellipse"){
         //Two points before rect/line drawn - go to "function mouseClicked()"
@@ -417,6 +434,7 @@ function mouseClicked(){
       ellipse["y"]=y1;
       ellipse["shape"]="ellipse";
       tables.push(ellipse);
+      redraw();
     }
     //second point
     else if(x2==0 && y2==0){
@@ -427,6 +445,7 @@ function mouseClicked(){
       ellipse["y"]=y2;
       ellipse["shape"]="ellipse";
       tables.push(ellipse);
+      redraw();
     }
   }
 }
@@ -455,13 +474,13 @@ function keyTyped() {
 
       var l=tables.length;
       var panel = QuickSettings.create(windowWidth-210, 0, tables[l-1]["title"])
-      .addRange("x1", 0, windowWidth , x1, 1, function(value) { tables[l-1]["x1"] = value})
-      .addRange("y1", 0, windowHeight , y1, 1, function(value) { tables[l-1]["y1"] = value})
-      .addRange("x2", 0, windowWidth , x2, 1, function(value) { tables[l-1]["x2"] = value})
-      .addRange("y2", 0, windowHeight , y2, 1, function(value) { tables[l-1]["y2"] = value})
-      .addColor("stroke color", "brown",function(color) { tables[l-1]["stroke color"] = color})
-      .addColor("fill color","white",function(color) { tables[l-1]["fill color"] = color})
-      .addButton("Remove", function(value) { master.removeControl(tables[l-1]["title"]); tables[l-1]["shape"]=""; panel.destroy(); })
+      .addRange("x1", 0, windowWidth , x1, 1, function(value) { tables[l-1]["x1"] = value; redraw();})
+      .addRange("y1", 0, windowHeight , y1, 1, function(value) { tables[l-1]["y1"] = value; redraw();})
+      .addRange("x2", 0, windowWidth , x2, 1, function(value) { tables[l-1]["x2"] = value; redraw();})
+      .addRange("y2", 0, windowHeight , y2, 1, function(value) { tables[l-1]["y2"] = value; redraw();})
+      .addColor("stroke color", "brown",function(color) { tables[l-1]["stroke color"] = color; redraw();})
+      .addColor("fill color","white",function(color) { tables[l-1]["fill color"] = color; redraw();})
+      .addButton("Remove", function(value) { master.removeControl(tables[l-1]["title"]); tables[l-1]["shape"]=""; panel.destroy(); redraw();})
 
 
       master.addBoolean("rect "+inc, true, function(value) {
@@ -472,6 +491,8 @@ function keyTyped() {
           panel.hide();
         }
       });
+
+      redraw();
     }
     if(shape=='line'){
       inc++;
@@ -488,13 +509,13 @@ function keyTyped() {
 
       var l=tables.length;
       var panel = QuickSettings.create(windowWidth-210, 0, tables[l-1]["title"])
-      .addRange("x1", 0, windowWidth , x1, 1, function(value) { tables[l-1]["x1"] = value})
-      .addRange("y1", 0, windowHeight , y1, 1, function(value) { tables[l-1]["y1"] = value})
-      .addRange("x2", 0, windowWidth , x2, 1, function(value) { tables[l-1]["x2"] = value})
-      .addRange("y2", 0, windowHeight , y2, 1, function(value) { tables[l-1]["y2"] = value})
-      .addRange("width", 0, 100, 2, 1, function(value) { tables[l-1]["width"] = value})
-      .addColor("color", "black",function(color) { tables[l-1]["color"] = color})
-      .addButton("Remove", function(value) { master.removeControl(tables[l-1]["title"]); tables[l-1]["shape"]=""; panel.destroy(); })
+      .addRange("x1", 0, windowWidth , x1, 1, function(value) { tables[l-1]["x1"] = value; redraw();})
+      .addRange("y1", 0, windowHeight , y1, 1, function(value) { tables[l-1]["y1"] = value; redraw();})
+      .addRange("x2", 0, windowWidth , x2, 1, function(value) { tables[l-1]["x2"] = value; redraw();})
+      .addRange("y2", 0, windowHeight , y2, 1, function(value) { tables[l-1]["y2"] = value; redraw();})
+      .addRange("width", 0, 100, 2, 1, function(value) { tables[l-1]["width"] = value; redraw();})
+      .addColor("color", "black",function(color) { tables[l-1]["color"] = color; redraw();})
+      .addButton("Remove", function(value) { master.removeControl(tables[l-1]["title"]); tables[l-1]["shape"]=""; panel.destroy(); redraw();})
 
 
       master.addBoolean("line "+inc, true, function(value) {
@@ -505,6 +526,8 @@ function keyTyped() {
           panel.hide();
         }
       });
+
+      redraw();
     }
     x1=0,y1=0,x2=0,y2=0;
     shape='';
