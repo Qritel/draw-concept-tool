@@ -5,7 +5,8 @@ This code uses 2 libraries :
 */
 
 //Begin variable listing
-var x1=0,y1=0,x2=0,y2=0,init=0;
+var x1=0, y1=0, x2=0, y2=0;
+var init=0;
 var shape='';
 var tableimg;
 var chairimg;
@@ -385,13 +386,17 @@ function draw() {
       else if(tables[j]["shape"]==="rect"){
         push();
         strokeWeight(4);
-        stroke(tables[j]["stroke color"])
+        stroke(tables[j]["stroke color"]);
         if(tables[j]["fill color"]=="white" || tables[j]["fill color"]=="#FFFFFF" || tables[j]["fill color"]=="#ffffff")
           noFill();
         else
-          fill(tables[j]["fill color"])
-        rect(min(tables[j]["x1"],tables[j]["x2"]),min(tables[j]["y1"],tables[j]["y2"]),
-            abs(tables[j]["x2"]-tables[j]["x1"]),abs(tables[j]["y2"]-tables[j]["y1"]));
+          fill(tables[j]["fill color"]);
+        
+        rectMode(CENTER); 
+        translate(tables[j]["x"],tables[j]["y"]);
+        rotate(tables[j]["angle"]*PI/180);
+        rect(0,0,tables[j]["w"],tables[j]["h"],
+              tables[j]["topLeftRadius"],tables[j]["topRightRadius"],tables[j]["bottomRightRadius"],tables[j]["bottomLeftRadius"]);
         pop();
       }
       else if(tables[j]["shape"]==="line"){
@@ -461,25 +466,35 @@ function keyTyped() {
 
     if(shape=='rect'){
       inc++;
-      var rectt = {};
-      rectt["x1"]=x1;
-      rectt["y1"]=y1;
-      rectt["x2"]=x2;
-      rectt["y2"]=y2;
-      rectt["stroke color"]="brown";
-      rectt["fill color"]="white";
-      rectt["shape"]="rect";
-      rectt["title"]="rect "+inc;
-      tables.push(rectt);
+      var Rectangle = {};
+      Rectangle["x"]=x1+(x2-x1)/2;
+      Rectangle["y"]=y1+(y2-y1)/2;
+      Rectangle["w"]=x2-x1;
+      Rectangle["h"]=y2-y1;
+      Rectangle["angle"]=0;
+      Rectangle["topLeftRadius"]=0;
+      Rectangle["topRightRadius"]=0;
+      Rectangle["bottomRightRadius"]=0;
+      Rectangle["bottomLeftRadius"]=0;
+      Rectangle["stroke color"]="brown";
+      Rectangle["fill color"]="white";
+      Rectangle["shape"]="rect";
+      Rectangle["title"]="rect "+inc;
+      tables.push(Rectangle);
 
       var l=tables.length;
       var panel = QuickSettings.create(windowWidth-210, 0, tables[l-1]["title"])
-      .addRange("x1", 0, windowWidth , x1, 1, function(value) { tables[l-1]["x1"] = value; redraw();})
-      .addRange("y1", 0, windowHeight , y1, 1, function(value) { tables[l-1]["y1"] = value; redraw();})
-      .addRange("x2", 0, windowWidth , x2, 1, function(value) { tables[l-1]["x2"] = value; redraw();})
-      .addRange("y2", 0, windowHeight , y2, 1, function(value) { tables[l-1]["y2"] = value; redraw();})
-      .addColor("stroke color", "brown",function(color) { tables[l-1]["stroke color"] = color; redraw();})
-      .addColor("fill color","white",function(color) { tables[l-1]["fill color"] = color; redraw();})
+      .addRange("X", 0, windowWidth , x1+(x2-x1)/2, 1, function(value) { tables[l-1]["x"] = value; redraw();})
+      .addRange("Y", 0, windowHeight , y1+(y2-y1)/2, 1, function(value) { tables[l-1]["y"] = value; redraw();})
+      .addRange("W", 0, windowHeight , y2-y1, 1, function(value) { tables[l-1]["w"] = value; redraw();})
+      .addRange("H", 0, windowWidth , x2-x1, 1, function(value) { tables[l-1]["h"] = value; redraw();})
+      .addRange("Angle", -180, 180 , 0, 1, function(value) { tables[l-1]["angle"] = value; redraw();})
+      .addRange("TopLeftRadius", 0, 200 , 0, 1, function(value) { tables[l-1]["topLeftRadius"] = value; redraw();})
+      .addRange("TopRightRadius", 0, 200 , 0, 1, function(value) { tables[l-1]["topRightRadius"] = value; redraw();})
+      .addRange("BottomRightRadius", 0, 200 , 0, 1, function(value) { tables[l-1]["bottomRightRadius"] = value; redraw();})
+      .addRange("BottomLeftRadius", 0, 200 , 0, 1, function(value) { tables[l-1]["bottomLeftRadius"] = value; redraw();})
+      .addColor("Stroke color", "brown",function(color) { tables[l-1]["stroke color"] = color; redraw();})
+      .addColor("Fill color","white",function(color) { tables[l-1]["fill color"] = color; redraw();})
       .addButton("Remove", function(value) { master.removeControl(tables[l-1]["title"]); tables[l-1]["shape"]=""; panel.destroy(); redraw();})
 
 
