@@ -473,8 +473,8 @@ function keyTyped() {
       var Rectangle = {};
       Rectangle["x"]=x1+(x2-x1)/2;
       Rectangle["y"]=y1+(y2-y1)/2;
-      Rectangle["w"]=x2-x1;
-      Rectangle["h"]=y2-y1;
+      Rectangle["w"]=abs(x2-x1);
+      Rectangle["h"]=abs(y2-y1);
       Rectangle["angle"]=0;
       Rectangle["topLeftRadius"]=0;
       Rectangle["topRightRadius"]=0;
