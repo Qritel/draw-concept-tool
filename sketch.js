@@ -403,7 +403,11 @@ function draw() {
         push();
         strokeWeight(tables[j]["width"]);
         stroke(tables[j]["color"]);
-        line(tables[j]["x1"],tables[j]["y1"],tables[j]["x2"],tables[j]["y2"]);
+
+        rectMode(CENTER); 
+        translate(tables[j]["x"],tables[j]["y"]);
+        rotate(tables[j]["angle"]*PI/180);
+        rect(0,0,tables[j]["l"],1);
         pop();
       }
       else if(tables[j]["shape"]==="ellipse"){
@@ -512,24 +516,24 @@ function keyTyped() {
     if(shape=='line'){
       inc++;
       var linee = {};
-      linee["x1"]=x1;
-      linee["y1"]=y1;
-      linee["x2"]=x2;
-      linee["y2"]=y2;
-      linee["width"]=2;
-      linee["color"]="black";
+      linee["x"]=x1+(x2-x1)/2;
+      linee["y"]=y1+(y2-y1)/2;
+      linee["l"]=sqrt((x1-x2)*(x1-x2)+(y1-y2)*(y1-y2));
+      linee["angle"]=atan((y2-y1)/(x2-x1))*180/PI;
+      linee["width"]=3;
+      linee["color"]="brown";
       linee["shape"]="line";
       linee["title"]="line "+inc;
       tables.push(linee);
 
       var l=tables.length;
       var panel = QuickSettings.create(windowWidth-210, 0, tables[l-1]["title"])
-      .addRange("x1", 0, windowWidth , x1, 1, function(value) { tables[l-1]["x1"] = value; redraw();})
-      .addRange("y1", 0, windowHeight , y1, 1, function(value) { tables[l-1]["y1"] = value; redraw();})
-      .addRange("x2", 0, windowWidth , x2, 1, function(value) { tables[l-1]["x2"] = value; redraw();})
-      .addRange("y2", 0, windowHeight , y2, 1, function(value) { tables[l-1]["y2"] = value; redraw();})
-      .addRange("width", 0, 100, 2, 1, function(value) { tables[l-1]["width"] = value; redraw();})
-      .addColor("color", "black",function(color) { tables[l-1]["color"] = color; redraw();})
+      .addRange("X", 0, windowWidth , x1+(x2-x1)/2, 1, function(value) { tables[l-1]["x"] = value; redraw();})
+      .addRange("Y", 0, windowHeight , y1+(y2-y1)/2, 1, function(value) { tables[l-1]["y"] = value; redraw();})
+      .addRange("L", 0, windowWidth+windowHeight , sqrt((x1-x2)*(x1-x2)+(y1-y2)*(y1-y2)), 1, function(value) { tables[l-1]["l"] = value; redraw();})
+      .addRange("Angle", -180, 180 , atan((y2-y1)/(x2-x1))*180/PI, 1, function(value) { tables[l-1]["angle"] = value; redraw();})
+      .addRange("width", 1, 100, 3, 1, function(value) { tables[l-1]["width"] = value; redraw();})
+      .addColor("color", "brown",function(color) { tables[l-1]["color"] = color; redraw();})
       .addButton("Remove", function(value) { master.removeControl(tables[l-1]["title"]); tables[l-1]["shape"]=""; panel.destroy(); redraw();})
 
 
