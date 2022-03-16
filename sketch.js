@@ -449,106 +449,90 @@ function mouseClicked(){
     else if(x2==0 && y2==0){
       x2=mouseX;
       y2=mouseY;
-      var ellipse = {};
-      ellipse["x"]=x2;
-      ellipse["y"]=y2;
-      ellipse["shape"]="ellipse";
-      tables.push(ellipse);
-      redraw();
+        if(shape=='rect'){
+          inc++;
+          var Rectangle = {};
+          Rectangle["x"]=x1+(x2-x1)/2;
+          Rectangle["y"]=y1+(y2-y1)/2;
+          Rectangle["w"]=abs(x2-x1);
+          Rectangle["h"]=abs(y2-y1);
+          Rectangle["angle"]=0;
+          Rectangle["topLeftRadius"]=0;
+          Rectangle["topRightRadius"]=0;
+          Rectangle["bottomRightRadius"]=0;
+          Rectangle["bottomLeftRadius"]=0;
+          Rectangle["stroke color"]="brown";
+          Rectangle["fill color"]="white";
+          Rectangle["shape"]="rect";
+          Rectangle["title"]="rect "+inc;
+          tables.push(Rectangle);
+    
+          var l=tables.length;
+          var panel = QuickSettings.create(windowWidth-210, 0, tables[l-1]["title"])
+          .addRange("X", 0, windowWidth , x1+(x2-x1)/2, 1, function(value) { tables[l-1]["x"] = value; redraw();})
+          .addRange("Y", 0, windowHeight , y1+(y2-y1)/2, 1, function(value) { tables[l-1]["y"] = value; redraw();})
+          .addRange("W", 0, windowHeight , x2-x1, 1, function(value) { tables[l-1]["w"] = value; redraw();})
+          .addRange("H", 0, windowWidth , y2-y1, 1, function(value) { tables[l-1]["h"] = value; redraw();})
+          .addRange("Angle", -180, 180 , 0, 1, function(value) { tables[l-1]["angle"] = value; redraw();})
+          .addRange("TopLeftRadius", 0, 200 , 0, 1, function(value) { tables[l-1]["topLeftRadius"] = value; redraw();})
+          .addRange("TopRightRadius", 0, 200 , 0, 1, function(value) { tables[l-1]["topRightRadius"] = value; redraw();})
+          .addRange("BottomRightRadius", 0, 200 , 0, 1, function(value) { tables[l-1]["bottomRightRadius"] = value; redraw();})
+          .addRange("BottomLeftRadius", 0, 200 , 0, 1, function(value) { tables[l-1]["bottomLeftRadius"] = value; redraw();})
+          .addColor("Stroke color", "brown",function(color) { tables[l-1]["stroke color"] = color; redraw();})
+          .addColor("Fill color","white",function(color) { tables[l-1]["fill color"] = color; redraw();})
+          .addButton("Remove", function(value) { master.removeControl(tables[l-1]["title"]); tables[l-1]["shape"]=""; panel.destroy(); redraw();})
+    
+    
+          master.addBoolean("rect "+inc, true, function(value) {
+            if(value) {
+              panel.show();
+            }
+            else {
+              panel.hide();
+            }
+          });
+    
+          redraw();
+        }
+        if(shape=='line'){
+          inc++;
+          var linee = {};
+          linee["x"]=x1+(x2-x1)/2;
+          linee["y"]=y1+(y2-y1)/2;
+          linee["l"]=sqrt((x1-x2)*(x1-x2)+(y1-y2)*(y1-y2));
+          linee["angle"]=atan((y2-y1)/(x2-x1))*180/PI;
+          linee["width"]=3;
+          linee["color"]="brown";
+          linee["shape"]="line";
+          linee["title"]="line "+inc;
+          tables.push(linee);
+    
+          var l=tables.length;
+          var panel = QuickSettings.create(windowWidth-210, 0, tables[l-1]["title"])
+          .addRange("X", 0, windowWidth , x1+(x2-x1)/2, 1, function(value) { tables[l-1]["x"] = value; redraw();})
+          .addRange("Y", 0, windowHeight , y1+(y2-y1)/2, 1, function(value) { tables[l-1]["y"] = value; redraw();})
+          .addRange("L", 0, windowWidth+windowHeight , sqrt((x1-x2)*(x1-x2)+(y1-y2)*(y1-y2)), 1, function(value) { tables[l-1]["l"] = value; redraw();})
+          .addRange("Angle", -180, 180 , atan((y2-y1)/(x2-x1))*180/PI, 1, function(value) { tables[l-1]["angle"] = value; redraw();})
+          .addRange("width", 1, 100, 3, 1, function(value) { tables[l-1]["width"] = value; redraw();})
+          .addColor("color", "brown",function(color) { tables[l-1]["color"] = color; redraw();})
+          .addButton("Remove", function(value) { master.removeControl(tables[l-1]["title"]); tables[l-1]["shape"]=""; panel.destroy(); redraw();})
+    
+    
+          master.addBoolean("line "+inc, true, function(value) {
+            if(value) {
+              panel.show();
+            }
+            else {
+              panel.hide();
+            }
+          });
+    
+          redraw();
+        }
+
+        x1=0,y1=0,x2=0,y2=0;
+        shape='';
+      
     }
-  }
-}
-
-//p5 function: called once every time a key is pressed
-function keyTyped() {
-  //Type c to finish drawing your shape
-  if(key==='c' && x1 && x2 && y1 && y2){
-
-    //remove the two points from the map -canvas-
-    tables.pop();
-    tables.pop();
-
-    if(shape=='rect'){
-      inc++;
-      var Rectangle = {};
-      Rectangle["x"]=x1+(x2-x1)/2;
-      Rectangle["y"]=y1+(y2-y1)/2;
-      Rectangle["w"]=abs(x2-x1);
-      Rectangle["h"]=abs(y2-y1);
-      Rectangle["angle"]=0;
-      Rectangle["topLeftRadius"]=0;
-      Rectangle["topRightRadius"]=0;
-      Rectangle["bottomRightRadius"]=0;
-      Rectangle["bottomLeftRadius"]=0;
-      Rectangle["stroke color"]="brown";
-      Rectangle["fill color"]="white";
-      Rectangle["shape"]="rect";
-      Rectangle["title"]="rect "+inc;
-      tables.push(Rectangle);
-
-      var l=tables.length;
-      var panel = QuickSettings.create(windowWidth-210, 0, tables[l-1]["title"])
-      .addRange("X", 0, windowWidth , x1+(x2-x1)/2, 1, function(value) { tables[l-1]["x"] = value; redraw();})
-      .addRange("Y", 0, windowHeight , y1+(y2-y1)/2, 1, function(value) { tables[l-1]["y"] = value; redraw();})
-      .addRange("W", 0, windowHeight , x2-x1, 1, function(value) { tables[l-1]["w"] = value; redraw();})
-      .addRange("H", 0, windowWidth , y2-y1, 1, function(value) { tables[l-1]["h"] = value; redraw();})
-      .addRange("Angle", -180, 180 , 0, 1, function(value) { tables[l-1]["angle"] = value; redraw();})
-      .addRange("TopLeftRadius", 0, 200 , 0, 1, function(value) { tables[l-1]["topLeftRadius"] = value; redraw();})
-      .addRange("TopRightRadius", 0, 200 , 0, 1, function(value) { tables[l-1]["topRightRadius"] = value; redraw();})
-      .addRange("BottomRightRadius", 0, 200 , 0, 1, function(value) { tables[l-1]["bottomRightRadius"] = value; redraw();})
-      .addRange("BottomLeftRadius", 0, 200 , 0, 1, function(value) { tables[l-1]["bottomLeftRadius"] = value; redraw();})
-      .addColor("Stroke color", "brown",function(color) { tables[l-1]["stroke color"] = color; redraw();})
-      .addColor("Fill color","white",function(color) { tables[l-1]["fill color"] = color; redraw();})
-      .addButton("Remove", function(value) { master.removeControl(tables[l-1]["title"]); tables[l-1]["shape"]=""; panel.destroy(); redraw();})
-
-
-      master.addBoolean("rect "+inc, true, function(value) {
-        if(value) {
-          panel.show();
-        }
-        else {
-          panel.hide();
-        }
-      });
-
-      redraw();
-    }
-    if(shape=='line'){
-      inc++;
-      var linee = {};
-      linee["x"]=x1+(x2-x1)/2;
-      linee["y"]=y1+(y2-y1)/2;
-      linee["l"]=sqrt((x1-x2)*(x1-x2)+(y1-y2)*(y1-y2));
-      linee["angle"]=atan((y2-y1)/(x2-x1))*180/PI;
-      linee["width"]=3;
-      linee["color"]="brown";
-      linee["shape"]="line";
-      linee["title"]="line "+inc;
-      tables.push(linee);
-
-      var l=tables.length;
-      var panel = QuickSettings.create(windowWidth-210, 0, tables[l-1]["title"])
-      .addRange("X", 0, windowWidth , x1+(x2-x1)/2, 1, function(value) { tables[l-1]["x"] = value; redraw();})
-      .addRange("Y", 0, windowHeight , y1+(y2-y1)/2, 1, function(value) { tables[l-1]["y"] = value; redraw();})
-      .addRange("L", 0, windowWidth+windowHeight , sqrt((x1-x2)*(x1-x2)+(y1-y2)*(y1-y2)), 1, function(value) { tables[l-1]["l"] = value; redraw();})
-      .addRange("Angle", -180, 180 , atan((y2-y1)/(x2-x1))*180/PI, 1, function(value) { tables[l-1]["angle"] = value; redraw();})
-      .addRange("width", 1, 100, 3, 1, function(value) { tables[l-1]["width"] = value; redraw();})
-      .addColor("color", "brown",function(color) { tables[l-1]["color"] = color; redraw();})
-      .addButton("Remove", function(value) { master.removeControl(tables[l-1]["title"]); tables[l-1]["shape"]=""; panel.destroy(); redraw();})
-
-
-      master.addBoolean("line "+inc, true, function(value) {
-        if(value) {
-          panel.show();
-        }
-        else {
-          panel.hide();
-        }
-      });
-
-      redraw();
-    }
-    x1=0,y1=0,x2=0,y2=0;
-    shape='';
   }
 }
