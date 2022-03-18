@@ -8,11 +8,15 @@ This code uses 2 libraries :
 var x1=0, y1=0, x2=0, y2=0;
 var init=0;
 var shape='';
+
 var tableimg;
 var chairimg;
 var sofaimg;
 var doorimg;
 var windowimg;
+var sinkimg;
+var toiletimg;
+var tvimg;
 var inc=0;
 
 //An array will contain all the objects on the map -canvas-
