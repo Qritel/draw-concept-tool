@@ -451,6 +451,7 @@ function mouseClicked(){
     }
     //second point
     else if(x2==0 && y2==0){
+      tables.pop();
       x2=mouseX;
       y2=mouseY;
         if(shape=='rect'){
