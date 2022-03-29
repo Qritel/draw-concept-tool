@@ -7,7 +7,7 @@ This code uses 2 libraries :
 //Begin variable listing
 var x1=0, y1=0, x2=0, y2=0;
 var init=0;
-var shape='';
+var ClickEvent='';
 
 var tableimg;
 var chairimg;
@@ -48,11 +48,11 @@ function setup() {
 
   button = createButton('Rect');
   button.position(canv.x,canv.y-25);
-  button.mousePressed(function() { shape="rect"; init=0;});
+  button.mousePressed(function() { ClickEvent="Draw_Rect"; init=0;});
 
   button = createButton('Line');
   button.position(canv.x+43,canv.y-25);
-  button.mousePressed(function() { shape="line"; init=0;});
+  button.mousePressed(function() { ClickEvent="Draw_Line"; init=0;});
 
   button = createButton('Table');
   button.position(canv.x+83,canv.y-25);
@@ -433,7 +433,7 @@ function draw() {
 
 //p5 function: called once after a mouse button has been pressed and then released.
 function mouseClicked(){
-  if(shape=='rect' || shape=='line'){
+  if(ClickEvent=='Draw_Rect' || ClickEvent=='Draw_Line'){
     //when you click on the button rect / li, this click is counted
     if(init==0 ){
       init=1;
@@ -454,7 +454,7 @@ function mouseClicked(){
       tables.pop();
       x2=mouseX;
       y2=mouseY;
-        if(shape=='rect'){
+        if(ClickEvent=='Draw_Rect'){
           inc++;
           var Rectangle = {};
           Rectangle["x"]=x1+(x2-x1)/2;
@@ -499,7 +499,7 @@ function mouseClicked(){
     
           redraw();
         }
-        if(shape=='line'){
+        if(ClickEvent=='Draw_Line'){
           inc++;
           var linee = {};
           linee["x"]=x1+(x2-x1)/2;
@@ -536,7 +536,7 @@ function mouseClicked(){
         }
 
         x1=0,y1=0,x2=0,y2=0;
-        shape='';
+        ClickEvent='';
       
     }
   }
