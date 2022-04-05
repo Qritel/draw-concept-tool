@@ -4,6 +4,6 @@
 -> Code refactoring. ---> done
 -> Redesign User Interface.
 -> Add new feature: move objects with mouse.
--> Add Folder of libraries.
--> Implement a color picker (go to p5.GUI).
+-> Add Folder of libraries. ---> done
+-> Implement a color picker (go to p5.GUI). ---> done
 -> Implement Export\Import from JSON.
