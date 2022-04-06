@@ -1,9 +1,17 @@
 -> Modify Rectangle settings : "X,Y,H,W,Angle,radius" instead of "x1,X2,Y1,Y2". ---> done
+
 -> Modify Line settings : "X,Y,L,Angle" instead of "x1,X2,Y1,Y2". ---> done
+
 -> User can draw rectangle or line with just two click. ---> done
+
 -> Code refactoring. ---> done
+
 -> Redesign User Interface.
--> Add new feature: move objects with mouse.
+
+-> Add new feature: move objects with mouse. ---> done
+
 -> Add Folder of libraries. ---> done
+
 -> Implement a color picker (go to p5.GUI). ---> done
+
 -> Implement Export\Import from JSON.

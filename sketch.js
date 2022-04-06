@@ -8,6 +8,12 @@ var x1 = 0, y1 = 0, x2 = 0, y2 = 0;
 var init = 0;
 var clickEvent = '';
 var nbObjects = 0;
+var canvasWidth;
+var canvasHeight;
+var canvasX;
+var canvasY;
+var diffPositionX;
+var diffPositionY;
 var tableimg;
 var chairimg;
 var sofaimg;
@@ -47,9 +53,13 @@ function setup() {
   createPanel(object);
 
   //p5: Creates a canvas element in the document, and sets the dimensions of it in pixels
-  var canv = createCanvas(windowWidth-320, windowHeight-50);
+  canvasWidth = windowWidth-320;
+  canvasHeight = windowHeight-50;
+  canvasX = 10;
+  canvasY = 40;
+  var canv = createCanvas(canvasWidth, canvasHeight);
   //p5: Set its postion
-  canv.position(10, 40);
+  canv.position(canvasX, canvasY);
 
   button = createButton('Rect');
   button.position(canv.x, canv.y-25);
@@ -387,6 +397,22 @@ function mouseClicked(){
       clickEvent = '';
       
     }
+  }
+}
+
+//p5 function: called once after every time a mouse button is pressed.
+function mousePressed() {
+  diffPositionX = mouseX - panel.getValue('x');
+  diffPositionY = mouseY - panel.getValue('y');
+}
+
+//p5 function: called once every time the mouse moves and a mouse button is pressed.
+function mouseDragged(){
+  if(mouseX > 0 && mouseX < canvasWidth &&
+     mouseY > 0 && mouseY < canvasHeight
+  ){
+    panel.setValue('x', mouseX - diffPositionX);
+    panel.setValue('y', mouseY - diffPositionY);
   }
 }
 
