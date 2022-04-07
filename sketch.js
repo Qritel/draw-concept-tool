@@ -47,16 +47,20 @@ function preload() {
 
 //p5 function: called once when the program starts
 function setup() {
-  master = QuickSettings.create(windowWidth-300, 0, 'Master');
-  master.setSize(300, windowHeight-300);
+
+  QuickSettings.useExtStyleSheet();
+  master = QuickSettings.create(windowWidth - 190, 0, 'Master');
+  master.setSize(190, windowHeight - windowHeight * 0.4);
+  master.setDraggable(false);
+  master.setCollapsible(false);
   resetObject();
   createPanel(object);
 
   //p5: Creates a canvas element in the document, and sets the dimensions of it in pixels
-  canvasWidth = windowWidth-320;
-  canvasHeight = windowHeight-50;
-  canvasX = 10;
+  canvasX = 150;
   canvasY = 40;
+  canvasWidth = windowWidth - 191 - canvasX;
+  canvasHeight = windowHeight - 2 - canvasY;
   var canv = createCanvas(canvasWidth, canvasHeight);
   //p5: Set its postion
   canv.position(canvasX, canvasY);
@@ -187,7 +191,7 @@ function setup() {
     object.y = 70;
     object.angle = 0.01;
     object.inputText = 'Your text';
-    object.color = 'black';
+    object.color = '#000000';
     object.size = 32;
     object.name = 'text';
   
@@ -206,9 +210,12 @@ function setup() {
 //p5 function: continuously executes the lines of code contained inside its block until the program is stopped or noLoop() is called(as our case)
 //draw() will be executed one time, when an object is added or its properties is changed.
 function draw() {
-  //p5 function: sets the color used for the background of the canvas
-  background(220);
-
+  //set the color for the background of the canvas
+  background('#fafafa')
+  noFill();
+  stroke('#d8d8d8');
+  rect(0,0,canvasWidth-1,canvasHeight-1);
+  
   if(nbObjects) {
     //browse all objects
     objects.forEach(function(_object){
@@ -363,8 +370,8 @@ function mouseClicked(){
         object.topRightRadius = 1;
         object.bottomRightRadius = 1;
         object.bottomLeftRadius = 1;
-        object.strokeColor = 'black';
-        object.fillColor = 'white';
+        object.strokeColor = '#000000';
+        object.fillColor = '#ffffff';
         object.name = 'rect';
       
         objects.push(object);
@@ -382,7 +389,7 @@ function mouseClicked(){
         object.l = parseInt(sqrt((x1-x2)*(x1-x2)+(y1-y2)*(y1-y2)));
         object.angle = atan((y2-y1)/(x2-x1))*180/PI;
         object.w = 2;
-        object.color = 'black';
+        object.color = '#000000';
         object.name = 'line';
       
         objects.push(object);
@@ -411,8 +418,8 @@ function mouseDragged(){
   if(mouseX > 0 && mouseX < canvasWidth &&
      mouseY > 0 && mouseY < canvasHeight
   ){
-    panel.setValue('x', mouseX - diffPositionX);
-    panel.setValue('y', mouseY - diffPositionY);
+    panel.setValue('x', parseInt(mouseX - diffPositionX));
+    panel.setValue('y', parseInt(mouseY - diffPositionY));
   }
 }
 
@@ -422,14 +429,16 @@ function createPanel(_object){
     panel.destroy();
   }
 
-  panel=QuickSettings.create(windowWidth-300, windowHeight-300, 'Properties');
-  panel.setSize(300, 300);
+  panel=QuickSettings.create(windowWidth - 190, windowHeight - windowHeight * 0.4, 'Properties');
+  panel.setSize(190, windowHeight * 0.4);
+  panel.setDraggable(false);
+  panel.setCollapsible(false);
   panel.setGlobalChangeHandler(function(){redraw()});
-  panel.bindNumber('x', 0, windowWidth, _object.x, 1, _object);
-  panel.bindNumber('y', 0, windowHeight, _object.y, 1, _object);
-  panel.bindNumber('w', 0, windowWidth, _object.w, 1, _object);
-  panel.bindNumber('h', 0, windowHeight, _object.h, 1, _object);
-  panel.bindNumber('l', 0, windowHeight, _object.l, 1, _object);
+  panel.bindNumber('x', 0, windowWidth, parseInt(_object.x), 1, _object);
+  panel.bindNumber('y', 0, windowHeight, parseInt(_object.y), 1, _object);
+  panel.bindNumber('w', 0, windowWidth, parseInt(_object.w), 1, _object);
+  panel.bindNumber('h', 0, windowHeight, parseInt(_object.h), 1, _object);
+  panel.bindNumber('l', 0, windowHeight, parseInt(_object.l), 1, _object);
   panel.bindRange('angle', -180, 180, _object.angle, 1, _object);
   panel.bindNumber('topLeftRadius', 0, 200, _object.topLeftRadius, 1, _object);
   panel.bindNumber('topRightRadius', 0, 200, _object.topRightRadius, 1, _object);

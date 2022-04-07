@@ -6,7 +6,8 @@ Project Description
 
 ### Todo
 
-- [ ] Implement Export\Import from JSON  
+- [ ] Add zoom tool  
+- [ ] Implement Export/Import from JSON  
 - [ ] Implement rollback feature  
 - [ ] Implement delete feature  
 
