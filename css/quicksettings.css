@@ -4,14 +4,14 @@
   position: absolute;
   width: 200px;
   font: 12px sans-serif;
-  box-shadow: 5px 5px 8px rgba(0, 0, 0, 0.35);
   user-select: none;
   -webkit-user-select: none;
   color: #000000;
   border: none;
+  padding: 1px;
 }
 .qs_content {
-  background-color: #cccccc;
+  background-color: #fafafa;
   overflow-y: auto;
 }
 .qs_title_bar {
@@ -25,9 +25,9 @@
   color: #000000;
 }
 .qs_container {
-  margin: 5px;
+  margin: 1px;
   padding: 5px;
-  background-color: #eeeeee;
+  background-color: #f6f6f6;
   border: none;
   position: relative;
 }
@@ -134,17 +134,19 @@
 .qs_button {
   background-color: #f6f6f6;
   color: #000000;
-  height: 30px;
-  border: 1px solid #aaaaaa;
-  font: 12px sans-serif;
+  height: 22px;
+  border: none;
+  font: 11.5px sans-serif;
+  text-align: left;
+  width: 100%;
+  padding-left: 0px;
 }
 .qs_button:active {
   background-color: #ffffff;
-  border: 1px solid #aaaaaa;
+  border: none;
 }
 .qs_button:focus {
-  border: 1px solid #aaaaaa;
-  outline: none;
+  background-color: #ffffff;
 }
 .qs_checkbox {
   cursor: pointer;

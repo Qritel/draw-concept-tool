@@ -50,9 +50,10 @@ function setup() {
 
   QuickSettings.useExtStyleSheet();
   master = QuickSettings.create(windowWidth - 190, 0, 'Master');
-  master.setSize(190, windowHeight - windowHeight * 0.4);
+  master.setSize(188, windowHeight - windowHeight * 0.4 - 2);
   master.setDraggable(false);
   master.setCollapsible(false);
+  
   resetObject();
   createPanel(object);
 
@@ -82,7 +83,7 @@ function setup() {
     object.typeChair = 'chair';
     object.x = 70;
     object.y = 70;
-    object.name = 'table';
+    object.name = 'Table';
   
     objects.push(object);
     nbObjects ++;
@@ -100,7 +101,7 @@ function setup() {
     object.x = 70;
     object.y = 70;
     object.angle = 0.01;
-    object.name = 'door';
+    object.name = 'Door';
   
     objects.push(object);
     nbObjects ++;
@@ -118,7 +119,7 @@ function setup() {
     object.x = 70;
     object.y = 70;
     object.angle = 0.01;
-    object.name = 'window';
+    object.name = 'Window';
   
     objects.push(object);
     nbObjects ++;
@@ -136,7 +137,7 @@ function setup() {
     object.x = 70;
     object.y = 70;
     object.angle = 0.01;
-    object.name = 'tv';
+    object.name = 'Tv';
   
     objects.push(object);
     nbObjects ++;
@@ -154,7 +155,7 @@ function setup() {
     object.x = 70;
     object.y = 70;
     object.angle = 0.01;
-    object.name = 'toilet';
+    object.name = 'Toilet';
   
     objects.push(object);
     nbObjects ++;
@@ -172,7 +173,7 @@ function setup() {
     object.x = 70;
     object.y = 70;
     object.angle = 0.01;
-    object.name = 'sink';
+    object.name = 'Sink';
   
     objects.push(object);
     nbObjects ++;
@@ -193,7 +194,7 @@ function setup() {
     object.inputText = 'Your text';
     object.color = '#000000';
     object.size = 32;
-    object.name = 'text';
+    object.name = 'Text';
   
 
     objects.push(object);
@@ -219,7 +220,7 @@ function draw() {
   if(nbObjects) {
     //browse all objects
     objects.forEach(function(_object){
-      if(_object.name === 'rect'){
+      if(_object.name === 'Rectangle'){
         push();
         strokeWeight(3);
         stroke(_object.strokeColor);
@@ -231,7 +232,7 @@ function draw() {
           _object.topLeftRadius, _object.topRightRadius, _object.bottomRightRadius, _object.bottomLeftRadius);
         pop();
       }
-      else if(_object.name === 'line'){
+      else if(_object.name === 'Line'){
         push();
         strokeWeight(_object.w);
         stroke(_object.color);
@@ -241,7 +242,7 @@ function draw() {
         rect(0,0,_object.l,1);
         pop();
       }
-      else if(_object.name === 'table'){
+      else if(_object.name === 'Table'){
         image(tableimg,_object.x,_object.y,100,73);
 
         // draw chairs arranged in a circle
@@ -274,7 +275,7 @@ function draw() {
           }
         }
       }
-      else if(_object.name === 'door'){
+      else if(_object.name === 'Door'){
         push();
         imageMode(CENTER);
         translate(_object.x, _object.y);
@@ -282,7 +283,7 @@ function draw() {
         image(doorimg, 0, 0, 200, 75);
         pop();
       }
-      else if(_object.name === 'window'){
+      else if(_object.name === 'Window'){
         push();
         imageMode(CENTER);
         translate(_object.x, _object.y);
@@ -290,7 +291,7 @@ function draw() {
         image(windowimg, 0, 0, 200, 150);
         pop();
       }
-      else if(_object.name === 'tv'){
+      else if(_object.name === 'Tv'){
         push();
         imageMode(CENTER);
         translate(_object.x, _object.y);
@@ -298,7 +299,7 @@ function draw() {
         image(tvimg, 0, 0, 120, 75);
         pop();
       }
-      else if(_object.name === 'toilet'){
+      else if(_object.name === 'Toilet'){
         push();
         imageMode(CENTER);
         translate(_object.x, _object.y);
@@ -306,7 +307,7 @@ function draw() {
         image(toiletimg, 0, 0, 55, 70);
         pop();
       }
-      else if(_object.name === 'sink'){
+      else if(_object.name === 'Sink'){
         push();
         imageMode(CENTER);
         translate(_object.x, _object.y);
@@ -314,7 +315,7 @@ function draw() {
         image(sinkimg, 0, 0, 70, 85);
         pop();
       }
-      else if(_object.name === 'text'){
+      else if(_object.name === 'Text'){
         push();
         noStroke();
         textSize(_object.size);
@@ -324,7 +325,7 @@ function draw() {
         text(_object.inputText, 0, 0);
         pop();
       }
-      else if(_object.name === 'ellipse'){
+      else if(_object.name === 'Ellipse'){
         //Two points before rect/line drawn - go to 'function mouseClicked()'
         ellipse(_object.x, _object.y,2);
       }
@@ -347,7 +348,7 @@ function mouseClicked(){
       resetObject();
       object.x = x1;
       object.y = y1;
-      object.name = 'ellipse';
+      object.name = 'Ellipse';
       objects.push(object);
       nbObjects++;
       redraw();
@@ -372,7 +373,7 @@ function mouseClicked(){
         object.bottomLeftRadius = 1;
         object.strokeColor = '#000000';
         object.fillColor = '#ffffff';
-        object.name = 'rect';
+        object.name = 'Rectangle';
       
         objects.push(object);
         nbObjects ++;
@@ -390,7 +391,7 @@ function mouseClicked(){
         object.angle = atan((y2-y1)/(x2-x1))*180/PI;
         object.w = 2;
         object.color = '#000000';
-        object.name = 'line';
+        object.name = 'Line';
       
         objects.push(object);
         nbObjects ++;
@@ -429,8 +430,8 @@ function createPanel(_object){
     panel.destroy();
   }
 
-  panel=QuickSettings.create(windowWidth - 190, windowHeight - windowHeight * 0.4, 'Properties');
-  panel.setSize(190, windowHeight * 0.4);
+  panel=QuickSettings.create(windowWidth - 190, windowHeight - windowHeight * 0.4 - 2, 'Properties');
+  panel.setSize(188, windowHeight * 0.4);
   panel.setDraggable(false);
   panel.setCollapsible(false);
   panel.setGlobalChangeHandler(function(){redraw()});
