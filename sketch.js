@@ -58,24 +58,27 @@ function setup() {
   createPanel(object);
 
   //p5: Creates a canvas element in the document, and sets the dimensions of it in pixels
-  canvasX = 150;
-  canvasY = 40;
+  canvasX = 100;
+  canvasY = 1;
   canvasWidth = windowWidth - 191 - canvasX;
   canvasHeight = windowHeight - 2 - canvasY;
   var canv = createCanvas(canvasWidth, canvasHeight);
   //p5: Set its postion
   canv.position(canvasX, canvasY);
 
-  button = createButton('Rect');
-  button.position(canv.x, canv.y-25);
+  button = createButton('⬛');
+  button.position(0, 120);
+  button.class('button');
   button.mousePressed(function() { clickEvent='Draw_Rect'; init=0;});
 
-  button = createButton('Line');
-  button.position(canv.x+43, canv.y-25);
+  button = createButton('	▬▬');
+  button.position(0, 160);
+  button.class('button');
   button.mousePressed(function() { clickEvent='Draw_Line'; init=0;});
 
   button = createButton('Table');
-  button.position(canv.x+83, canv.y-25);
+  button.position(0, 200);
+  button.class('button');
   button.mousePressed(function() {
 
     resetObject();
@@ -94,7 +97,8 @@ function setup() {
   });
 
   button = createButton('Door');
-  button.position(canv.x+130.3, canv.y-25);
+  button.position(0, 240);
+  button.class('button');
   button.mousePressed(function() {
 
     resetObject();
@@ -112,7 +116,8 @@ function setup() {
   });
 
   button = createButton('Window');
-  button.position(canv.x+175, canv.y-25);
+  button.position(0, 280);
+  button.class('button');
   button.mousePressed(function() {
 
     resetObject();
@@ -130,7 +135,8 @@ function setup() {
   });
 
   button = createButton('TV');
-  button.position(canv.x+238, canv.y-25);
+  button.position(0, 320);
+  button.class('button');
   button.mousePressed(function() {
 
     resetObject();
@@ -148,7 +154,8 @@ function setup() {
   });
 
   button = createButton('Toilet');
-  button.position(canv.x+270, canv.y-25);
+  button.position(0, 360);
+  button.class('button');
   button.mousePressed(function() {
 
     resetObject();
@@ -166,7 +173,8 @@ function setup() {
   });
 
   button = createButton('Sink');
-  button.position(canv.x+316, canv.y-25);
+  button.position(0, 400);
+  button.class('button');
   button.mousePressed(function() {
 
     resetObject();
@@ -184,7 +192,8 @@ function setup() {
   });
 
   button = createButton('Text');
-  button.position(canv.x+357.5, canv.y-25);
+  button.position(0, 440);
+  button.class('button');
   button.mousePressed(function() {
 
     resetObject();
@@ -212,7 +221,7 @@ function setup() {
 //draw() will be executed one time, when an object is added or its properties is changed.
 function draw() {
   //set the color for the background of the canvas
-  background('#fafafa')
+  background('#ffffff')
   noFill();
   stroke('#d8d8d8');
   rect(0,0,canvasWidth-1,canvasHeight-1);

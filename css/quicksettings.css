@@ -11,7 +11,7 @@
   padding: 1px;
 }
 .qs_content {
-  background-color: #fafafa;
+  background-color: #d6d6d6;
   overflow-y: auto;
 }
 .qs_title_bar {
@@ -25,7 +25,7 @@
   color: #000000;
 }
 .qs_container {
-  margin: 1px;
+  margin: 1px 0px 1px;
   padding: 5px;
   background-color: #f6f6f6;
   border: none;
@@ -208,7 +208,6 @@
   -moz-border-radius: 0;
   border-radius: 0;
   padding: 0 5px;
-  -moz-outline: none;
   font-size: 14px;
 }
 .qs_select option {

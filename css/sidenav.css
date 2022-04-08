@@ -1,0 +1,29 @@
+.sidenav {
+    height: 100%;
+    width: 100px;
+    position: fixed;
+    z-index: 0;
+    top: 0;
+    left: 0;
+    background-color: #efefef;
+    overflow-x: hidden;
+    padding-top: 20px;
+}
+
+.button {
+    background-color: #efefef;
+    color: #000000;
+    text-decoration: none;
+    width: 101px;
+    border: 1px solid #d6d6d6;
+    padding: 12px 10px;
+}
+
+.button:hover {
+    background-color: #393939;
+    color: #efefef;
+    text-decoration: none;
+    width: 101px;
+    border: 1px solid #d6d6d6;
+    padding: 12px 10px;
+}

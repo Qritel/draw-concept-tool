@@ -13,7 +13,7 @@ Project Description
 
 ### In Progress
 
-- [ ] Redesign User Interface  
+- [ ] improve user interface design  
 
 ### Done ✓
 
