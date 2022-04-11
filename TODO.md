@@ -6,6 +6,7 @@ Project Description
 
 ### Todo
 
+- [ ] Implement resize and rotate corners  
 - [ ] Add zoom tool  
 - [ ] Implement Export/Import from JSON  
 - [ ] Implement rollback feature  
@@ -14,12 +15,12 @@ Project Description
 ### In Progress
 
 - [ ] improve user interface design  
+- [ ] ⭐Code refactoring⭐  
 
 ### Done ✓
 
 - [x] Implement a color picker  
 - [x] Add new feature: move objects with mouse  
-- [x] ⭐Code refactoring⭐  
 - [x] Add Folder of libraries  
 - [x] User can draw rectangle or line with just two click  
 - [x] Modify Line settings : "X,Y,L,Angle" instead of "x1,X2,Y1,Y2"  
