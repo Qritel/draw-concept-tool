@@ -6,6 +6,7 @@ Project Description
 
 ### Todo
 
+- [ ] Add a tooltip to different elements  
 - [ ] Implement resize and rotate corners  
 - [ ] Add zoom tool  
 - [ ] Implement Export/Import from JSON  
@@ -13,6 +14,7 @@ Project Description
 
 ### In Progress
 
+- [ ] Move Layers Up And Down  
 - [ ] Implement delete feature  
 - [ ] improve user interface design  
 - [ ] ⭐Code refactoring⭐  

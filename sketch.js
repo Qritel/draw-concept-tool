@@ -27,7 +27,7 @@ var objects = [];
 var object = {};
 
 //A panel lists the names of the created objects
-var master;
+var layers;
 
 //A panel lists the properties of selected object
 var panel;
@@ -48,10 +48,10 @@ function preload() {
 function setup() {
 
   QuickSettings.useExtStyleSheet();
-  master = QuickSettings.create(windowWidth - 190, 0, 'Master');
-  master.setSize(188, windowHeight - windowHeight * 0.4 - 2);
-  master.setDraggable(false);
-  master.setCollapsible(false);
+  layers = QuickSettings.create(windowWidth - 190, 0, 'Layers');
+  layers.setSize(188, windowHeight - windowHeight * 0.4 - 2);
+  layers.setDraggable(false);
+  layers.setCollapsible(false);
 
   createPanel(object);
 
@@ -81,7 +81,7 @@ function setup() {
     addObject('Table ' + (nbObjects + 1), 70, 70, undefined, undefined, undefined, undefined, undefined, undefined, undefined,
     undefined, undefined, undefined, undefined, 2, 'chair', undefined, undefined);
     createPanel(object);
-    addToMaster(object);
+    addToLayers(object);
     redraw();
   });
 
@@ -92,7 +92,7 @@ function setup() {
     addObject('Door ' + (nbObjects + 1), 70, 70, undefined, undefined, undefined, 0, undefined, undefined, undefined,
     undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined);
     createPanel(object);
-    addToMaster(object);
+    addToLayers(object);
     redraw();
   });
 
@@ -103,7 +103,7 @@ function setup() {
     addObject('Window ' + (nbObjects + 1), 70, 70, undefined, undefined, undefined, 0, undefined, undefined, undefined,
     undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined);
     createPanel(object);
-    addToMaster(object);
+    addToLayers(object);
     redraw();
   });
 
@@ -114,7 +114,7 @@ function setup() {
     addObject('TV ' + (nbObjects + 1), 70, 70, undefined, undefined, undefined, 0, undefined, undefined, undefined,
     undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined);
     createPanel(object);
-    addToMaster(object);
+    addToLayers(object);
     redraw();
   });
 
@@ -125,7 +125,7 @@ function setup() {
     addObject('Toilet ' + (nbObjects + 1), 70, 70, undefined, undefined, undefined, 0, undefined, undefined, undefined,
     undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined);
     createPanel(object);
-    addToMaster(object);
+    addToLayers(object);
     redraw();
   });
 
@@ -136,7 +136,7 @@ function setup() {
     addObject('Sink ' + (nbObjects + 1), 70, 70, undefined, undefined, undefined, 0, undefined, undefined, undefined,
     undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined);
     createPanel(object);
-    addToMaster(object);
+    addToLayers(object);
     redraw();
   });
 
@@ -147,7 +147,7 @@ function setup() {
     addObject('Text ' + (nbObjects + 1), 90, 70, undefined, undefined, undefined, 0, undefined, undefined, undefined,
     undefined, undefined, undefined, '#000000', undefined, undefined, 'Your text', 32);
     createPanel(object);
-    addToMaster(object);
+    addToLayers(object);
     redraw();
   });
 
@@ -163,7 +163,7 @@ function draw() {
   stroke('#d8d8d8');
   rect(0,0,canvasWidth-1,canvasHeight-1);
   
-  if(nbObjects) {
+  if(nbObjects || clickEvent) {
     //browse all objects
     objects.forEach(function(_object) {
       if(_object.name.startsWith('Rectangle')) {
@@ -330,7 +330,7 @@ function mouseReleased() {
         undefined, undefined, undefined, undefined);
       }
       createPanel(object);
-      addToMaster(object);
+      addToLayers(object);
       redraw();
       x1 = 0, y1 = 0, x2 = 0, y2 = 0;
       clickEvent = '';
@@ -373,18 +373,17 @@ _bottomLeftRadius, _strokeColor, _fillColor, _color, _numPlace, _typeChair, _inp
       delete object[key];
     }
   });
-  
-  nbObjects ++;
+  if(!_name.endsWith('drawing')) nbObjects ++;
   objects.push(object);
 }
 
 function removeObject(_name) {
-  if(nbObjects) {
-    objects= objects.filter(function( _object ) {
-      return _object.name !== _name;
-    });
-    nbObjects --;
-  }
+
+  objects= objects.filter(function( _object ) {
+    return _object.name !== _name;
+  });
+
+  if(!_name.endsWith('drawing')) nbObjects --;
 }
 
 function createPanel(_object) {
@@ -423,8 +422,8 @@ function createPanel(_object) {
   }
 }
 
-function addToMaster(_object) {
-  master.addButton(_object.name, function() {
+function addToLayers(_object) {
+  layers.addButton(_object.name, function() {
     createPanel(_object);
   });
 }
