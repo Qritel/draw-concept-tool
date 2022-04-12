@@ -5,7 +5,6 @@ This code uses 2 libraries :
 */
 
 var x1 = 0, y1 = 0, x2 = 0, y2 = 0;
-var init = 0;
 var clickEvent = '';
 var nbObjects = 0;
 var canvasWidth;
@@ -53,8 +52,7 @@ function setup() {
   master.setSize(188, windowHeight - windowHeight * 0.4 - 2);
   master.setDraggable(false);
   master.setCollapsible(false);
-  
-  resetObject();
+
   createPanel(object);
 
   //p5: Creates a canvas element in the document, and sets the dimensions of it in pixels
@@ -69,18 +67,18 @@ function setup() {
   button = createButton('⬛');
   button.position(0, 120);
   button.class('button');
-  button.mousePressed(function() { clickEvent='Draw_Rect'; init=0;});
+  button.mousePressed(function() { clickEvent='Draw_Rect'; });
 
   button = createButton('	▬▬');
   button.position(0, 160);
   button.class('button');
-  button.mousePressed(function() { clickEvent='Draw_Line'; init=0;});
+  button.mousePressed(function() { clickEvent='Draw_Line'; });
 
   button = createButton('Table');
   button.position(0, 200);
   button.class('button');
   button.mousePressed(function() {
-    addObject('Table', 70, 70, undefined, undefined, undefined, undefined, undefined, undefined, undefined,
+    addObject('Table ' + (nbObjects + 1), 70, 70, undefined, undefined, undefined, undefined, undefined, undefined, undefined,
     undefined, undefined, undefined, undefined, 2, 'chair', undefined, undefined);
     createPanel(object);
     addToMaster(object);
@@ -91,7 +89,7 @@ function setup() {
   button.position(0, 240);
   button.class('button');
   button.mousePressed(function() {
-    addObject('Door', 70, 70, undefined, undefined, undefined, 0, undefined, undefined, undefined,
+    addObject('Door ' + (nbObjects + 1), 70, 70, undefined, undefined, undefined, 0, undefined, undefined, undefined,
     undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined);
     createPanel(object);
     addToMaster(object);
@@ -102,7 +100,7 @@ function setup() {
   button.position(0, 280);
   button.class('button');
   button.mousePressed(function() {
-    addObject('Window', 70, 70, undefined, undefined, undefined, 0, undefined, undefined, undefined,
+    addObject('Window ' + (nbObjects + 1), 70, 70, undefined, undefined, undefined, 0, undefined, undefined, undefined,
     undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined);
     createPanel(object);
     addToMaster(object);
@@ -113,7 +111,7 @@ function setup() {
   button.position(0, 320);
   button.class('button');
   button.mousePressed(function() {
-    addObject('TV', 70, 70, undefined, undefined, undefined, 0, undefined, undefined, undefined,
+    addObject('TV ' + (nbObjects + 1), 70, 70, undefined, undefined, undefined, 0, undefined, undefined, undefined,
     undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined);
     createPanel(object);
     addToMaster(object);
@@ -124,7 +122,7 @@ function setup() {
   button.position(0, 360);
   button.class('button');
   button.mousePressed(function() {
-    addObject('Toilet', 70, 70, undefined, undefined, undefined, 0, undefined, undefined, undefined,
+    addObject('Toilet ' + (nbObjects + 1), 70, 70, undefined, undefined, undefined, 0, undefined, undefined, undefined,
     undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined);
     createPanel(object);
     addToMaster(object);
@@ -135,7 +133,7 @@ function setup() {
   button.position(0, 400);
   button.class('button');
   button.mousePressed(function() {
-    addObject('Sink', 70, 70, undefined, undefined, undefined, 0, undefined, undefined, undefined,
+    addObject('Sink ' + (nbObjects + 1), 70, 70, undefined, undefined, undefined, 0, undefined, undefined, undefined,
     undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined);
     createPanel(object);
     addToMaster(object);
@@ -146,7 +144,7 @@ function setup() {
   button.position(0, 440);
   button.class('button');
   button.mousePressed(function() {
-    addObject('Text', 90, 70, undefined, undefined, undefined, 0, undefined, undefined, undefined,
+    addObject('Text ' + (nbObjects + 1), 90, 70, undefined, undefined, undefined, 0, undefined, undefined, undefined,
     undefined, undefined, undefined, '#000000', undefined, undefined, 'Your text', 32);
     createPanel(object);
     addToMaster(object);
@@ -167,8 +165,8 @@ function draw() {
   
   if(nbObjects) {
     //browse all objects
-    objects.forEach(function(_object){
-      if(_object.name === 'Rectangle'){
+    objects.forEach(function(_object) {
+      if(_object.name.startsWith('Rectangle')) {
         push();
         strokeWeight(3);
         stroke(_object.strokeColor);
@@ -180,7 +178,7 @@ function draw() {
           _object.topLeftRadius, _object.topRightRadius, _object.bottomRightRadius, _object.bottomLeftRadius);
         pop();
       }
-      else if(_object.name === 'Line'){
+      else if(_object.name.startsWith('Line')) {
         push();
         strokeWeight(_object.w);
         stroke(_object.color);
@@ -190,7 +188,7 @@ function draw() {
         rect(0,0,_object.l,1);
         pop();
       }
-      else if(_object.name === 'Table'){
+      else if(_object.name.startsWith('Table')) {
         image(tableimg,_object.x,_object.y,100,73);
 
         // draw chairs arranged in a circle
@@ -223,7 +221,7 @@ function draw() {
           }
         }
       }
-      else if(_object.name === 'Door'){
+      else if(_object.name.startsWith('Door')) {
         push();
         imageMode(CENTER);
         translate(_object.x, _object.y);
@@ -231,7 +229,7 @@ function draw() {
         image(doorimg, 0, 0, 200, 75);
         pop();
       }
-      else if(_object.name === 'Window'){
+      else if(_object.name.startsWith('Window')) {
         push();
         imageMode(CENTER);
         translate(_object.x, _object.y);
@@ -239,7 +237,7 @@ function draw() {
         image(windowimg, 0, 0, 200, 150);
         pop();
       }
-      else if(_object.name === 'TV'){
+      else if(_object.name.startsWith('TV')) {
         push();
         imageMode(CENTER);
         translate(_object.x, _object.y);
@@ -247,7 +245,7 @@ function draw() {
         image(tvimg, 0, 0, 120, 75);
         pop();
       }
-      else if(_object.name === 'Toilet'){
+      else if(_object.name.startsWith('Toilet')) {
         push();
         imageMode(CENTER);
         translate(_object.x, _object.y);
@@ -255,7 +253,7 @@ function draw() {
         image(toiletimg, 0, 0, 55, 70);
         pop();
       }
-      else if(_object.name === 'Sink'){
+      else if(_object.name.startsWith('Sink')) {
         push();
         imageMode(CENTER);
         translate(_object.x, _object.y);
@@ -263,7 +261,7 @@ function draw() {
         image(sinkimg, 0, 0, 70, 85);
         pop();
       }
-      else if(_object.name === 'Text'){
+      else if(_object.name.startsWith('Text')) {
         push();
         noStroke();
         textSize(_object.size);
@@ -273,112 +271,79 @@ function draw() {
         text(_object.inputText, 0, 0);
         pop();
       }
-      else if(_object.name === 'Ellipse'){
-        //Two points before rect/line drawn - go to 'function mouseClicked()'
-        ellipse(_object.x, _object.y,2);
-      }
     });
-  }
-
-}
-
-//p5 function: called once after a mouse button has been pressed and then released.
-function mouseClicked(){
-  if(clickEvent == 'Draw_Rect' || clickEvent == 'Draw_Line'){
-    //when you click on the button rect / li, this click is counted
-    if(init == 0 ){
-      init = 1;
-    }
-    //first point
-    else if(x1 == 0 && y1 == 0){
-      x1 = mouseX;
-      y1 = mouseY;
-      resetObject();
-      object.x = x1;
-      object.y = y1;
-      object.name = 'Ellipse';
-      objects.push(object);
-      nbObjects++;
-      redraw();
-    }
-    //second point
-    else if(x2 == 0 && y2 == 0){
-
-      objects.pop();
-      nbObjects--;
-      x2 = mouseX;
-      y2 = mouseY;
-      if(clickEvent == 'Draw_Rect'){
-        addObject('Rectangle', x1+(x2-x1)/2, y1+(y2-y1)/2, abs(x2-x1), abs(y2-y1), undefined, 0, 0, 0, 0,
-          0, '#000000', '#ffffff', undefined, undefined, undefined, undefined, undefined);
-        createPanel(object);
-        addToMaster(object);
-        redraw();
-      }
-      if(clickEvent == 'Draw_Line'){
-        addObject('Line', x1+(x2-x1)/2, y1+(y2-y1)/2, 2, undefined, parseInt(sqrt((x1-x2)*(x1-x2)+(y1-y2)*(y1-y2)))
-        , atan((y2-y1)/(x2-x1))*180/PI, undefined, undefined, undefined,undefined, undefined, undefined, '#000000', 
-        undefined, undefined, undefined, undefined);
-        createPanel(object);
-        addToMaster(object);
-        redraw();
-      }
-
-      x1 = 0, y1 = 0, x2 = 0, y2 = 0;
-      clickEvent = '';
-
-    }
   }
 }
 
 //p5 function: called once after every time a mouse button is pressed.
 function mousePressed() {
-  if(clickEvent == 'Draw_Rect' || clickEvent == 'Draw_Line'){
-    // x1 = mouseX;
-    // y1 = mouseY;
-  }
-  else {
-    diffPositionX = mouseX - panel.getValue('x');
-    diffPositionY = mouseY - panel.getValue('y');
+  if(mouseX > 0 && mouseX < canvasWidth && mouseY > 0 && mouseY < canvasHeight) {
+    if(clickEvent == 'Draw_Rect' || clickEvent == 'Draw_Line') {
+      x1 = mouseX;
+      y1 = mouseY;
+    }
+    else {
+      diffPositionX = mouseX - panel.getValue('x');
+      diffPositionY = mouseY - panel.getValue('y');
+    }
   }
 }
 
 //p5 function: called once every time the mouse moves and a mouse button is pressed.
-function mouseDragged(){
-  if(clickEvent == 'Draw_Rect' || clickEvent == 'Draw_Line'){
-    /*x2 = mouseX;
-    y2 = mouseY;
-    resetObject();
-    object.x = x1+(x2-x1)/2;
-    object.y = y1+(y2-y1)/2;
-    object.w = abs(x2-x1);
-    object.h = abs(y2-y1);
-    object.angle = 0;
-    object.topLeftRadius = 1;
-    object.topRightRadius = 1;
-    object.bottomRightRadius = 1;
-    object.bottomLeftRadius = 1;
-    object.strokeColor = '#000000';
-    object.fillColor = '#ffffff';
-    object.name = 'Rectangle';
-    objects.push(object);
-    nbObjects ++;
-    redraw();*/
-  }
-  else if(mouseX > 0 && mouseX < canvasWidth &&
-     mouseY > 0 && mouseY < canvasHeight
-  ){
-    panel.setValue('x', parseInt(mouseX - diffPositionX));
-    panel.setValue('y', parseInt(mouseY - diffPositionY));
+function mouseDragged() {
+  if(mouseX > 0 && mouseX < canvasWidth && mouseY > 0 && mouseY < canvasHeight) {
+    if(clickEvent == 'Draw_Rect' || clickEvent == 'Draw_Line') {
+      x2 = mouseX;
+      y2 = mouseY;
+      if(clickEvent == 'Draw_Rect') {
+        removeObject('Rectangle drawing');
+        addObject('Rectangle drawing', x1+(x2-x1)/2, y1+(y2-y1)/2, abs(x2-x1), abs(y2-y1), undefined, 0, 0, 0, 0,
+        0, '#000000', '#ffffff', undefined, undefined, undefined, undefined, undefined);
+      }
+      if(clickEvent == 'Draw_Line') {
+        removeObject('Line drawing');
+        addObject('Line drawing', x1+(x2-x1)/2, y1+(y2-y1)/2, 2, undefined, parseInt(sqrt((x1-x2)*(x1-x2)+(y1-y2)*(y1-y2)))
+          , atan((y2-y1)/(x2-x1))*180/PI, undefined, undefined, undefined,undefined, undefined, undefined, '#000000', 
+          undefined, undefined, undefined, undefined);
+      }
+      redraw();
+    }
+    else {
+      panel.setValue('x', parseInt(mouseX - diffPositionX));
+      panel.setValue('y', parseInt(mouseY - diffPositionY));
+    }
   }
 }
 
-function resetObject(){
+function mouseReleased() {
+  if(mouseX > 0 && mouseX < canvasWidth && mouseY > 0 && mouseY < canvasHeight) {
+    if(clickEvent == 'Draw_Rect' || clickEvent == 'Draw_Line') {
+      if(clickEvent == 'Draw_Rect') {
+        removeObject('Rectangle drawing');
+        addObject('Rectangle ' + (nbObjects + 1), x1+(x2-x1)/2, y1+(y2-y1)/2, abs(x2-x1), abs(y2-y1), undefined, 0, 0, 0, 0,
+        0, '#000000', '#ffffff', undefined, undefined, undefined, undefined, undefined);
+      }
+      else if(clickEvent == 'Draw_Line') {
+        removeObject('Line drawing');
+        addObject('Line ' + (nbObjects + 1), x1+(x2-x1)/2, y1+(y2-y1)/2, 2, undefined, parseInt(sqrt((x1-x2)*(x1-x2)+(y1-y2)*(y1-y2)))
+        , atan((y2-y1)/(x2-x1))*180/PI, undefined, undefined, undefined,undefined, undefined, undefined, '#000000', 
+        undefined, undefined, undefined, undefined);
+      }
+      createPanel(object);
+      addToMaster(object);
+      redraw();
+      x1 = 0, y1 = 0, x2 = 0, y2 = 0;
+      clickEvent = '';
+    }
+  }
+}
+
+function resetObject() {
   object = {}
 }
 
 function addObject(_name, _x, _y, _w, _h, _l, _angle, _topLeftRadius, _topRightRadius, _bottomRightRadius,
-_bottomLeftRadius, _strokeColor, _fillColor, _color, _numPlace, _typeChair, _inputText, _size){
+_bottomLeftRadius, _strokeColor, _fillColor, _color, _numPlace, _typeChair, _inputText, _size) {
 
   resetObject();
   
@@ -408,15 +373,23 @@ _bottomLeftRadius, _strokeColor, _fillColor, _color, _numPlace, _typeChair, _inp
       delete object[key];
     }
   });
-
-  objects.push(object);
+  
   nbObjects ++;
-
+  objects.push(object);
 }
 
-function createPanel(_object){
+function removeObject(_name) {
+  if(nbObjects) {
+    objects= objects.filter(function( _object ) {
+      return _object.name !== _name;
+    });
+    nbObjects --;
+  }
+}
 
-  if(nbObjects>0){
+function createPanel(_object) {
+
+  if(nbObjects>0) {
     panel.destroy();
   }
 
@@ -424,7 +397,7 @@ function createPanel(_object){
   panel.setSize(188, windowHeight * 0.4);
   panel.setDraggable(false);
   panel.setCollapsible(false);
-  panel.setGlobalChangeHandler(function(){redraw()});
+  panel.setGlobalChangeHandler(function() {redraw()});
   panel.bindNumber('x', 0, windowWidth, parseInt(_object.x), 1, _object);
   panel.bindNumber('y', 0, windowHeight, parseInt(_object.y), 1, _object);
   panel.bindNumber('w', 0, windowWidth, parseInt(_object.w), 1, _object);
@@ -443,16 +416,15 @@ function createPanel(_object){
   panel.bindTextArea('inputText', _object.inputText, _object);
   panel.bindRange('size', 0, 100, _object.size, 1, _object);
 
-  for(control in panel._controls){
-    if(!Object.keys(object).includes(control)){
+  for(control in panel._controls) {
+    if(!Object.keys(object).includes(control)) {
       panel.hideControl(control);
     }
   }
-
 }
 
-function addToMaster(_object){
-  master.addButton(_object.name, function(){
+function addToMaster(_object) {
+  master.addButton(_object.name, function() {
     createPanel(_object);
   });
 }

@@ -10,10 +10,10 @@ Project Description
 - [ ] Add zoom tool  
 - [ ] Implement Export/Import from JSON  
 - [ ] Implement rollback feature  
-- [ ] Implement delete feature  
 
 ### In Progress
 
+- [ ] Implement delete feature  
 - [ ] improve user interface design  
 - [ ] ⭐Code refactoring⭐  
 
