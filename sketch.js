@@ -433,13 +433,15 @@ function refreshLayers() {
   layers.setCollapsible(false);
 
   objects.slice().reverse().forEach(function(_object) {
+
     layers.addButton(_object.name, function() {
       createPanel(_object);
     });
-  });
 
-  // layers.addButton('🗑️', function(){
-  //   removeObject(_object.name);
-  //   redraw();
-  // });
+    layers.addButton('🗑️', function(){
+      removeObject(_object.name);
+      refreshLayers();
+      redraw();
+    });
+  });
 }
