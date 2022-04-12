@@ -48,12 +48,9 @@ function preload() {
 function setup() {
 
   QuickSettings.useExtStyleSheet();
-  layers = QuickSettings.create(windowWidth - 190, 0, 'Layers');
-  layers.setSize(188, windowHeight - windowHeight * 0.4 - 2);
-  layers.setDraggable(false);
-  layers.setCollapsible(false);
 
   createPanel(object);
+  refreshLayers();
 
   //p5: Creates a canvas element in the document, and sets the dimensions of it in pixels
   canvasX = 100;
@@ -81,7 +78,7 @@ function setup() {
     addObject('Table ' + (nbObjects + 1), 70, 70, undefined, undefined, undefined, undefined, undefined, undefined, undefined,
     undefined, undefined, undefined, undefined, 2, 'chair', undefined, undefined);
     createPanel(object);
-    addToLayers(object);
+    refreshLayers();
     redraw();
   });
 
@@ -92,7 +89,7 @@ function setup() {
     addObject('Door ' + (nbObjects + 1), 70, 70, undefined, undefined, undefined, 0, undefined, undefined, undefined,
     undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined);
     createPanel(object);
-    addToLayers(object);
+    refreshLayers();
     redraw();
   });
 
@@ -103,7 +100,7 @@ function setup() {
     addObject('Window ' + (nbObjects + 1), 70, 70, undefined, undefined, undefined, 0, undefined, undefined, undefined,
     undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined);
     createPanel(object);
-    addToLayers(object);
+    refreshLayers();
     redraw();
   });
 
@@ -114,7 +111,7 @@ function setup() {
     addObject('TV ' + (nbObjects + 1), 70, 70, undefined, undefined, undefined, 0, undefined, undefined, undefined,
     undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined);
     createPanel(object);
-    addToLayers(object);
+    refreshLayers();
     redraw();
   });
 
@@ -125,7 +122,7 @@ function setup() {
     addObject('Toilet ' + (nbObjects + 1), 70, 70, undefined, undefined, undefined, 0, undefined, undefined, undefined,
     undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined);
     createPanel(object);
-    addToLayers(object);
+    refreshLayers();
     redraw();
   });
 
@@ -136,7 +133,7 @@ function setup() {
     addObject('Sink ' + (nbObjects + 1), 70, 70, undefined, undefined, undefined, 0, undefined, undefined, undefined,
     undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined);
     createPanel(object);
-    addToLayers(object);
+    refreshLayers();
     redraw();
   });
 
@@ -147,7 +144,7 @@ function setup() {
     addObject('Text ' + (nbObjects + 1), 90, 70, undefined, undefined, undefined, 0, undefined, undefined, undefined,
     undefined, undefined, undefined, '#000000', undefined, undefined, 'Your text', 32);
     createPanel(object);
-    addToLayers(object);
+    refreshLayers();
     redraw();
   });
 
@@ -330,7 +327,7 @@ function mouseReleased() {
         undefined, undefined, undefined, undefined);
       }
       createPanel(object);
-      addToLayers(object);
+      refreshLayers();
       redraw();
       x1 = 0, y1 = 0, x2 = 0, y2 = 0;
       clickEvent = '';
@@ -373,7 +370,9 @@ _bottomLeftRadius, _strokeColor, _fillColor, _color, _numPlace, _typeChair, _inp
       delete object[key];
     }
   });
+
   if(!_name.endsWith('drawing')) nbObjects ++;
+  
   objects.push(object);
 }
 
@@ -422,8 +421,25 @@ function createPanel(_object) {
   }
 }
 
-function addToLayers(_object) {
-  layers.addButton(_object.name, function() {
-    createPanel(_object);
+function refreshLayers() {
+
+  if(nbObjects>0) {
+    layers.destroy();
+  }
+
+  layers = QuickSettings.create(windowWidth - 190, 0, 'Layers');
+  layers.setSize(188, windowHeight - windowHeight * 0.4 - 2);
+  layers.setDraggable(false);
+  layers.setCollapsible(false);
+
+  objects.slice().reverse().forEach(function(_object) {
+    layers.addButton(_object.name, function() {
+      createPanel(_object);
+    });
   });
+
+  // layers.addButton('🗑️', function(){
+  //   removeObject(_object.name);
+  //   redraw();
+  // });
 }
