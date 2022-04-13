@@ -377,12 +377,9 @@ _bottomLeftRadius, _strokeColor, _fillColor, _color, _numPlace, _typeChair, _inp
 }
 
 function removeObject(_name) {
-
   objects= objects.filter(function( _object ) {
     return _object.name !== _name;
   });
-
-  if(!_name.endsWith('drawing')) id --;
 }
 
 function createPanel(_object) {
