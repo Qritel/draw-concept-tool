@@ -14,12 +14,12 @@ Project Description
 
 ### In Progress
 
-- [ ] Move Layers Up And Down  
 - [ ] improve user interface design  
 - [ ] ⭐Code refactoring⭐  
 
 ### Done ✓
 
+- [x] Move Layers Up And Down  
 - [x] Implement delete feature  
 - [x] Implement a color picker  
 - [x] Add new feature: move objects with mouse  

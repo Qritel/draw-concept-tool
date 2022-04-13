@@ -6,7 +6,7 @@ This code uses 2 libraries :
 
 var x1 = 0, y1 = 0, x2 = 0, y2 = 0;
 var clickEvent = '';
-var nbObjects = 0;
+var id = 1;
 var canvasWidth;
 var canvasHeight;
 var canvasX;
@@ -75,7 +75,7 @@ function setup() {
   button.position(0, 200);
   button.class('button');
   button.mousePressed(function() {
-    addObject('Table ' + (nbObjects + 1), 70, 70, undefined, undefined, undefined, undefined, undefined, undefined, undefined,
+    addObject('Table ' + id, 70, 70, undefined, undefined, undefined, undefined, undefined, undefined, undefined,
     undefined, undefined, undefined, undefined, 2, 'chair', undefined, undefined);
     createPanel(object);
     refreshLayers();
@@ -86,7 +86,7 @@ function setup() {
   button.position(0, 240);
   button.class('button');
   button.mousePressed(function() {
-    addObject('Door ' + (nbObjects + 1), 70, 70, undefined, undefined, undefined, 0, undefined, undefined, undefined,
+    addObject('Door ' + id, 70, 70, undefined, undefined, undefined, 0, undefined, undefined, undefined,
     undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined);
     createPanel(object);
     refreshLayers();
@@ -97,7 +97,7 @@ function setup() {
   button.position(0, 280);
   button.class('button');
   button.mousePressed(function() {
-    addObject('Window ' + (nbObjects + 1), 70, 70, undefined, undefined, undefined, 0, undefined, undefined, undefined,
+    addObject('Window ' + id, 70, 70, undefined, undefined, undefined, 0, undefined, undefined, undefined,
     undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined);
     createPanel(object);
     refreshLayers();
@@ -108,7 +108,7 @@ function setup() {
   button.position(0, 320);
   button.class('button');
   button.mousePressed(function() {
-    addObject('TV ' + (nbObjects + 1), 70, 70, undefined, undefined, undefined, 0, undefined, undefined, undefined,
+    addObject('TV ' + id, 70, 70, undefined, undefined, undefined, 0, undefined, undefined, undefined,
     undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined);
     createPanel(object);
     refreshLayers();
@@ -119,7 +119,7 @@ function setup() {
   button.position(0, 360);
   button.class('button');
   button.mousePressed(function() {
-    addObject('Toilet ' + (nbObjects + 1), 70, 70, undefined, undefined, undefined, 0, undefined, undefined, undefined,
+    addObject('Toilet ' + id, 70, 70, undefined, undefined, undefined, 0, undefined, undefined, undefined,
     undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined);
     createPanel(object);
     refreshLayers();
@@ -130,7 +130,7 @@ function setup() {
   button.position(0, 400);
   button.class('button');
   button.mousePressed(function() {
-    addObject('Sink ' + (nbObjects + 1), 70, 70, undefined, undefined, undefined, 0, undefined, undefined, undefined,
+    addObject('Sink ' + id, 70, 70, undefined, undefined, undefined, 0, undefined, undefined, undefined,
     undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined);
     createPanel(object);
     refreshLayers();
@@ -141,7 +141,7 @@ function setup() {
   button.position(0, 440);
   button.class('button');
   button.mousePressed(function() {
-    addObject('Text ' + (nbObjects + 1), 90, 70, undefined, undefined, undefined, 0, undefined, undefined, undefined,
+    addObject('Text ' + id, 90, 70, undefined, undefined, undefined, 0, undefined, undefined, undefined,
     undefined, undefined, undefined, '#000000', undefined, undefined, 'Your text', 32);
     createPanel(object);
     refreshLayers();
@@ -160,7 +160,7 @@ function draw() {
   stroke('#d8d8d8');
   rect(0,0,canvasWidth-1,canvasHeight-1);
   
-  if(nbObjects || clickEvent) {
+  if(id || clickEvent) {
     //browse all objects
     objects.forEach(function(_object) {
       if(_object.name.startsWith('Rectangle')) {
@@ -317,12 +317,12 @@ function mouseReleased() {
     if(clickEvent == 'Draw_Rect' || clickEvent == 'Draw_Line') {
       if(clickEvent == 'Draw_Rect') {
         removeObject('Rectangle drawing');
-        addObject('Rectangle ' + (nbObjects + 1), x1+(x2-x1)/2, y1+(y2-y1)/2, abs(x2-x1), abs(y2-y1), undefined, 0, 0, 0, 0,
+        addObject('Rectangle ' + id, x1+(x2-x1)/2, y1+(y2-y1)/2, abs(x2-x1), abs(y2-y1), undefined, 0, 0, 0, 0,
         0, '#000000', '#ffffff', undefined, undefined, undefined, undefined, undefined);
       }
       else if(clickEvent == 'Draw_Line') {
         removeObject('Line drawing');
-        addObject('Line ' + (nbObjects + 1), x1+(x2-x1)/2, y1+(y2-y1)/2, 2, undefined, parseInt(sqrt((x1-x2)*(x1-x2)+(y1-y2)*(y1-y2)))
+        addObject('Line ' + id, x1+(x2-x1)/2, y1+(y2-y1)/2, 2, undefined, parseInt(sqrt((x1-x2)*(x1-x2)+(y1-y2)*(y1-y2)))
         , atan((y2-y1)/(x2-x1))*180/PI, undefined, undefined, undefined,undefined, undefined, undefined, '#000000', 
         undefined, undefined, undefined, undefined);
       }
@@ -371,7 +371,7 @@ _bottomLeftRadius, _strokeColor, _fillColor, _color, _numPlace, _typeChair, _inp
     }
   });
 
-  if(!_name.endsWith('drawing')) nbObjects ++;
+  if(!_name.endsWith('drawing')) id ++;
   
   objects.push(object);
 }
@@ -382,12 +382,12 @@ function removeObject(_name) {
     return _object.name !== _name;
   });
 
-  if(!_name.endsWith('drawing')) nbObjects --;
+  if(!_name.endsWith('drawing')) id --;
 }
 
 function createPanel(_object) {
 
-  if(nbObjects>0) {
+  if(layers) {
     panel.destroy();
   }
 
@@ -423,7 +423,7 @@ function createPanel(_object) {
 
 function refreshLayers() {
 
-  if(nbObjects>0) {
+  if(layers) {
     layers.destroy();
   }
 
@@ -431,6 +431,7 @@ function refreshLayers() {
   layers.setSize(188, windowHeight - windowHeight * 0.4 - 2);
   layers.setDraggable(false);
   layers.setCollapsible(false);
+  layers.setGlobalChangeHandler(refreshLayers);
 
   objects.slice().reverse().forEach(function(_object) {
 
@@ -440,8 +441,30 @@ function refreshLayers() {
 
     layers.addButton('🗑️', function(){
       removeObject(_object.name);
-      refreshLayers();
+      redraw();
+    });
+
+    layers.addButton('▲', function(){
+      moveUpObject(_object.name);
+      redraw();
+    });
+
+    layers.addButton('▼', function(){
+      moveDownObject(_object.name);
       redraw();
     });
   });
+}
+
+function moveUpObject(name){
+  const index = objects.findIndex(_object => _object.name === name);
+  const len = objects.length;
+  if(index < len - 1) 
+    [objects[index], objects[index + 1]] = [objects[index + 1], objects[index]];
+}
+
+function moveDownObject(name){
+  const index = objects.findIndex(_object => _object.name === name);
+  if(index > 0) 
+    [objects[index], objects[index - 1]] = [objects[index - 1], objects[index]];
 }
