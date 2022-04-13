@@ -391,7 +391,7 @@ function removeObject(_name) {
 
 function createPanel(_object) {
 
-  if(layers) {
+  if(panel) {
     panel.destroy();
   }
 
@@ -422,7 +422,7 @@ function createPanel(_object) {
   panel.bindRange('size', 0, 100, _object.size, 1, _object);
 
   for(control in panel._controls) {
-    if(!Object.keys(object).includes(control)) {
+    if(!Object.keys(_object).includes(control)) {
       panel.hideControl(control);
     }
   }
