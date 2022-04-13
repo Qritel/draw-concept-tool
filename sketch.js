@@ -79,7 +79,7 @@ function setup() {
   button.class('button');
   button.mousePressed(function() {
     addObject('Table ' + id, 70, 70, undefined, undefined, undefined, undefined, undefined, undefined, undefined,
-    undefined, undefined, undefined, undefined, 2, 'chair', undefined, undefined);
+    undefined, undefined, undefined, undefined, undefined, undefined, 2, 'chair', undefined, undefined);
     createPanel(object);
     refreshLayers();
     redraw();
@@ -90,7 +90,7 @@ function setup() {
   button.class('button');
   button.mousePressed(function() {
     addObject('Door ' + id, 70, 70, undefined, undefined, undefined, 0, undefined, undefined, undefined,
-    undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined);
+    undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined);
     createPanel(object);
     refreshLayers();
     redraw();
@@ -101,7 +101,7 @@ function setup() {
   button.class('button');
   button.mousePressed(function() {
     addObject('Window ' + id, 70, 70, undefined, undefined, undefined, 0, undefined, undefined, undefined,
-    undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined);
+    undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined);
     createPanel(object);
     refreshLayers();
     redraw();
@@ -112,7 +112,7 @@ function setup() {
   button.class('button');
   button.mousePressed(function() {
     addObject('TV ' + id, 70, 70, undefined, undefined, undefined, 0, undefined, undefined, undefined,
-    undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined);
+    undefined, undefined, undefined, undefined,undefined,  undefined, undefined, undefined, undefined, undefined);
     createPanel(object);
     refreshLayers();
     redraw();
@@ -123,7 +123,7 @@ function setup() {
   button.class('button');
   button.mousePressed(function() {
     addObject('Toilet ' + id, 70, 70, undefined, undefined, undefined, 0, undefined, undefined, undefined,
-    undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined);
+    undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined);
     createPanel(object);
     refreshLayers();
     redraw();
@@ -134,7 +134,7 @@ function setup() {
   button.class('button');
   button.mousePressed(function() {
     addObject('Sink ' + id, 70, 70, undefined, undefined, undefined, 0, undefined, undefined, undefined,
-    undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined);
+    undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined);
     createPanel(object);
     refreshLayers();
     redraw();
@@ -145,7 +145,7 @@ function setup() {
   button.class('button');
   button.mousePressed(function() {
     addObject('Text ' + id, 90, 70, undefined, undefined, undefined, 0, undefined, undefined, undefined,
-    undefined, undefined, undefined, '#000000', undefined, undefined, 'Your text', 32);
+    undefined, undefined, undefined, undefined, undefined, '#000000', undefined, undefined, 'Your text', 32);
     createPanel(object);
     refreshLayers();
     redraw();
@@ -171,6 +171,8 @@ function draw() {
         strokeWeight(3);
         stroke(_object.strokeColor);
         fill(_object.fillColor);
+        if(_object.noFill) noFill();
+        if(_object.noStroke) noStroke();
         rectMode(CENTER); 
         translate(_object.x, _object.y);
         rotate(_object.angle*PI/180);
@@ -298,13 +300,13 @@ function mouseDragged() {
       if(clickEvent == 'Draw_Rect') {
         removeObject('Rectangle drawing');
         addObject('Rectangle drawing', x1+(x2-x1)/2, y1+(y2-y1)/2, abs(x2-x1), abs(y2-y1), undefined, 0, 0, 0, 0,
-        0, '#000000', '#ffffff', undefined, undefined, undefined, undefined, undefined);
+        0, '#000000', false, '#ffffff', false, undefined, undefined, undefined, undefined, undefined);
       }
       if(clickEvent == 'Draw_Line') {
         removeObject('Line drawing');
         addObject('Line drawing', x1+(x2-x1)/2, y1+(y2-y1)/2, 2, undefined, parseInt(sqrt((x1-x2)*(x1-x2)+(y1-y2)*(y1-y2)))
-          , atan((y2-y1)/(x2-x1))*180/PI, undefined, undefined, undefined,undefined, undefined, undefined, '#000000', 
-          undefined, undefined, undefined, undefined);
+          , atan((y2-y1)/(x2-x1))*180/PI, undefined, undefined, undefined,undefined, undefined, undefined, undefined, 
+          undefined, '#000000', undefined, undefined, undefined, undefined);
       }
       redraw();
     }
@@ -321,13 +323,13 @@ function mouseReleased() {
       if(clickEvent == 'Draw_Rect') {
         removeObject('Rectangle drawing');
         addObject('Rectangle ' + id, x1+(x2-x1)/2, y1+(y2-y1)/2, abs(x2-x1), abs(y2-y1), undefined, 0, 0, 0, 0,
-        0, '#000000', '#ffffff', undefined, undefined, undefined, undefined, undefined);
+        0, '#000000', false, '#ffffff', false, undefined, undefined, undefined, undefined, undefined);
       }
       else if(clickEvent == 'Draw_Line') {
         removeObject('Line drawing');
         addObject('Line ' + id, x1+(x2-x1)/2, y1+(y2-y1)/2, 2, undefined, parseInt(sqrt((x1-x2)*(x1-x2)+(y1-y2)*(y1-y2)))
-        , atan((y2-y1)/(x2-x1))*180/PI, undefined, undefined, undefined,undefined, undefined, undefined, '#000000', 
-        undefined, undefined, undefined, undefined);
+        , atan((y2-y1)/(x2-x1))*180/PI, undefined, undefined, undefined,undefined, undefined, undefined, undefined, 
+        undefined, '#000000', undefined, undefined, undefined, undefined);
       }
       createPanel(object);
       refreshLayers();
@@ -343,7 +345,7 @@ function resetObject() {
 }
 
 function addObject(_name, _x, _y, _w, _h, _l, _angle, _topLeftRadius, _topRightRadius, _bottomRightRadius,
-_bottomLeftRadius, _strokeColor, _fillColor, _color, _numPlace, _typeChair, _inputText, _size) {
+_bottomLeftRadius, _strokeColor, _noStroke, _fillColor, _noFill, _color, _numPlace, _typeChair, _inputText, _size) {
 
   resetObject();
   
@@ -360,7 +362,9 @@ _bottomLeftRadius, _strokeColor, _fillColor, _color, _numPlace, _typeChair, _inp
     bottomRightRadius : _bottomRightRadius,
     bottomLeftRadius : _bottomLeftRadius,
     strokeColor : _strokeColor,
+    noStroke : _noStroke,
     fillColor : _fillColor,
+    noFill : _noFill,
     color : _color, // color for text and line
     numPlace : _numPlace,
     typeChair : _typeChair,
@@ -396,6 +400,7 @@ function createPanel(_object) {
   panel.setDraggable(false);
   panel.setCollapsible(false);
   panel.setGlobalChangeHandler(function() {redraw()});
+
   panel.bindNumber('x', 0, windowWidth, parseInt(_object.x), 1, _object);
   panel.bindNumber('y', 0, windowHeight, parseInt(_object.y), 1, _object);
   panel.bindNumber('w', 0, windowWidth, parseInt(_object.w), 1, _object);
@@ -407,7 +412,9 @@ function createPanel(_object) {
   panel.bindNumber('bottomRightRadius', 0, 200, _object.bottomRightRadius, 1, _object);
   panel.bindNumber('bottomLeftRadius', 0, 200, _object.bottomLeftRadius, 1, _object);
   panel.bindColor('strokeColor', _object.strokeColor, _object);
+  panel.bindBoolean('noStroke', _object.noStroke, _object);
   panel.bindColor('fillColor', _object.fillColor, _object);
+  panel.bindBoolean('noFill', _object.noFill, _object);
   panel.bindColor('color', _object.color, _object);
   panel.bindRange('numPlace', 1, 10, _object.numPlace, 1, _object);
   panel.bindDropDown('typeChair',  ['chair','sofa'],  _object);
