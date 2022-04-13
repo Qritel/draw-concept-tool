@@ -28,6 +28,9 @@ var object = {};
 
 //A panel lists the names of the created objects
 var layers;
+var layerUp;
+var layerDown;
+var layerDelete;
 
 //A panel lists the properties of selected object
 var panel;
@@ -425,10 +428,28 @@ function refreshLayers() {
   }
 
   layers = QuickSettings.create(windowWidth - 190, 0, 'Layers');
-  layers.setSize(188, windowHeight - windowHeight * 0.4 - 2);
+  layers.setSize(108, windowHeight - windowHeight * 0.4 - 2);
   layers.setDraggable(false);
   layers.setCollapsible(false);
   layers.setGlobalChangeHandler(refreshLayers);
+
+  layerUp = QuickSettings.create(windowWidth - 82, 0, ' ');
+  layerUp.setSize(26, windowHeight - windowHeight * 0.4 - 2);
+  layerUp.setDraggable(false);
+  layerUp.setCollapsible(false);
+  layerUp.setGlobalChangeHandler(refreshLayers);
+
+  layerDown = QuickSettings.create(windowWidth - 56, 0, ' ');
+  layerDown.setSize(26, windowHeight - windowHeight * 0.4 - 2);
+  layerDown.setDraggable(false);
+  layerDown.setCollapsible(false);
+  layerDown.setGlobalChangeHandler(refreshLayers);
+
+  layerDelete = QuickSettings.create(windowWidth - 30, 0, ' ');
+  layerDelete.setSize(28, windowHeight - windowHeight * 0.4 - 2);
+  layerDelete.setDraggable(false);
+  layerDelete.setCollapsible(false);
+  layerDelete.setGlobalChangeHandler(refreshLayers);
 
   objects.slice().reverse().forEach(function(_object) {
 
@@ -436,18 +457,18 @@ function refreshLayers() {
       createPanel(_object);
     });
 
-    layers.addButton('🗑️', function(){
-      removeObject(_object.name);
-      redraw();
-    });
-
-    layers.addButton('▲', function(){
+    layerUp.addButton('🡡', function(){
       moveUpObject(_object.name);
       redraw();
     });
 
-    layers.addButton('▼', function(){
+    layerDown.addButton('🡣', function(){
       moveDownObject(_object.name);
+      redraw();
+    });
+    
+    layerDelete.addButton('🗑️', function(){
+      removeObject(_object.name);
       redraw();
     });
   });

@@ -8,7 +8,7 @@
   -webkit-user-select: none;
   color: #000000;
   border: none;
-  padding: 1px;
+  padding: 1px 0px;
 }
 .qs_content {
   background-color: #d6d6d6;
@@ -23,6 +23,7 @@
   font-weight: bold;
   border: none;
   color: #000000;
+  height: 13.6px;
 }
 .qs_container {
   margin: 1px 0px 1px;
