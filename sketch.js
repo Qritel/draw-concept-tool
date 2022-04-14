@@ -175,7 +175,8 @@ function draw() {
         if(_object.noStroke) noStroke();
         rectMode(CENTER); 
         translate(_object.x, _object.y);
-        rotate(_object.angle*PI/180);
+        angleMode(DEGREES);
+        rotate(_object.angle);
         rect(0, 0, _object.w, _object.h,
           _object.topLeftRadius, _object.topRightRadius, _object.bottomRightRadius, _object.bottomLeftRadius);
         pop();
@@ -186,7 +187,8 @@ function draw() {
         stroke(_object.color);
         rectMode(CENTER); 
         translate(_object.x, _object.y);
-        rotate(_object.angle*PI/180);
+        angleMode(DEGREES);
+        rotate(_object.angle);
         rect(0,0,_object.l,1);
         pop();
       }
@@ -207,6 +209,7 @@ function draw() {
               push();
               imageMode(CENTER);
               translate(x+100, y+65);
+              angleMode(RADIANS);
               rotate(angle+PI/2);
               image(chairimg,0, 0, 200, 130);
               pop();
@@ -216,6 +219,7 @@ function draw() {
               push();
               imageMode(CENTER);
               translate(x+100, y+65);
+              angleMode(RADIANS);
               rotate(angle+PI/2);
               image(sofaimg,0, 0, 200, 130);
               pop();
@@ -227,7 +231,8 @@ function draw() {
         push();
         imageMode(CENTER);
         translate(_object.x, _object.y);
-        rotate((_object.angle/45)*PI/2);
+        angleMode(DEGREES);
+        rotate(_object.angle);
         image(doorimg, 0, 0, 200, 75);
         pop();
       }
@@ -235,7 +240,8 @@ function draw() {
         push();
         imageMode(CENTER);
         translate(_object.x, _object.y);
-        rotate((_object.angle/45)*PI/2);
+        angleMode(DEGREES);
+        rotate(_object.angle);
         image(windowimg, 0, 0, 200, 150);
         pop();
       }
@@ -243,7 +249,8 @@ function draw() {
         push();
         imageMode(CENTER);
         translate(_object.x, _object.y);
-        rotate((_object.angle/45)*PI/2);
+        angleMode(DEGREES);
+        rotate(_object.angle);
         image(tvimg, 0, 0, 120, 75);
         pop();
       }
@@ -251,7 +258,8 @@ function draw() {
         push();
         imageMode(CENTER);
         translate(_object.x, _object.y);
-        rotate((_object.angle/45)*PI/2);
+        angleMode(DEGREES);
+        rotate(_object.angle);
         image(toiletimg, 0, 0, 55, 70);
         pop();
       }
@@ -259,7 +267,8 @@ function draw() {
         push();
         imageMode(CENTER);
         translate(_object.x, _object.y);
-        rotate((_object.angle/45)*PI/2);
+        angleMode(DEGREES);
+        rotate(_object.angle);
         image(sinkimg, 0, 0, 70, 85);
         pop();
       }
@@ -269,7 +278,8 @@ function draw() {
         textSize(_object.size);
         fill(_object.color);
         translate(_object.x, _object.y);
-        rotate((_object.angle/45)*PI/2);
+        angleMode(DEGREES);
+        rotate(_object.angle);
         text(_object.inputText, 0, 0);
         pop();
       }
@@ -305,7 +315,7 @@ function mouseDragged() {
       if(clickEvent == 'Draw_Line') {
         removeObject('Line drawing');
         addObject('Line drawing', x1+(x2-x1)/2, y1+(y2-y1)/2, 2, undefined, parseInt(sqrt((x1-x2)*(x1-x2)+(y1-y2)*(y1-y2)))
-          , atan((y2-y1)/(x2-x1))*180/PI, undefined, undefined, undefined,undefined, undefined, undefined, undefined, 
+          , atan((y2-y1)/(x2-x1)), undefined, undefined, undefined,undefined, undefined, undefined, undefined, 
           undefined, '#000000', undefined, undefined, undefined, undefined);
       }
       redraw();
@@ -328,7 +338,7 @@ function mouseReleased() {
       else if(clickEvent == 'Draw_Line') {
         removeObject('Line drawing');
         addObject('Line ' + id, x1+(x2-x1)/2, y1+(y2-y1)/2, 2, undefined, parseInt(sqrt((x1-x2)*(x1-x2)+(y1-y2)*(y1-y2)))
-        , atan((y2-y1)/(x2-x1))*180/PI, undefined, undefined, undefined,undefined, undefined, undefined, undefined, 
+        , atan((y2-y1)/(x2-x1)), undefined, undefined, undefined,undefined, undefined, undefined, undefined, 
         undefined, '#000000', undefined, undefined, undefined, undefined);
       }
       createPanel(object);
