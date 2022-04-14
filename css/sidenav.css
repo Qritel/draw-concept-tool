@@ -27,3 +27,42 @@
     border: 1px solid #d6d6d6;
     padding: 12px 10px;
 }
+
+.button:active {
+    background-color: #666666;
+    color: #efefef;
+    text-decoration: none;
+    width: 101px;
+    border: 1px solid #d6d6d6;
+    padding: 12px 10px;
+}
+
+.button_zoom {
+    background-color: transparent;
+    color: #555555;
+    text-decoration: none;
+    width: 15px;
+    height: 15px;
+    border: 1px solid #d6d6d6;
+    padding: 0px 0px;
+}
+
+.button_zoom:hover {
+    background-color: #393939;
+    color: #ffffff;
+    text-decoration: none;
+    width: 15px;
+    height: 15px;
+    border: 1px solid #d6d6d6;
+    padding: 0px 0px;
+}
+
+.button_zoom:active {
+    background-color: #666666;
+    color: #ffffff;
+    text-decoration: none;
+    width: 15px;
+    height: 15px;
+    border: 1px solid #d6d6d6;
+    padding: 0px 0px;
+}

@@ -21,6 +21,8 @@ var windowimg;
 var sinkimg;
 var toiletimg;
 var tvimg;
+var zoom = 100;
+var ellipseZoomX;
 
 //An array will contain all the objects on the map -canvas-
 var objects = [];
@@ -151,6 +153,22 @@ function setup() {
     redraw();
   });
 
+  button = createButton('-');
+  button.position(102.5, canvasHeight - 23);
+  button.class('button_zoom');
+  button.mousePressed(function() {
+    if(zoom > 5) zoom -= 5;
+    redraw();
+  });
+
+  button = createButton('+');
+  button.position(254, canvasHeight - 23);
+  button.class('button_zoom');
+  button.mousePressed(function() {
+    if(zoom < 200) zoom += 5;
+    redraw();
+  });
+
   noLoop();
 }
 
@@ -162,6 +180,18 @@ function draw() {
   noFill();
   stroke('#d8d8d8');
   rect(0,0,canvasWidth-1,canvasHeight-1);
+
+  //zoom slider
+  push();
+  fill('#555555')
+  line(20, canvasHeight - 15, 150, canvasHeight - 15);
+  ellipseZoomX = map(zoom / 100, 0, 2, 20, 150, true);
+  ellipse(ellipseZoomX, canvasHeight - 15, 8, 8);
+  textSize(10);
+  text(zoom + '%', ellipseZoomX - 10, canvasHeight - 25);
+  pop();
+
+  scale(zoom / 100);
   
   //browse all objects
   objects.forEach(function(_object) {
