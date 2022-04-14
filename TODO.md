@@ -6,14 +6,15 @@ Project Description
 
 ### Todo
 
+- [ ] keyboard shortcuts (DEL, Ctrl +, Ctrl -, Ctrl Z, ....)  
 - [ ] Add a tooltip to different elements  
 - [ ] Implement resize and rotate corners  
-- [ ] Add zoom tool  
 - [ ] Implement Export/Import from JSON  
 - [ ] Implement rollback feature  
 
 ### In Progress
 
+- [ ] Add zoom tool  
 - [ ] improve user interface design  
 - [ ] ⭐Code refactoring⭐  
 

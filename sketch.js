@@ -65,17 +65,17 @@ function setup() {
   canv.position(canvasX, canvasY);
 
   button = createButton('⬛');
-  button.position(0, 120);
+  button.position(0, 100);
   button.class('button');
   button.mousePressed(function() { clickEvent='Draw_Rect'; });
 
   button = createButton('	▬▬');
-  button.position(0, 160);
+  button.position(0, 140);
   button.class('button');
   button.mousePressed(function() { clickEvent='Draw_Line'; });
 
   button = createButton('Table');
-  button.position(0, 200);
+  button.position(0, 180);
   button.class('button');
   button.mousePressed(function() {
     addObject('Table ' + id, 70, 70, undefined, undefined, undefined, undefined, undefined, undefined, undefined,
@@ -86,7 +86,7 @@ function setup() {
   });
 
   button = createButton('Door');
-  button.position(0, 240);
+  button.position(0, 220);
   button.class('button');
   button.mousePressed(function() {
     addObject('Door ' + id, 70, 70, undefined, undefined, undefined, 0, undefined, undefined, undefined,
@@ -97,7 +97,7 @@ function setup() {
   });
 
   button = createButton('Window');
-  button.position(0, 280);
+  button.position(0, 260);
   button.class('button');
   button.mousePressed(function() {
     addObject('Window ' + id, 70, 70, undefined, undefined, undefined, 0, undefined, undefined, undefined,
@@ -108,7 +108,7 @@ function setup() {
   });
 
   button = createButton('TV');
-  button.position(0, 320);
+  button.position(0, 300);
   button.class('button');
   button.mousePressed(function() {
     addObject('TV ' + id, 70, 70, undefined, undefined, undefined, 0, undefined, undefined, undefined,
@@ -119,7 +119,7 @@ function setup() {
   });
 
   button = createButton('Toilet');
-  button.position(0, 360);
+  button.position(0, 340);
   button.class('button');
   button.mousePressed(function() {
     addObject('Toilet ' + id, 70, 70, undefined, undefined, undefined, 0, undefined, undefined, undefined,
@@ -130,7 +130,7 @@ function setup() {
   });
 
   button = createButton('Sink');
-  button.position(0, 400);
+  button.position(0, 380);
   button.class('button');
   button.mousePressed(function() {
     addObject('Sink ' + id, 70, 70, undefined, undefined, undefined, 0, undefined, undefined, undefined,
@@ -141,7 +141,7 @@ function setup() {
   });
 
   button = createButton('Text');
-  button.position(0, 440);
+  button.position(0, 420);
   button.class('button');
   button.mousePressed(function() {
     addObject('Text ' + id, 90, 70, undefined, undefined, undefined, 0, undefined, undefined, undefined,
@@ -163,128 +163,126 @@ function draw() {
   stroke('#d8d8d8');
   rect(0,0,canvasWidth-1,canvasHeight-1);
   
-  if(id || clickEvent) {
-    //browse all objects
-    objects.forEach(function(_object) {
-      if(_object.name.startsWith('Rectangle')) {
-        push();
-        strokeWeight(3);
-        stroke(_object.strokeColor);
-        fill(_object.fillColor);
-        if(_object.noFill) noFill();
-        if(_object.noStroke) noStroke();
-        rectMode(CENTER); 
-        translate(_object.x, _object.y);
-        angleMode(DEGREES);
-        rotate(_object.angle);
-        rect(0, 0, _object.w, _object.h,
-          _object.topLeftRadius, _object.topRightRadius, _object.bottomRightRadius, _object.bottomLeftRadius);
-        pop();
-      }
-      else if(_object.name.startsWith('Line')) {
-        push();
-        strokeWeight(_object.w);
-        stroke(_object.color);
-        rectMode(CENTER); 
-        translate(_object.x, _object.y);
-        angleMode(DEGREES);
-        rotate(_object.angle);
-        rect(0,0,_object.l,1);
-        pop();
-      }
-      else if(_object.name.startsWith('Table')) {
-        image(tableimg,_object.x,_object.y,100,73);
+  //browse all objects
+  objects.forEach(function(_object) {
+    if(_object.name.startsWith('Rectangle')) {
+      push();
+      strokeWeight(3);
+      stroke(_object.strokeColor);
+      fill(_object.fillColor);
+      if(_object.noFill) noFill();
+      if(_object.noStroke) noStroke();
+      rectMode(CENTER); 
+      translate(_object.x, _object.y);
+      angleMode(DEGREES);
+      rotate(_object.angle);
+      rect(0, 0, _object.w, _object.h,
+        _object.topLeftRadius, _object.topRightRadius, _object.bottomRightRadius, _object.bottomLeftRadius);
+      pop();
+    }
+    else if(_object.name.startsWith('Line')) {
+      push();
+      strokeWeight(_object.w);
+      stroke(_object.color);
+      rectMode(CENTER); 
+      translate(_object.x, _object.y);
+      angleMode(DEGREES);
+      rotate(_object.angle);
+      rect(0,0,_object.l,1);
+      pop();
+    }
+    else if(_object.name.startsWith('Table')) {
+      image(tableimg,_object.x,_object.y,100,73);
 
-        // draw chairs arranged in a circle
-        for(var i = 0; i < _object.numPlace; i++) {
+      // draw chairs arranged in a circle
+      for(var i = 0; i < _object.numPlace; i++) {
 
-          var angle = TWO_PI / _object.numPlace * i;
-          var x = _object.x + cos(angle) * 60 -51;
-          var y = _object.y + sin(angle) * 60 -30;
+        var angle = TWO_PI / _object.numPlace * i;
+        var x = _object.x + cos(angle) * 60 -51;
+        var y = _object.y + sin(angle) * 60 -30;
 
-          switch(_object.typeChair) {
+        switch(_object.typeChair) {
 
-            case 'chair':
-            //p5: The push() function saves the current drawing style settings and transformations, while pop() restores these settings
-              push();
-              imageMode(CENTER);
-              translate(x+100, y+65);
-              angleMode(RADIANS);
-              rotate(angle+PI/2);
-              image(chairimg,0, 0, 200, 130);
-              pop();
-              break;
+          case 'chair':
+          //p5: The push() function saves the current drawing style settings and transformations, while pop() restores these settings
+            push();
+            imageMode(CENTER);
+            translate(x+100, y+65);
+            angleMode(RADIANS);
+            rotate(angle+PI/2);
+            image(chairimg,0, 0, 200, 130);
+            pop();
+            break;
 
-            case 'sofa':
-              push();
-              imageMode(CENTER);
-              translate(x+100, y+65);
-              angleMode(RADIANS);
-              rotate(angle+PI/2);
-              image(sofaimg,0, 0, 200, 130);
-              pop();
-              break;
-          }
+          case 'sofa':
+            push();
+            imageMode(CENTER);
+            translate(x+100, y+65);
+            angleMode(RADIANS);
+            rotate(angle+PI/2);
+            image(sofaimg,0, 0, 200, 130);
+            pop();
+            break;
         }
       }
-      else if(_object.name.startsWith('Door')) {
-        push();
-        imageMode(CENTER);
-        translate(_object.x, _object.y);
-        angleMode(DEGREES);
-        rotate(_object.angle);
-        image(doorimg, 0, 0, 200, 75);
-        pop();
-      }
-      else if(_object.name.startsWith('Window')) {
-        push();
-        imageMode(CENTER);
-        translate(_object.x, _object.y);
-        angleMode(DEGREES);
-        rotate(_object.angle);
-        image(windowimg, 0, 0, 200, 150);
-        pop();
-      }
-      else if(_object.name.startsWith('TV')) {
-        push();
-        imageMode(CENTER);
-        translate(_object.x, _object.y);
-        angleMode(DEGREES);
-        rotate(_object.angle);
-        image(tvimg, 0, 0, 120, 75);
-        pop();
-      }
-      else if(_object.name.startsWith('Toilet')) {
-        push();
-        imageMode(CENTER);
-        translate(_object.x, _object.y);
-        angleMode(DEGREES);
-        rotate(_object.angle);
-        image(toiletimg, 0, 0, 55, 70);
-        pop();
-      }
-      else if(_object.name.startsWith('Sink')) {
-        push();
-        imageMode(CENTER);
-        translate(_object.x, _object.y);
-        angleMode(DEGREES);
-        rotate(_object.angle);
-        image(sinkimg, 0, 0, 70, 85);
-        pop();
-      }
-      else if(_object.name.startsWith('Text')) {
-        push();
-        noStroke();
-        textSize(_object.size);
-        fill(_object.color);
-        translate(_object.x, _object.y);
-        angleMode(DEGREES);
-        rotate(_object.angle);
-        text(_object.inputText, 0, 0);
-        pop();
-      }
-    });
-  }
+    }
+    else if(_object.name.startsWith('Door')) {
+      push();
+      imageMode(CENTER);
+      translate(_object.x, _object.y);
+      angleMode(DEGREES);
+      rotate(_object.angle);
+      image(doorimg, 0, 0, 200, 75);
+      pop();
+    }
+    else if(_object.name.startsWith('Window')) {
+      push();
+      imageMode(CENTER);
+      translate(_object.x, _object.y);
+      angleMode(DEGREES);
+      rotate(_object.angle);
+      image(windowimg, 0, 0, 200, 150);
+      pop();
+    }
+    else if(_object.name.startsWith('TV')) {
+      push();
+      imageMode(CENTER);
+      translate(_object.x, _object.y);
+      angleMode(DEGREES);
+      rotate(_object.angle);
+      image(tvimg, 0, 0, 120, 75);
+      pop();
+    }
+    else if(_object.name.startsWith('Toilet')) {
+      push();
+      imageMode(CENTER);
+      translate(_object.x, _object.y);
+      angleMode(DEGREES);
+      rotate(_object.angle);
+      image(toiletimg, 0, 0, 55, 70);
+      pop();
+    }
+    else if(_object.name.startsWith('Sink')) {
+      push();
+      imageMode(CENTER);
+      translate(_object.x, _object.y);
+      angleMode(DEGREES);
+      rotate(_object.angle);
+      image(sinkimg, 0, 0, 70, 85);
+      pop();
+    }
+    else if(_object.name.startsWith('Text')) {
+      push();
+      noStroke();
+      textSize(_object.size);
+      fill(_object.color);
+      translate(_object.x, _object.y);
+      angleMode(DEGREES);
+      rotate(_object.angle);
+      text(_object.inputText, 0, 0);
+      pop();
+    }
+  });
 }
 
 //p5 function: called once after every time a mouse button is pressed.
