@@ -181,16 +181,7 @@ function draw() {
   stroke('#d8d8d8');
   rect(0,0,canvasWidth-1,canvasHeight-1);
 
-  //zoom slider
   push();
-  fill('#555555')
-  line(20, canvasHeight - 15, 150, canvasHeight - 15);
-  ellipseZoomX = map(zoom / 100, 0, 2, 20, 150, true);
-  ellipse(ellipseZoomX, canvasHeight - 15, 8, 8);
-  textSize(10);
-  text(zoom + '%', ellipseZoomX - 10, canvasHeight - 25);
-  pop();
-
   scale(zoom / 100);
   
   //browse all objects
@@ -313,6 +304,18 @@ function draw() {
       pop();
     }
   });
+  pop();
+
+  //zoom slider
+  push();
+  scale(1);
+  fill('#555555');
+  line(20, canvasHeight - 15, 150, canvasHeight - 15);
+  ellipseZoomX = map(zoom / 100, 0, 2, 20, 150, true);
+  ellipse(ellipseZoomX, canvasHeight - 15, 8, 8);
+  textSize(10);
+  text(zoom + '%', ellipseZoomX - 10, canvasHeight - 25);
+  pop();
 }
 
 //p5 function: called once after every time a mouse button is pressed.

@@ -14,12 +14,12 @@ Project Description
 
 ### In Progress
 
-- [ ] Add zoom tool  
 - [ ] improve user interface design  
 - [ ] ⭐Code refactoring⭐  
 
 ### Done ✓
 
+- [x] Add zoom tool  
 - [x] Move Layers Up And Down  
 - [x] Implement delete feature  
 - [x] Implement a color picker  
