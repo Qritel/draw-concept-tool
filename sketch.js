@@ -322,12 +322,12 @@ function draw() {
 function mousePressed() {
   if(mouseX > 0 && mouseX < canvasWidth && mouseY > 0 && mouseY < canvasHeight) {
     if(clickEvent == 'Draw_Rect' || clickEvent == 'Draw_Line') {
-      x1 = mouseX;
-      y1 = mouseY;
+      x1 = mouseX * 100 / zoom;
+      y1 = mouseY * 100 / zoom;
     }
     else {
-      diffPositionX = mouseX - panel.getValue('x');
-      diffPositionY = mouseY - panel.getValue('y');
+      diffPositionX = mouseX * 100 / zoom - panel.getValue('x');
+      diffPositionY = mouseY * 100 / zoom - panel.getValue('y');
     }
   }
 }
@@ -336,8 +336,8 @@ function mousePressed() {
 function mouseDragged() {
   if(mouseX > 0 && mouseX < canvasWidth && mouseY > 0 && mouseY < canvasHeight) {
     if(clickEvent == 'Draw_Rect' || clickEvent == 'Draw_Line') {
-      x2 = mouseX;
-      y2 = mouseY;
+      x2 = mouseX * 100 / zoom;
+      y2 = mouseY * 100 / zoom;
       if(clickEvent == 'Draw_Rect') {
         removeObject('Rectangle drawing');
         addObject('Rectangle drawing', x1+(x2-x1)/2, y1+(y2-y1)/2, abs(x2-x1), abs(y2-y1), undefined, 0, 0, 0, 0,
@@ -352,8 +352,8 @@ function mouseDragged() {
       redraw();
     }
     else {
-      panel.setValue('x', parseInt(mouseX - diffPositionX));
-      panel.setValue('y', parseInt(mouseY - diffPositionY));
+      panel.setValue('x', parseInt(mouseX * 100 / zoom - diffPositionX));
+      panel.setValue('y', parseInt(mouseY * 100 / zoom - diffPositionY));
     }
   }
 }
