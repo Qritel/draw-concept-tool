@@ -352,6 +352,7 @@ function mouseDragged() {
       redraw();
     }
     else {
+      cursor(MOVE);
       panel.setValue('x', parseInt(mouseX * 100 / zoom - diffPositionX));
       panel.setValue('y', parseInt(mouseY * 100 / zoom - diffPositionY));
     }
@@ -379,6 +380,7 @@ function mouseReleased() {
       clickEvent = '';
     }
   }
+  cursor(ARROW);
 }
 
 function resetObject() {
