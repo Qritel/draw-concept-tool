@@ -13,6 +13,10 @@ var canvasX;
 var canvasY;
 var diffPositionX;
 var diffPositionY;
+var beforeMoveX;
+var beforeMoveY;
+var afterMoveX;
+var afterMoveY;
 var tableimg;
 var chairimg;
 var sofaimg;
@@ -23,6 +27,9 @@ var toiletimg;
 var tvimg;
 var zoom = 100;
 var ellipseZoomX;
+var button;
+var btnUndo;
+var btnRedo;
 
 //An array will contain all the objects on the map -canvas-
 var objects = [];
@@ -36,6 +43,8 @@ var layerDelete;
 
 //A panel lists the properties of selected object
 var panel;
+
+var undoManager = new UndoManager();
 
 //p5 function: used to handle asynchronous loading of external files
 function preload() {
@@ -169,6 +178,22 @@ function setup() {
     redraw();
   });
 
+  btnUndo = createButton('⟲');
+  btnUndo.position(10,20);
+  btnUndo.mousePressed(function() {
+    undoManager.undo();
+    redraw();
+    refreshLayers();
+  });
+
+  btnRedo = createButton('⟳');
+  btnRedo.position(61,20);
+  btnRedo.mousePressed(function() {
+    undoManager.redo();
+    redraw();
+    refreshLayers();
+  });
+
   noLoop();
 }
 
@@ -184,6 +209,12 @@ function draw() {
   push();
   scale(zoom / 100);
   
+  if(!undoManager.hasUndo()) btnUndo.hide();
+  else btnUndo.show();
+  
+  if(!undoManager.hasRedo()) btnRedo.hide();
+  else btnRedo.show();
+
   //browse all objects
   objects.forEach(function(_object) {
     if(_object.name.startsWith('Rectangle')) {
@@ -328,6 +359,8 @@ function mousePressed() {
     else {
       diffPositionX = mouseX * 100 / zoom - panel.getValue('x');
       diffPositionY = mouseY * 100 / zoom - panel.getValue('y');
+      beforeMoveX = panel.getValue('x');
+      beforeMoveY = panel.getValue('y');
     }
   }
 }
@@ -355,6 +388,8 @@ function mouseDragged() {
       cursor(MOVE);
       panel.setValue('x', parseInt(mouseX * 100 / zoom - diffPositionX));
       panel.setValue('y', parseInt(mouseY * 100 / zoom - diffPositionY));
+      afterMoveX = panel.getValue('x');
+      afterMoveY = panel.getValue('y');
     }
   }
 }
@@ -378,6 +413,18 @@ function mouseReleased() {
       redraw();
       x1 = 0, y1 = 0, x2 = 0, y2 = 0;
       clickEvent = '';
+    }
+    else {
+      undoManager.add({
+        undo: function() {
+          panel.setValue('x',beforeMoveX);
+          panel.setValue('y',beforeMoveY);
+        },
+        redo: function() {
+          panel.setValue('x',afterMoveX);
+          panel.setValue('y',afterMoveY);
+        }
+      });
     }
   }
   cursor(ARROW);
@@ -421,15 +468,45 @@ _bottomLeftRadius, _strokeColor, _noStroke, _fillColor, _noFill, _color, _numPla
     }
   });
 
-  if(!_name.endsWith('drawing')) id ++;
+  if(!_name.endsWith('drawing')){
+    id ++;
+    undoManager.add({
+      undo: function() {
+        removeObject(_name);
+      },
+      redo: function() {
+        addObject(_name, _x, _y, _w, _h, _l, _angle, _topLeftRadius, _topRightRadius, _bottomRightRadius,
+          _bottomLeftRadius, _strokeColor, _noStroke, _fillColor, _noFill, _color, _numPlace, _typeChair, _inputText, _size);
+      }
+    });
+  }
   
   objects.push(object);
 }
 
 function removeObject(_name) {
-  objects= objects.filter(function( _object ) {
+
+  let index = objects.findIndex(_object => _object.name === _name);
+  _object = objects[index];
+
+  objects = objects.filter(function( _object ) {
     return _object.name !== _name;
   });
+
+  if(!_name.endsWith('drawing')){
+    undoManager.add({
+      undo: function() {
+        addObject(_object.name, _object.x, _object.y, _object.w, _object.h, _object.l, 
+          _object.angle, _object.topLeftRadius, _object.topRightRadius, _object.bottomRightRadius, 
+          _object.bottomLeftRadius, _object.strokeColor, _object.noStroke, _object.fillColor, 
+          _object.noFill, _object.color, _object.numPlace, _object.typeChair, _object.inputText, 
+          _object.size);
+      },
+      redo: function() {
+        removeObject(_name);
+      }
+    });
+  }
 }
 
 function createPanel(_object) {
@@ -527,12 +604,35 @@ function refreshLayers() {
 function moveUpObject(name){
   const index = objects.findIndex(_object => _object.name === name);
   const len = objects.length;
-  if(index < len - 1) 
+  if(index < len - 1){
+
     [objects[index], objects[index + 1]] = [objects[index + 1], objects[index]];
+
+    undoManager.add({
+      undo: function() {
+        moveDownObject(name);
+      },
+      redo: function() {
+        moveUpObject(name);
+      }
+    });
+  }
 }
 
 function moveDownObject(name){
   const index = objects.findIndex(_object => _object.name === name);
-  if(index > 0) 
+  if(index > 0){
+
     [objects[index], objects[index - 1]] = [objects[index - 1], objects[index]];
+    createPanel()
+
+    undoManager.add({
+      undo: function() {
+        moveUpObject(name);
+      },
+      redo: function() {
+        moveDownObject(name);
+      }
+    });
+  }
 }

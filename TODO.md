@@ -6,11 +6,12 @@ Project Description
 
 ### Todo
 
+- [ ] add button : Rectangle select  
+- [ ] add button : Move tool  
+- [ ] Implement Export/Import from JSON  
 - [ ] keyboard shortcuts (DEL, Ctrl +, Ctrl -, Ctrl Z, ....)  
 - [ ] Add a tooltip to different elements  
 - [ ] Implement resize and rotate corners  
-- [ ] Implement Export/Import from JSON  
-- [ ] Implement rollback feature  
 
 ### In Progress
 
@@ -19,6 +20,7 @@ Project Description
 
 ### Done ✓
 
+- [x] Implement undo/redo feature  
 - [x] Add zoom tool  
 - [x] Move Layers Up And Down  
 - [x] Implement delete feature  
