@@ -34,6 +34,7 @@ var btnRedo;
 //An array will contain all the objects on the map -canvas-
 var objects = [];
 var object = {};
+var activeObject;
 
 //A panel lists the names of the created objects
 var layers;
@@ -91,9 +92,7 @@ function setup() {
   button.mousePressed(function() {
     addObject('Table ' + id, 70, 70, undefined, undefined, undefined, undefined, undefined, undefined, undefined,
     undefined, undefined, undefined, undefined, undefined, undefined, 2, 'chair', undefined, undefined);
-    createPanel(object);
-    refreshLayers();
-    redraw();
+    refresh();
   });
 
   button = createButton('Door');
@@ -102,9 +101,7 @@ function setup() {
   button.mousePressed(function() {
     addObject('Door ' + id, 70, 70, undefined, undefined, undefined, 0, undefined, undefined, undefined,
     undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined);
-    createPanel(object);
-    refreshLayers();
-    redraw();
+    refresh();
   });
 
   button = createButton('Window');
@@ -113,9 +110,7 @@ function setup() {
   button.mousePressed(function() {
     addObject('Window ' + id, 70, 70, undefined, undefined, undefined, 0, undefined, undefined, undefined,
     undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined);
-    createPanel(object);
-    refreshLayers();
-    redraw();
+    refresh();
   });
 
   button = createButton('TV');
@@ -124,9 +119,7 @@ function setup() {
   button.mousePressed(function() {
     addObject('TV ' + id, 70, 70, undefined, undefined, undefined, 0, undefined, undefined, undefined,
     undefined, undefined, undefined, undefined,undefined,  undefined, undefined, undefined, undefined, undefined);
-    createPanel(object);
-    refreshLayers();
-    redraw();
+    refresh();
   });
 
   button = createButton('Toilet');
@@ -135,9 +128,7 @@ function setup() {
   button.mousePressed(function() {
     addObject('Toilet ' + id, 70, 70, undefined, undefined, undefined, 0, undefined, undefined, undefined,
     undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined);
-    createPanel(object);
-    refreshLayers();
-    redraw();
+    refresh();
   });
 
   button = createButton('Sink');
@@ -146,9 +137,7 @@ function setup() {
   button.mousePressed(function() {
     addObject('Sink ' + id, 70, 70, undefined, undefined, undefined, 0, undefined, undefined, undefined,
     undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined);
-    createPanel(object);
-    refreshLayers();
-    redraw();
+    refresh();
   });
 
   button = createButton('Text');
@@ -157,9 +146,7 @@ function setup() {
   button.mousePressed(function() {
     addObject('Text ' + id, 90, 70, undefined, undefined, undefined, 0, undefined, undefined, undefined,
     undefined, undefined, undefined, undefined, undefined, '#000000', undefined, undefined, 'Your text', 32);
-    createPanel(object);
-    refreshLayers();
-    redraw();
+    refresh();
   });
 
   button = createButton('-');
@@ -182,16 +169,14 @@ function setup() {
   btnUndo.position(10,20);
   btnUndo.mousePressed(function() {
     undoManager.undo();
-    redraw();
-    refreshLayers();
+    refresh();
   });
 
   btnRedo = createButton('⟳');
   btnRedo.position(61,20);
   btnRedo.mousePressed(function() {
     undoManager.redo();
-    redraw();
-    refreshLayers();
+    refresh();
   });
 
   noLoop();
@@ -408,9 +393,7 @@ function mouseReleased() {
         , atan((y2-y1)/(x2-x1)), undefined, undefined, undefined,undefined, undefined, undefined, undefined, 
         undefined, '#000000', undefined, undefined, undefined, undefined);
       }
-      createPanel(object);
-      refreshLayers();
-      redraw();
+      refresh();
       x1 = 0, y1 = 0, x2 = 0, y2 = 0;
       clickEvent = '';
     }
@@ -481,6 +464,7 @@ _bottomLeftRadius, _strokeColor, _noStroke, _fillColor, _noFill, _color, _numPla
     });
   }
   
+  activeObject = object;
   objects.push(object);
 }
 
@@ -492,6 +476,10 @@ function removeObject(_name) {
   objects = objects.filter(function( _object ) {
     return _object.name !== _name;
   });
+
+  if(objects.length == 0) activeObject = {};
+  else if(objects.length == 1) activeObject = objects[0];
+  else activeObject = objects[index];
 
   if(!_name.endsWith('drawing')){
     undoManager.add({
@@ -558,51 +546,60 @@ function refreshLayers() {
   layers.setSize(108, windowHeight - windowHeight * 0.4 - 2);
   layers.setDraggable(false);
   layers.setCollapsible(false);
-  layers.setGlobalChangeHandler(refreshLayers);
+  layers.setGlobalChangeHandler(refresh);
 
   layerUp = QuickSettings.create(windowWidth - 82, 0, ' ');
   layerUp.setSize(26, windowHeight - windowHeight * 0.4 - 2);
   layerUp.setDraggable(false);
   layerUp.setCollapsible(false);
-  layerUp.setGlobalChangeHandler(refreshLayers);
+  layerUp.setGlobalChangeHandler(refresh);
 
   layerDown = QuickSettings.create(windowWidth - 56, 0, ' ');
   layerDown.setSize(26, windowHeight - windowHeight * 0.4 - 2);
   layerDown.setDraggable(false);
   layerDown.setCollapsible(false);
-  layerDown.setGlobalChangeHandler(refreshLayers);
+  layerDown.setGlobalChangeHandler(refresh);
 
   layerDelete = QuickSettings.create(windowWidth - 30, 0, ' ');
   layerDelete.setSize(28, windowHeight - windowHeight * 0.4 - 2);
   layerDelete.setDraggable(false);
   layerDelete.setCollapsible(false);
-  layerDelete.setGlobalChangeHandler(refreshLayers);
+  layerDelete.setGlobalChangeHandler(refresh);
 
   objects.slice().reverse().forEach(function(_object) {
 
     layers.addButton(_object.name, function() {
-      createPanel(_object);
+      activeObject = _object;
     });
 
     layerUp.addButton('🡡', function(){
       moveUpObject(_object.name);
-      redraw();
     });
 
     layerDown.addButton('🡣', function(){
       moveDownObject(_object.name);
-      redraw();
     });
     
     layerDelete.addButton('🗑️', function(){
       removeObject(_object.name);
-      redraw();
     });
+
+    if(activeObject == _object){
+      layers.overrideStyle(_object.name, 'font-weight', 'bold');
+      layerUp.overrideStyle('🡡', 'font-weight', 'bold');
+      layerDown.overrideStyle('🡣', 'font-weight', 'bold');
+    }
+    else{
+      layers.overrideStyle(_object.name, 'color', '#000000');
+      layerUp.overrideStyle('🡡', 'color', '#000000');
+      layerDown.overrideStyle('🡣', 'color', '#000000');
+    }
   });
 }
 
 function moveUpObject(name){
   const index = objects.findIndex(_object => _object.name === name);
+  activeObject = objects[index];
   const len = objects.length;
   if(index < len - 1){
 
@@ -621,10 +618,10 @@ function moveUpObject(name){
 
 function moveDownObject(name){
   const index = objects.findIndex(_object => _object.name === name);
+  activeObject = objects[index];
   if(index > 0){
 
     [objects[index], objects[index - 1]] = [objects[index - 1], objects[index]];
-    createPanel()
 
     undoManager.add({
       undo: function() {
@@ -635,4 +632,10 @@ function moveDownObject(name){
       }
     });
   }
+}
+
+function refresh(){
+    refreshLayers();
+    createPanel(activeObject);
+    redraw();
 }
