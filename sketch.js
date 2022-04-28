@@ -90,7 +90,7 @@ function setup() {
   button.position(0, 180);
   button.class('button');
   button.mousePressed(function() {
-    addObject('Table ' + id, 70, 70, undefined, undefined, undefined, undefined, undefined, undefined, undefined,
+    addObject(objects.length, 'Table ' + id, 70, 70, undefined, undefined, undefined, undefined, undefined, undefined, undefined,
     undefined, undefined, undefined, undefined, undefined, undefined, 2, 'chair', undefined, undefined);
     refresh();
   });
@@ -99,7 +99,7 @@ function setup() {
   button.position(0, 220);
   button.class('button');
   button.mousePressed(function() {
-    addObject('Door ' + id, 70, 70, undefined, undefined, undefined, 0, undefined, undefined, undefined,
+    addObject(objects.length, 'Door ' + id, 70, 70, undefined, undefined, undefined, 0, undefined, undefined, undefined,
     undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined);
     refresh();
   });
@@ -108,7 +108,7 @@ function setup() {
   button.position(0, 260);
   button.class('button');
   button.mousePressed(function() {
-    addObject('Window ' + id, 70, 70, undefined, undefined, undefined, 0, undefined, undefined, undefined,
+    addObject(objects.length, 'Window ' + id, 70, 70, undefined, undefined, undefined, 0, undefined, undefined, undefined,
     undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined);
     refresh();
   });
@@ -117,7 +117,7 @@ function setup() {
   button.position(0, 300);
   button.class('button');
   button.mousePressed(function() {
-    addObject('TV ' + id, 70, 70, undefined, undefined, undefined, 0, undefined, undefined, undefined,
+    addObject(objects.length, 'TV ' + id, 70, 70, undefined, undefined, undefined, 0, undefined, undefined, undefined,
     undefined, undefined, undefined, undefined,undefined,  undefined, undefined, undefined, undefined, undefined);
     refresh();
   });
@@ -126,7 +126,7 @@ function setup() {
   button.position(0, 340);
   button.class('button');
   button.mousePressed(function() {
-    addObject('Toilet ' + id, 70, 70, undefined, undefined, undefined, 0, undefined, undefined, undefined,
+    addObject(objects.length, 'Toilet ' + id, 70, 70, undefined, undefined, undefined, 0, undefined, undefined, undefined,
     undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined);
     refresh();
   });
@@ -135,7 +135,7 @@ function setup() {
   button.position(0, 380);
   button.class('button');
   button.mousePressed(function() {
-    addObject('Sink ' + id, 70, 70, undefined, undefined, undefined, 0, undefined, undefined, undefined,
+    addObject(objects.length, 'Sink ' + id, 70, 70, undefined, undefined, undefined, 0, undefined, undefined, undefined,
     undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined);
     refresh();
   });
@@ -144,7 +144,7 @@ function setup() {
   button.position(0, 420);
   button.class('button');
   button.mousePressed(function() {
-    addObject('Text ' + id, 90, 70, undefined, undefined, undefined, 0, undefined, undefined, undefined,
+    addObject(objects.length, 'Text ' + id, 90, 70, undefined, undefined, undefined, 0, undefined, undefined, undefined,
     undefined, undefined, undefined, undefined, undefined, '#000000', undefined, undefined, 'Your text', 32);
     refresh();
   });
@@ -358,12 +358,12 @@ function mouseDragged() {
       y2 = mouseY * 100 / zoom;
       if(clickEvent == 'Draw_Rect') {
         removeObject('Rectangle drawing');
-        addObject('Rectangle drawing', x1+(x2-x1)/2, y1+(y2-y1)/2, abs(x2-x1), abs(y2-y1), undefined, 0, 0, 0, 0,
+        addObject(objects.length, 'Rectangle drawing', x1+(x2-x1)/2, y1+(y2-y1)/2, abs(x2-x1), abs(y2-y1), undefined, 0, 0, 0, 0,
         0, '#000000', false, '#ffffff', false, undefined, undefined, undefined, undefined, undefined);
       }
       if(clickEvent == 'Draw_Line') {
         removeObject('Line drawing');
-        addObject('Line drawing', x1+(x2-x1)/2, y1+(y2-y1)/2, 2, undefined, parseInt(sqrt((x1-x2)*(x1-x2)+(y1-y2)*(y1-y2)))
+        addObject(objects.length, 'Line drawing', x1+(x2-x1)/2, y1+(y2-y1)/2, 2, undefined, parseInt(sqrt((x1-x2)*(x1-x2)+(y1-y2)*(y1-y2)))
           , atan((y2-y1)/(x2-x1)), undefined, undefined, undefined,undefined, undefined, undefined, undefined, 
           undefined, '#000000', undefined, undefined, undefined, undefined);
       }
@@ -384,12 +384,12 @@ function mouseReleased() {
     if(clickEvent == 'Draw_Rect' || clickEvent == 'Draw_Line') {
       if(clickEvent == 'Draw_Rect') {
         removeObject('Rectangle drawing');
-        addObject('Rectangle ' + id, x1+(x2-x1)/2, y1+(y2-y1)/2, abs(x2-x1), abs(y2-y1), undefined, 0, 0, 0, 0,
+        addObject(objects.length,'Rectangle ' + id, x1+(x2-x1)/2, y1+(y2-y1)/2, abs(x2-x1), abs(y2-y1), undefined, 0, 0, 0, 0,
         0, '#000000', false, '#ffffff', false, undefined, undefined, undefined, undefined, undefined);
       }
       else if(clickEvent == 'Draw_Line') {
         removeObject('Line drawing');
-        addObject('Line ' + id, x1+(x2-x1)/2, y1+(y2-y1)/2, 2, undefined, parseInt(sqrt((x1-x2)*(x1-x2)+(y1-y2)*(y1-y2)))
+        addObject(objects.length, 'Line ' + id, x1+(x2-x1)/2, y1+(y2-y1)/2, 2, undefined, parseInt(sqrt((x1-x2)*(x1-x2)+(y1-y2)*(y1-y2)))
         , atan((y2-y1)/(x2-x1)), undefined, undefined, undefined,undefined, undefined, undefined, undefined, 
         undefined, '#000000', undefined, undefined, undefined, undefined);
       }
@@ -417,12 +417,13 @@ function resetObject() {
   object = {}
 }
 
-function addObject(_name, _x, _y, _w, _h, _l, _angle, _topLeftRadius, _topRightRadius, _bottomRightRadius,
+function addObject(_index, _name, _x, _y, _w, _h, _l, _angle, _topLeftRadius, _topRightRadius, _bottomRightRadius,
 _bottomLeftRadius, _strokeColor, _noStroke, _fillColor, _noFill, _color, _numPlace, _typeChair, _inputText, _size) {
 
   resetObject();
   
   object = {
+    index : _index,
     name : _name,
     x : _x,
     y : _y,
@@ -458,14 +459,14 @@ _bottomLeftRadius, _strokeColor, _noStroke, _fillColor, _noFill, _color, _numPla
         removeObject(_name);
       },
       redo: function() {
-        addObject(_name, _x, _y, _w, _h, _l, _angle, _topLeftRadius, _topRightRadius, _bottomRightRadius,
+        addObject(_index, _name, _x, _y, _w, _h, _l, _angle, _topLeftRadius, _topRightRadius, _bottomRightRadius,
           _bottomLeftRadius, _strokeColor, _noStroke, _fillColor, _noFill, _color, _numPlace, _typeChair, _inputText, _size);
       }
     });
   }
-  
+
   activeObject = object;
-  objects.push(object);
+  objects.splice(_index, 0, object);
 }
 
 function removeObject(_name) {
@@ -477,14 +478,16 @@ function removeObject(_name) {
     return _object.name !== _name;
   });
 
-  if(objects.length == 0) activeObject = {};
-  else if(objects.length == 1) activeObject = objects[0];
-  else activeObject = objects[index];
+  if(activeObject === _object){
+    if(objects.length == 0) activeObject = {};
+    else if(index == 0) activeObject = objects[index];
+    else activeObject = objects[index-1];
+  }
 
   if(!_name.endsWith('drawing')){
     undoManager.add({
       undo: function() {
-        addObject(_object.name, _object.x, _object.y, _object.w, _object.h, _object.l, 
+        addObject(_object.index, _object.name, _object.x, _object.y, _object.w, _object.h, _object.l, 
           _object.angle, _object.topLeftRadius, _object.topRightRadius, _object.bottomRightRadius, 
           _object.bottomLeftRadius, _object.strokeColor, _object.noStroke, _object.fillColor, 
           _object.noFill, _object.color, _object.numPlace, _object.typeChair, _object.inputText, 
