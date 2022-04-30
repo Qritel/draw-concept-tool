@@ -13,10 +13,6 @@ var canvasX;
 var canvasY;
 var diffPositionX;
 var diffPositionY;
-var beforeMoveX;
-var beforeMoveY;
-var afterMoveX;
-var afterMoveY;
 var tableimg;
 var chairimg;
 var sofaimg;
@@ -341,11 +337,11 @@ function mousePressed() {
       x1 = mouseX * 100 / zoom;
       y1 = mouseY * 100 / zoom;
     }
-    else {
+    else if(objects.length){
       diffPositionX = mouseX * 100 / zoom - panel.getValue('x');
       diffPositionY = mouseY * 100 / zoom - panel.getValue('y');
-      beforeMoveX = panel.getValue('x');
-      beforeMoveY = panel.getValue('y');
+      object = { ...activeObject };
+      objects.push(object);
     }
   }
 }
@@ -369,12 +365,11 @@ function mouseDragged() {
       }
       redraw();
     }
-    else {
+    else if(diffPositionX && diffPositionY) {
       cursor(MOVE);
-      panel.setValue('x', parseInt(mouseX * 100 / zoom - diffPositionX));
-      panel.setValue('y', parseInt(mouseY * 100 / zoom - diffPositionY));
-      afterMoveX = panel.getValue('x');
-      afterMoveY = panel.getValue('y');
+      createPanel(object);
+      panel.setValue('x',parseInt(mouseX * 100 / zoom - diffPositionX));
+      panel.setValue('y',parseInt(mouseY * 100 / zoom - diffPositionY));
     }
   }
 }
@@ -397,17 +392,12 @@ function mouseReleased() {
       x1 = 0, y1 = 0, x2 = 0, y2 = 0;
       clickEvent = '';
     }
-    else {
-      undoManager.add({
-        undo: function() {
-          panel.setValue('x',beforeMoveX);
-          panel.setValue('y',beforeMoveY);
-        },
-        redo: function() {
-          panel.setValue('x',afterMoveX);
-          panel.setValue('y',afterMoveY);
-        }
-      });
+    else if(objects.length){
+      objects.pop();
+      createPanel(activeObject);
+      dragObject(object.x - activeObject.x, object.y - activeObject.y);
+      diffPositionX = 0;
+      diffPositionY = 0;
     }
   }
   cursor(ARROW);
@@ -452,7 +442,7 @@ _bottomLeftRadius, _strokeColor, _noStroke, _fillColor, _noFill, _color, _numPla
     }
   });
 
-  if(!_name.endsWith('drawing')){
+  if(!_name.endsWith('drawing')) {
     id ++;
     undoManager.add({
       undo: function() {
@@ -478,13 +468,13 @@ function removeObject(_name) {
     return _object.name !== _name;
   });
 
-  if(activeObject === _object){
+  if(activeObject === _object) {
     if(objects.length == 0) activeObject = {};
     else if(index == 0) activeObject = objects[index];
     else activeObject = objects[index-1];
   }
 
-  if(!_name.endsWith('drawing')){
+  if(!_name.endsWith('drawing')) {
     undoManager.add({
       undo: function() {
         addObject(_object.index, _object.name, _object.x, _object.y, _object.w, _object.h, _object.l, 
@@ -575,19 +565,19 @@ function refreshLayers() {
       activeObject = _object;
     });
 
-    layerUp.addButton('🡡', function(){
+    layerUp.addButton('🡡', function() {
       moveUpObject(_object.name);
     });
 
-    layerDown.addButton('🡣', function(){
+    layerDown.addButton('🡣', function() {
       moveDownObject(_object.name);
     });
     
-    layerDelete.addButton('🗑️', function(){
+    layerDelete.addButton('🗑️', function() {
       removeObject(_object.name);
     });
 
-    if(activeObject == _object){
+    if(activeObject == _object) {
       layers.overrideStyle(_object.name, 'font-weight', 'bold');
       layerUp.overrideStyle('🡡', 'font-weight', 'bold');
       layerDown.overrideStyle('🡣', 'font-weight', 'bold');
@@ -600,45 +590,58 @@ function refreshLayers() {
   });
 }
 
-function moveUpObject(name){
-  const index = objects.findIndex(_object => _object.name === name);
+function moveUpObject(_name) {
+  const index = objects.findIndex(_object => _object.name === _name);
   activeObject = objects[index];
   const len = objects.length;
-  if(index < len - 1){
+  if(index < len - 1) {
 
     [objects[index], objects[index + 1]] = [objects[index + 1], objects[index]];
 
     undoManager.add({
       undo: function() {
-        moveDownObject(name);
+        moveDownObject(_name);
       },
       redo: function() {
-        moveUpObject(name);
+        moveUpObject(_name);
       }
     });
   }
 }
 
-function moveDownObject(name){
-  const index = objects.findIndex(_object => _object.name === name);
+function moveDownObject(_name) {
+  const index = objects.findIndex(_object => _object.name === _name);
   activeObject = objects[index];
-  if(index > 0){
+  if(index > 0) {
 
     [objects[index], objects[index - 1]] = [objects[index - 1], objects[index]];
 
     undoManager.add({
       undo: function() {
-        moveUpObject(name);
+        moveUpObject(_name);
       },
       redo: function() {
-        moveDownObject(name);
+        moveDownObject(_name);
       }
     });
   }
 }
 
-function refresh(){
-    refreshLayers();
-    createPanel(activeObject);
-    redraw();
+function dragObject(_dx,_dy) {
+  undoManager.add({
+    undo: function() {
+      dragObject(-_dx,-_dy);
+    },
+    redo: function() {
+      dragObject(_dx,_dy);
+    }
+  });
+  panel.setValue('x', activeObject.x + _dx);
+  panel.setValue('y', activeObject.y + _dy);
+}
+
+function refresh() {
+  refreshLayers();
+  createPanel(activeObject);
+  redraw();
 }
