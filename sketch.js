@@ -394,8 +394,8 @@ function mouseReleased() {
     }
     else if(objects.length){
       objects.pop();
-      createPanel(activeObject);
-      dragObject(object.x - activeObject.x, object.y - activeObject.y);
+      const index = objects.indexOf(activeObject);
+      dragObject(object.x - activeObject.x, object.y - activeObject.y, index);
       diffPositionX = 0;
       diffPositionY = 0;
     }
@@ -455,8 +455,8 @@ _bottomLeftRadius, _strokeColor, _noStroke, _fillColor, _noFill, _color, _numPla
     });
   }
 
-  activeObject = object;
   objects.splice(_index, 0, object);
+  activeObject = objects[_index];
 }
 
 function removeObject(_name) {
@@ -627,17 +627,19 @@ function moveDownObject(_name) {
   }
 }
 
-function dragObject(_dx,_dy) {
+function dragObject(_dx, _dy, _index) {
+  objects[_index].x += _dx;
+  objects[_index].y += _dy;
+  activeObject = objects[_index];
   undoManager.add({
     undo: function() {
-      dragObject(-_dx,-_dy);
+      dragObject(-_dx, -_dy, _index);
     },
     redo: function() {
-      dragObject(_dx,_dy);
+      dragObject(_dx, _dy, _index);
     }
   });
-  panel.setValue('x', activeObject.x + _dx);
-  panel.setValue('y', activeObject.y + _dy);
+  refresh();
 }
 
 function refresh() {
