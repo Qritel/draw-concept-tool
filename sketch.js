@@ -395,7 +395,7 @@ function mouseReleased() {
     else if(objects.length){
       objects.pop();
       const index = objects.indexOf(activeObject);
-      dragObject(object.x - activeObject.x, object.y - activeObject.y, index);
+      if(object.x != activeObject.x) dragObject(object.x - activeObject.x, object.y - activeObject.y, index);
       diffPositionX = 0;
       diffPositionY = 0;
     }
