@@ -4,44 +4,44 @@ This code uses 2 libraries :
   P5 : https://p5js.org/reference/
 */
 
-var x1 = 0, y1 = 0, x2 = 0, y2 = 0;
-var clickEvent = '';
-var id = 1;
-var canvasWidth;
-var canvasHeight;
-var canvasX;
-var canvasY;
-var diffPositionX;
-var diffPositionY;
-var tableimg;
-var chairimg;
-var sofaimg;
-var doorimg;
-var windowimg;
-var sinkimg;
-var toiletimg;
-var tvimg;
-var zoom = 100;
-var ellipseZoomX;
-var buttons = [];
-var btnUndo;
-var btnRedo;
+let x1 = 0, y1 = 0, x2 = 0, y2 = 0;
+let clickEvent = '';
+let id = 1;
+let canvasWidth;
+let canvasHeight;
+let canvasX;
+let canvasY;
+let diffPositionX;
+let diffPositionY;
+let tableimg;
+let chairimg;
+let sofaimg;
+let doorimg;
+let windowimg;
+let sinkimg;
+let toiletimg;
+let tvimg;
+let zoom = 100;
+let ellipseZoomX;
+let buttons = [];
+let btnUndo;
+let btnRedo;
 
 //An array will contain all the objects on the map -canvas-
-var objects = [];
-var object = {};
-var activeObject;
+let objects = [];
+let object = {};
+let activeObject;
 
 //A panel lists the names of the created objects
-var layers;
-var layerUp;
-var layerDown;
-var layerDelete;
+let layers;
+let layerUp;
+let layerDown;
+let layerDelete;
 
 //A panel lists the properties of selected object
-var panel;
+let panel;
 
-var undoManager = new UndoManager();
+let undoManager = new UndoManager();
 
 //p5 function: used to handle asynchronous loading of external files
 function preload() {
@@ -68,7 +68,7 @@ function setup() {
   canvasY = 1;
   canvasWidth = windowWidth - 191 - canvasX;
   canvasHeight = windowHeight - 2 - canvasY;
-  var canv = createCanvas(canvasWidth, canvasHeight);
+  let canv = createCanvas(canvasWidth, canvasHeight);
   //p5: Set its postion
   canv.position(canvasX, canvasY);
 
@@ -167,11 +167,11 @@ function draw() {
         image(tableimg,_object.x,_object.y,100,73);
 
         // draw chairs arranged in a circle
-        for(var i = 0; i < _object.numPlace; i++) {
+        for(let i = 0; i < _object.numPlace; i++) {
 
-          var angle = TWO_PI / _object.numPlace * i;
-          var x = _object.x + cos(angle) * 60 -51;
-          var y = _object.y + sin(angle) * 60 -30;
+          let angle = TWO_PI / _object.numPlace * i;
+          let x = _object.x + cos(angle) * 60 -51;
+          let y = _object.y + sin(angle) * 60 -30;
 
           switch(_object.typeChair) {
 
@@ -418,7 +418,7 @@ _bottomLeftRadius, _strokeColor, _noStroke, _fillColor, _noFill, _color, _numPla
 
 function removeObject(_name) {
 
-  let index = objects.findIndex(_object => _object.name === _name);
+  const index = objects.findIndex(_object => _object.name === _name);
   _object = objects[index];
 
   objects = objects.filter(function( _object ) {
@@ -607,7 +607,7 @@ function refresh() {
 
 function createBtnTool(_name, _x, _y, _clickEvent){
   buttons.push({pointer : createButton(_name), clickEvent : _clickEvent});
-  let l = buttons.length
+  const l = buttons.length
   buttons[l - 1]['pointer'].position(_x, _y);
   buttons[l - 1]['pointer'].class('button');
   buttons[l - 1]['pointer'].mousePressed(function() {
