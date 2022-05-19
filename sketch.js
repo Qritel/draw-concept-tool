@@ -136,122 +136,124 @@ function draw() {
 
   //browse all objects
   objects.forEach(function(_object) {
-    if(_object.name.startsWith('Rectangle')) {
-      push();
-      strokeWeight(3);
-      stroke(_object.strokeColor);
-      fill(_object.fillColor);
-      if(_object.noFill) noFill();
-      if(_object.noStroke) noStroke();
-      rectMode(CENTER); 
-      translate(_object.x, _object.y);
-      angleMode(DEGREES);
-      rotate(_object.angle);
-      rect(0, 0, _object.w, _object.h,
-        _object.topLeftRadius, _object.topRightRadius, _object.bottomRightRadius, _object.bottomLeftRadius);
-      pop();
-    }
-    else if(_object.name.startsWith('Line')) {
-      push();
-      strokeWeight(_object.w);
-      stroke(_object.color);
-      rectMode(CENTER); 
-      translate(_object.x, _object.y);
-      angleMode(DEGREES);
-      rotate(_object.angle);
-      rect(0,0,_object.l,1);
-      pop();
-    }
-    else if(_object.name.startsWith('Table')) {
-      image(tableimg,_object.x,_object.y,100,73);
+    if(_object.visibility){
+      if(_object.name.startsWith('Rectangle')) {
+        push();
+        strokeWeight(3);
+        stroke(_object.strokeColor);
+        fill(_object.fillColor);
+        if(_object.noFill) noFill();
+        if(_object.noStroke) noStroke();
+        rectMode(CENTER); 
+        translate(_object.x, _object.y);
+        angleMode(DEGREES);
+        rotate(_object.angle);
+        rect(0, 0, _object.w, _object.h,
+          _object.topLeftRadius, _object.topRightRadius, _object.bottomRightRadius, _object.bottomLeftRadius);
+        pop();
+      }
+      else if(_object.name.startsWith('Line')) {
+        push();
+        strokeWeight(_object.w);
+        stroke(_object.color);
+        rectMode(CENTER); 
+        translate(_object.x, _object.y);
+        angleMode(DEGREES);
+        rotate(_object.angle);
+        rect(0,0,_object.l,1);
+        pop();
+      }
+      else if(_object.name.startsWith('Table')) {
+        image(tableimg,_object.x,_object.y,100,73);
 
-      // draw chairs arranged in a circle
-      for(var i = 0; i < _object.numPlace; i++) {
+        // draw chairs arranged in a circle
+        for(var i = 0; i < _object.numPlace; i++) {
 
-        var angle = TWO_PI / _object.numPlace * i;
-        var x = _object.x + cos(angle) * 60 -51;
-        var y = _object.y + sin(angle) * 60 -30;
+          var angle = TWO_PI / _object.numPlace * i;
+          var x = _object.x + cos(angle) * 60 -51;
+          var y = _object.y + sin(angle) * 60 -30;
 
-        switch(_object.typeChair) {
+          switch(_object.typeChair) {
 
-          case 'chair':
-          //p5: The push() function saves the current drawing style settings and transformations, while pop() restores these settings
-            push();
-            imageMode(CENTER);
-            translate(x+100, y+65);
-            angleMode(RADIANS);
-            rotate(angle+PI/2);
-            image(chairimg,0, 0, 200, 130);
-            pop();
-            break;
+            case 'chair':
+            //p5: The push() function saves the current drawing style settings and transformations, while pop() restores these settings
+              push();
+              imageMode(CENTER);
+              translate(x+100, y+65);
+              angleMode(RADIANS);
+              rotate(angle+PI/2);
+              image(chairimg,0, 0, 200, 130);
+              pop();
+              break;
 
-          case 'sofa':
-            push();
-            imageMode(CENTER);
-            translate(x+100, y+65);
-            angleMode(RADIANS);
-            rotate(angle+PI/2);
-            image(sofaimg,0, 0, 200, 130);
-            pop();
-            break;
+            case 'sofa':
+              push();
+              imageMode(CENTER);
+              translate(x+100, y+65);
+              angleMode(RADIANS);
+              rotate(angle+PI/2);
+              image(sofaimg,0, 0, 200, 130);
+              pop();
+              break;
+          }
         }
       }
-    }
-    else if(_object.name.startsWith('Door')) {
-      push();
-      imageMode(CENTER);
-      translate(_object.x, _object.y);
-      angleMode(DEGREES);
-      rotate(_object.angle);
-      image(doorimg, 0, 0, 200, 75);
-      pop();
-    }
-    else if(_object.name.startsWith('Window')) {
-      push();
-      imageMode(CENTER);
-      translate(_object.x, _object.y);
-      angleMode(DEGREES);
-      rotate(_object.angle);
-      image(windowimg, 0, 0, 200, 150);
-      pop();
-    }
-    else if(_object.name.startsWith('TV')) {
-      push();
-      imageMode(CENTER);
-      translate(_object.x, _object.y);
-      angleMode(DEGREES);
-      rotate(_object.angle);
-      image(tvimg, 0, 0, 120, 75);
-      pop();
-    }
-    else if(_object.name.startsWith('Toilet')) {
-      push();
-      imageMode(CENTER);
-      translate(_object.x, _object.y);
-      angleMode(DEGREES);
-      rotate(_object.angle);
-      image(toiletimg, 0, 0, 55, 70);
-      pop();
-    }
-    else if(_object.name.startsWith('Sink')) {
-      push();
-      imageMode(CENTER);
-      translate(_object.x, _object.y);
-      angleMode(DEGREES);
-      rotate(_object.angle);
-      image(sinkimg, 0, 0, 70, 85);
-      pop();
-    }
-    else if(_object.name.startsWith('Text')) {
-      push();
-      noStroke();
-      textSize(_object.size);
-      fill(_object.color);
-      translate(_object.x, _object.y);
-      angleMode(DEGREES);
-      rotate(_object.angle);
-      text(_object.inputText, 0, 0);
-      pop();
+      else if(_object.name.startsWith('Door')) {
+        push();
+        imageMode(CENTER);
+        translate(_object.x, _object.y);
+        angleMode(DEGREES);
+        rotate(_object.angle);
+        image(doorimg, 0, 0, 200, 75);
+        pop();
+      }
+      else if(_object.name.startsWith('Window')) {
+        push();
+        imageMode(CENTER);
+        translate(_object.x, _object.y);
+        angleMode(DEGREES);
+        rotate(_object.angle);
+        image(windowimg, 0, 0, 200, 150);
+        pop();
+      }
+      else if(_object.name.startsWith('TV')) {
+        push();
+        imageMode(CENTER);
+        translate(_object.x, _object.y);
+        angleMode(DEGREES);
+        rotate(_object.angle);
+        image(tvimg, 0, 0, 120, 75);
+        pop();
+      }
+      else if(_object.name.startsWith('Toilet')) {
+        push();
+        imageMode(CENTER);
+        translate(_object.x, _object.y);
+        angleMode(DEGREES);
+        rotate(_object.angle);
+        image(toiletimg, 0, 0, 55, 70);
+        pop();
+      }
+      else if(_object.name.startsWith('Sink')) {
+        push();
+        imageMode(CENTER);
+        translate(_object.x, _object.y);
+        angleMode(DEGREES);
+        rotate(_object.angle);
+        image(sinkimg, 0, 0, 70, 85);
+        pop();
+      }
+      else if(_object.name.startsWith('Text')) {
+        push();
+        noStroke();
+        textSize(_object.size);
+        fill(_object.color);
+        translate(_object.x, _object.y);
+        angleMode(DEGREES);
+        rotate(_object.angle);
+        text(_object.inputText, 0, 0);
+        pop();
+      }
     }
   });
   pop();
@@ -279,6 +281,7 @@ function mousePressed() {
       diffPositionX = mouseX * 100 / zoom - panel.getValue('x');
       diffPositionY = mouseY * 100 / zoom - panel.getValue('y');
       object = { ...activeObject };
+      activeObject.visibility = false;
       objects.push(object);
     }
   }
@@ -292,12 +295,12 @@ function mouseDragged() {
       y2 = mouseY * 100 / zoom;
       if(clickEvent == 'Draw_Rect') {
         removeObject('Rectangle drawing');
-        addObject(objects.length, 'Rectangle drawing', x1+(x2-x1)/2, y1+(y2-y1)/2, abs(x2-x1), abs(y2-y1), undefined, 0, 0, 0, 0,
+        addObject(true, objects.length, 'Rectangle drawing', x1+(x2-x1)/2, y1+(y2-y1)/2, abs(x2-x1), abs(y2-y1), undefined, 0, 0, 0, 0,
         0, '#000000', false, '#ffffff', false, undefined, undefined, undefined, undefined, undefined);
       }
       if(clickEvent == 'Draw_Line') {
         removeObject('Line drawing');
-        addObject(objects.length, 'Line drawing', x1+(x2-x1)/2, y1+(y2-y1)/2, 2, undefined, parseInt(sqrt((x1-x2)*(x1-x2)+(y1-y2)*(y1-y2)))
+        addObject(true, objects.length, 'Line drawing', x1+(x2-x1)/2, y1+(y2-y1)/2, 2, undefined, parseInt(sqrt((x1-x2)*(x1-x2)+(y1-y2)*(y1-y2)))
           , atan((y2-y1)/(x2-x1)), undefined, undefined, undefined,undefined, undefined, undefined, undefined, 
           undefined, '#000000', undefined, undefined, undefined, undefined);
       }
@@ -317,12 +320,12 @@ function mouseReleased() {
     if(clickEvent == 'Draw_Rect' || clickEvent == 'Draw_Line') {
       if(clickEvent == 'Draw_Rect') {
         removeObject('Rectangle drawing');
-        addObject(objects.length,'Rectangle ' + id, x1+(x2-x1)/2, y1+(y2-y1)/2, abs(x2-x1), abs(y2-y1), undefined, 0, 0, 0, 0,
+        addObject(true, objects.length,'Rectangle ' + id, x1+(x2-x1)/2, y1+(y2-y1)/2, abs(x2-x1), abs(y2-y1), undefined, 0, 0, 0, 0,
         0, '#000000', false, '#ffffff', false, undefined, undefined, undefined, undefined, undefined);
       }
       else if(clickEvent == 'Draw_Line') {
         removeObject('Line drawing');
-        addObject(objects.length, 'Line ' + id, x1+(x2-x1)/2, y1+(y2-y1)/2, 2, undefined, parseInt(sqrt((x1-x2)*(x1-x2)+(y1-y2)*(y1-y2)))
+        addObject(true, objects.length, 'Line ' + id, x1+(x2-x1)/2, y1+(y2-y1)/2, 2, undefined, parseInt(sqrt((x1-x2)*(x1-x2)+(y1-y2)*(y1-y2)))
         , atan((y2-y1)/(x2-x1)), undefined, undefined, undefined,undefined, undefined, undefined, undefined, 
         undefined, '#000000', undefined, undefined, undefined, undefined);
       }
@@ -330,23 +333,24 @@ function mouseReleased() {
       x1 = 0, y1 = 0, x2 = 0, y2 = 0;
     }
     else if(clickEvent == 'Table') {
-      addObject(objects.length, 'Table ' + id, mouseX - 50, mouseY - 32, undefined, undefined, undefined, undefined, undefined, undefined,
-      undefined, undefined, undefined, undefined, undefined, undefined, undefined, 2, 'chair', undefined, undefined);
+      addObject(true, objects.length, 'Table ' + id, mouseX - 50, mouseY - 32, undefined, undefined, undefined, undefined, undefined,
+      undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, 2, 'chair', undefined, undefined);
       refresh();
     }
     else if(['Door', 'Window', 'TV', 'Toilet', 'Sink'].includes(clickEvent)){
-      addObject(objects.length, clickEvent + ' ' + id, mouseX, mouseY, undefined, undefined, undefined, 0, undefined, undefined, undefined,
-      undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined);
+      addObject(true, objects.length, clickEvent + ' ' + id, mouseX, mouseY, undefined, undefined, undefined, 0, undefined, undefined,
+      undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined);
       refresh();
     }
     else if(clickEvent == 'Text') {
-      addObject(objects.length, 'Text ' + id, mouseX - 70, mouseY + 10, undefined, undefined, undefined, 0, undefined, undefined, undefined,
-      undefined, undefined, undefined, undefined, undefined, '#000000', undefined, undefined, 'Your text', 32);
+      addObject(true, objects.length, 'Text ' + id, mouseX - 70, mouseY + 10, undefined, undefined, undefined, 0, undefined, undefined,
+      undefined, undefined, undefined, undefined, undefined, undefined, '#000000', undefined, undefined, 'Your text', 32);
       refresh();
     }
     else if(objects.length && clickEvent == 'Move') {
       objects.pop();
       const index = objects.indexOf(activeObject);
+      activeObject.visibility = true;
       if(object.x != activeObject.x) dragObject(object.x - activeObject.x, object.y - activeObject.y, index);
       diffPositionX = 0;
       diffPositionY = 0;
@@ -359,12 +363,13 @@ function resetObject() {
   object = {}
 }
 
-function addObject(_index, _name, _x, _y, _w, _h, _l, _angle, _topLeftRadius, _topRightRadius, _bottomRightRadius,
+function addObject(_visibility, _index, _name, _x, _y, _w, _h, _l, _angle, _topLeftRadius, _topRightRadius, _bottomRightRadius,
 _bottomLeftRadius, _strokeColor, _noStroke, _fillColor, _noFill, _color, _numPlace, _typeChair, _inputText, _size) {
 
   resetObject();
   
   object = {
+    visibility : _visibility,
     index : _index,
     name : _name,
     x : _x,
@@ -401,7 +406,7 @@ _bottomLeftRadius, _strokeColor, _noStroke, _fillColor, _noFill, _color, _numPla
         removeObject(_name);
       },
       redo: function() {
-        addObject(_index, _name, _x, _y, _w, _h, _l, _angle, _topLeftRadius, _topRightRadius, _bottomRightRadius,
+        addObject(_visibility, _index, _name, _x, _y, _w, _h, _l, _angle, _topLeftRadius, _topRightRadius, _bottomRightRadius,
           _bottomLeftRadius, _strokeColor, _noStroke, _fillColor, _noFill, _color, _numPlace, _typeChair, _inputText, _size);
       }
     });
@@ -429,7 +434,7 @@ function removeObject(_name) {
   if(!_name.endsWith('drawing')) {
     undoManager.add({
       undo: function() {
-        addObject(_object.index, _object.name, _object.x, _object.y, _object.w, _object.h, _object.l, 
+        addObject(_object.visibility, _object.index, _object.name, _object.x, _object.y, _object.w, _object.h, _object.l, 
           _object.angle, _object.topLeftRadius, _object.topRightRadius, _object.bottomRightRadius, 
           _object.bottomLeftRadius, _object.strokeColor, _object.noStroke, _object.fillColor, 
           _object.noFill, _object.color, _object.numPlace, _object.typeChair, _object.inputText, 
