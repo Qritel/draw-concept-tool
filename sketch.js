@@ -330,8 +330,8 @@ function mouseReleased() {
       x1 = 0, y1 = 0, x2 = 0, y2 = 0;
     }
     else if(clickEvent == 'Table') {
-      addObject(objects.length, 'Table ' + id, mouseX, mouseY, undefined, undefined, undefined, undefined, undefined, undefined, undefined,
-      undefined, undefined, undefined, undefined, undefined, undefined, 2, 'chair', undefined, undefined);
+      addObject(objects.length, 'Table ' + id, mouseX - 50, mouseY - 32, undefined, undefined, undefined, undefined, undefined, undefined,
+      undefined, undefined, undefined, undefined, undefined, undefined, undefined, 2, 'chair', undefined, undefined);
       refresh();
     }
     else if(['Door', 'Window', 'TV', 'Toilet', 'Sink'].includes(clickEvent)){
@@ -340,7 +340,7 @@ function mouseReleased() {
       refresh();
     }
     else if(clickEvent == 'Text') {
-      addObject(objects.length, 'Text ' + id, mouseX, mouseY, undefined, undefined, undefined, 0, undefined, undefined, undefined,
+      addObject(objects.length, 'Text ' + id, mouseX - 70, mouseY + 10, undefined, undefined, undefined, 0, undefined, undefined, undefined,
       undefined, undefined, undefined, undefined, undefined, '#000000', undefined, undefined, 'Your text', 32);
       refresh();
     }
@@ -350,9 +350,9 @@ function mouseReleased() {
       if(object.x != activeObject.x) dragObject(object.x - activeObject.x, object.y - activeObject.y, index);
       diffPositionX = 0;
       diffPositionY = 0;
+      cursor(ARROW);
     }
   }
-  cursor(ARROW);
 }
 
 function resetObject() {
@@ -612,5 +612,11 @@ function createBtnTool(_name, _x, _y, _clickEvent){
     }
     clickEvent = _clickEvent;
     buttons[l - 1]['pointer'].class('button_pressed');
+    if(clickEvent == 'Move') {
+      cursor(ARROW);
+    }
+    else {
+      cursor(CROSS);
+    }
   });
 }
