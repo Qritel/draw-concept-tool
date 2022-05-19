@@ -23,7 +23,7 @@ var toiletimg;
 var tvimg;
 var zoom = 100;
 var ellipseZoomX;
-var button;
+var buttons = [];
 var btnUndo;
 var btnRedo;
 
@@ -72,78 +72,16 @@ function setup() {
   //p5: Set its postion
   canv.position(canvasX, canvasY);
 
-  button = createButton('⬛');
-  button.position(0, 100);
-  button.class('button');
-  button.mousePressed(function() { clickEvent='Draw_Rect'; });
-
-  button = createButton('	▬▬');
-  button.position(0, 140);
-  button.class('button');
-  button.mousePressed(function() { clickEvent='Draw_Line'; });
-
-  button = createButton('Table');
-  button.position(0, 180);
-  button.class('button');
-  button.mousePressed(function() {
-    addObject(objects.length, 'Table ' + id, 70, 70, undefined, undefined, undefined, undefined, undefined, undefined, undefined,
-    undefined, undefined, undefined, undefined, undefined, undefined, 2, 'chair', undefined, undefined);
-    refresh();
-  });
-
-  button = createButton('Door');
-  button.position(0, 220);
-  button.class('button');
-  button.mousePressed(function() {
-    addObject(objects.length, 'Door ' + id, 70, 70, undefined, undefined, undefined, 0, undefined, undefined, undefined,
-    undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined);
-    refresh();
-  });
-
-  button = createButton('Window');
-  button.position(0, 260);
-  button.class('button');
-  button.mousePressed(function() {
-    addObject(objects.length, 'Window ' + id, 70, 70, undefined, undefined, undefined, 0, undefined, undefined, undefined,
-    undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined);
-    refresh();
-  });
-
-  button = createButton('TV');
-  button.position(0, 300);
-  button.class('button');
-  button.mousePressed(function() {
-    addObject(objects.length, 'TV ' + id, 70, 70, undefined, undefined, undefined, 0, undefined, undefined, undefined,
-    undefined, undefined, undefined, undefined,undefined,  undefined, undefined, undefined, undefined, undefined);
-    refresh();
-  });
-
-  button = createButton('Toilet');
-  button.position(0, 340);
-  button.class('button');
-  button.mousePressed(function() {
-    addObject(objects.length, 'Toilet ' + id, 70, 70, undefined, undefined, undefined, 0, undefined, undefined, undefined,
-    undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined);
-    refresh();
-  });
-
-  button = createButton('Sink');
-  button.position(0, 380);
-  button.class('button');
-  button.mousePressed(function() {
-    addObject(objects.length, 'Sink ' + id, 70, 70, undefined, undefined, undefined, 0, undefined, undefined, undefined,
-    undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined);
-    refresh();
-  });
-
-  button = createButton('Text');
-  button.position(0, 420);
-  button.class('button');
-  button.mousePressed(function() {
-    addObject(objects.length, 'Text ' + id, 90, 70, undefined, undefined, undefined, 0, undefined, undefined, undefined,
-    undefined, undefined, undefined, undefined, undefined, '#000000', undefined, undefined, 'Your text', 32);
-    refresh();
-  });
+  createBtnTool('⇱', 0, 60, 'Move');
+  createBtnTool('⬛', 0, 100, 'Draw_Rect');
+  createBtnTool('▬▬', 0, 140, 'Draw_Line');
+  createBtnTool('Table', 0, 180, 'Table');
+  createBtnTool('Door', 0, 220, 'Door');
+  createBtnTool('Window', 0, 260, 'Window');
+  createBtnTool('TV', 0, 300, 'TV');
+  createBtnTool('Toilet', 0, 340, 'Toilet');
+  createBtnTool('Sink', 0, 380, 'Sink');
+  createBtnTool('Text', 0, 420, 'Text');
 
   button = createButton('-');
   button.position(102.5, canvasHeight - 23);
@@ -337,7 +275,7 @@ function mousePressed() {
       x1 = mouseX * 100 / zoom;
       y1 = mouseY * 100 / zoom;
     }
-    else if(objects.length){
+    else if(objects.length && clickEvent == 'Move'){
       diffPositionX = mouseX * 100 / zoom - panel.getValue('x');
       diffPositionY = mouseY * 100 / zoom - panel.getValue('y');
       object = { ...activeObject };
@@ -390,9 +328,23 @@ function mouseReleased() {
       }
       refresh();
       x1 = 0, y1 = 0, x2 = 0, y2 = 0;
-      clickEvent = '';
     }
-    else if(objects.length){
+    else if(clickEvent == 'Table') {
+      addObject(objects.length, 'Table ' + id, mouseX, mouseY, undefined, undefined, undefined, undefined, undefined, undefined, undefined,
+      undefined, undefined, undefined, undefined, undefined, undefined, 2, 'chair', undefined, undefined);
+      refresh();
+    }
+    else if(['Door', 'Window', 'TV', 'Toilet', 'Sink'].includes(clickEvent)){
+      addObject(objects.length, clickEvent + ' ' + id, mouseX, mouseY, undefined, undefined, undefined, 0, undefined, undefined, undefined,
+      undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined);
+      refresh();
+    }
+    else if(clickEvent == 'Text') {
+      addObject(objects.length, 'Text ' + id, mouseX, mouseY, undefined, undefined, undefined, 0, undefined, undefined, undefined,
+      undefined, undefined, undefined, undefined, undefined, '#000000', undefined, undefined, 'Your text', 32);
+      refresh();
+    }
+    else if(objects.length && clickEvent == 'Move') {
       objects.pop();
       const index = objects.indexOf(activeObject);
       if(object.x != activeObject.x) dragObject(object.x - activeObject.x, object.y - activeObject.y, index);
@@ -582,7 +534,7 @@ function refreshLayers() {
       layerUp.overrideStyle('🡡', 'font-weight', 'bold');
       layerDown.overrideStyle('🡣', 'font-weight', 'bold');
     }
-    else{
+    else {
       layers.overrideStyle(_object.name, 'color', '#000000');
       layerUp.overrideStyle('🡡', 'color', '#000000');
       layerDown.overrideStyle('🡣', 'color', '#000000');
@@ -646,4 +598,19 @@ function refresh() {
   refreshLayers();
   createPanel(activeObject);
   redraw();
+}
+
+function createBtnTool(_name, _x, _y, _clickEvent){
+  buttons.push({pointer : createButton(_name), clickEvent : _clickEvent});
+  let l = buttons.length
+  buttons[l - 1]['pointer'].position(_x, _y);
+  buttons[l - 1]['pointer'].class('button');
+  buttons[l - 1]['pointer'].mousePressed(function() {
+    if(clickEvent) {
+      const index = buttons.findIndex(_button => _button.clickEvent === clickEvent);
+      buttons[index]['pointer'].class('button');
+    }
+    clickEvent = _clickEvent;
+    buttons[l - 1]['pointer'].class('button_pressed');
+  });
 }

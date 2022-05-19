@@ -37,6 +37,15 @@
     padding: 12px 10px;
 }
 
+.button_pressed {
+    background-color: #666666;
+    color: #efefef;
+    text-decoration: none;
+    width: 101px;
+    border: 1px solid #d6d6d6;
+    padding: 12px 10px;
+}
+
 .button_zoom {
     background-color: #ffffff;
     color: #555555;
