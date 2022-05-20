@@ -288,7 +288,7 @@ function mouseDragged() {
       }
       redraw();
     }
-    else if(diffPositionX && diffPositionY) {
+    else if(diffPositionX && diffPositionY  && clickEvent == 'Move') {
       cursor(MOVE);
       createPanel(object);
       panel.setValue('x',parseInt(mouseX * 100 / zoom - diffPositionX));
@@ -307,26 +307,29 @@ function mouseReleased() {
       }
       else if(clickEvent == 'Draw_Line') {
         removeObject('Line drawing');
-        addObject(true, objects.length, 'Line ' + id, x1+(x2-x1)/2, y1+(y2-y1)/2, 2, undefined, parseInt(sqrt((x1-x2)*(x1-x2)+(y1-y2)*(y1-y2)))
-        , atan((y2-y1)/(x2-x1)), undefined, undefined, undefined,undefined, undefined, undefined, undefined, 
-        undefined, '#000000', undefined, undefined, undefined, undefined);
+        addObject(true, objects.length, 'Line ' + id, x1+(x2-x1)/2, y1+(y2-y1)/2, 2, undefined,
+        parseInt(sqrt((x1-x2)*(x1-x2)+(y1-y2)*(y1-y2))), atan((y2-y1)/(x2-x1)), undefined, undefined, undefined,undefined,
+        undefined, undefined, undefined, undefined, '#000000', undefined, undefined, undefined, undefined);
       }
       refresh();
       x1 = 0, y1 = 0, x2 = 0, y2 = 0;
     }
     else if(clickEvent == 'Table') {
-      addObject(true, objects.length, 'Table ' + id, mouseX - 50, mouseY - 32, undefined, undefined, undefined, undefined, undefined,
-      undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, 2, 'chair', undefined, undefined);
+      addObject(true, objects.length, 'Table ' + id, mouseX * 100 / zoom - 50, mouseY * 100 / zoom - 32, undefined, undefined, undefined,
+      undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, 2, 'chair', undefined,
+      undefined);
       refresh();
     }
     else if(['Door', 'Window', 'TV', 'Toilet', 'Sink'].includes(clickEvent)){
-      addObject(true, objects.length, clickEvent + ' ' + id, mouseX, mouseY, undefined, undefined, undefined, 0, undefined, undefined,
-      undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined);
+      addObject(true, objects.length, clickEvent + ' ' + id, mouseX * 100 / zoom, mouseY * 100 / zoom, undefined, undefined, undefined,
+      0, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined,
+      undefined);
       refresh();
     }
     else if(clickEvent == 'Text') {
-      addObject(true, objects.length, 'Text ' + id, mouseX - 70, mouseY + 10, undefined, undefined, undefined, 0, undefined, undefined,
-      undefined, undefined, undefined, undefined, undefined, undefined, '#000000', undefined, undefined, 'Your text', 32);
+      addObject(true, objects.length, 'Text ' + id, mouseX * 100 / zoom - 70, mouseY * 100 / zoom + 10, undefined, undefined, undefined,
+      0, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, '#000000', undefined, undefined,
+      'Your text', 32);
       refresh();
     }
     else if(objects.length && clickEvent == 'Move') {
