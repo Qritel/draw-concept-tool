@@ -21,8 +21,8 @@ let windowimg;
 let sinkimg;
 let toiletimg;
 let tvimg;
-let zoom = 100;
-let ellipseZoomX;
+let slider;
+let zoom;
 let buttons = [];
 let btnUndo;
 let btnRedo;
@@ -83,21 +83,11 @@ function setup() {
   createBtnTool('Sink', 0, 380, 'Sink');
   createBtnTool('Text', 0, 420, 'Text');
 
-  button = createButton('-');
-  button.position(102.5, canvasHeight - 23);
-  button.class('button_zoom');
-  button.mousePressed(function() {
-    if(zoom > 5) zoom -= 5;
-    redraw();
-  });
-
-  button = createButton('+');
-  button.position(254, canvasHeight - 23);
-  button.class('button_zoom');
-  button.mousePressed(function() {
-    if(zoom < 200) zoom += 5;
-    redraw();
-  });
+  //zoom slider
+  slider = createSlider(0, 250, 100, 5);
+  slider.position(1, canvasHeight - 20);
+  slider.style('width', '94px');
+  slider.input(redraw);
 
   btnUndo = createButton('⟲');
   btnUndo.position(10,20);
@@ -123,8 +113,11 @@ function draw() {
   background('#ffffff')
   noFill();
   stroke('#d8d8d8');
-  rect(0,0,canvasWidth-1,canvasHeight-1);
+  rect(0, 0, canvasWidth - 1, canvasHeight - 1);
 
+  zoom = slider.value();
+  stroke('#2e7bb6');
+  text(zoom + '%', 5, canvasHeight - 6);
   push();
   scale(zoom / 100);
   
@@ -256,17 +249,6 @@ function draw() {
       }
     }
   });
-  pop();
-
-  //zoom slider
-  push();
-  scale(1);
-  fill('#555555');
-  line(20, canvasHeight - 15, 150, canvasHeight - 15);
-  ellipseZoomX = map(zoom / 100, 0, 2, 20, 150, true);
-  ellipse(ellipseZoomX, canvasHeight - 15, 8, 8);
-  textSize(10);
-  text(zoom + '%', ellipseZoomX - 10, canvasHeight - 25);
   pop();
 }
 

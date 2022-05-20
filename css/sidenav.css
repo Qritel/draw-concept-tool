@@ -38,12 +38,13 @@
 }
 
 .button_pressed {
-    background-color: #666666;
+    background-color: #2e7bb6;
     color: #efefef;
     text-decoration: none;
     width: 101px;
     border: 1px solid #d6d6d6;
     padding: 12px 10px;
+    font-weight: bold;
 }
 
 .button_zoom {
