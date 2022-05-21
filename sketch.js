@@ -29,8 +29,8 @@ let btnRedo;
 
 //An array will contain all the objects on the map -canvas-
 let objects = [];
-let object = {};
-let activeObject;
+let tmpObject = {};
+let activeObject = {};
 
 //A panel lists the names of the created objects
 let layers;
@@ -60,7 +60,7 @@ function setup() {
 
   QuickSettings.useExtStyleSheet();
 
-  createPanel(object);
+  createPanel(activeObject);
   refreshLayers();
 
   //p5: Creates a canvas element in the document, and sets the dimensions of it in pixels
@@ -157,14 +157,16 @@ function draw() {
         pop();
       }
       else if(_object.name.startsWith('Table')) {
-        image(tableimg,_object.x,_object.y,100,73);
-
+        push();
+        imageMode(CENTER);
+        image(tableimg, _object.x, _object.y, 100, 73);
+        pop();
         // draw chairs arranged in a circle
         for(let i = 0; i < _object.numPlace; i++) {
 
           let angle = TWO_PI / _object.numPlace * i;
-          let x = _object.x + cos(angle) * 60 -51;
-          let y = _object.y + sin(angle) * 60 -30;
+          let x = _object.x + cos(angle) * 55;
+          let y = _object.y + sin(angle) * 55;
 
           switch(_object.typeChair) {
 
@@ -172,7 +174,7 @@ function draw() {
             //p5: The push() function saves the current drawing style settings and transformations, while pop() restores these settings
               push();
               imageMode(CENTER);
-              translate(x+100, y+65);
+              translate(x, y);
               angleMode(RADIANS);
               rotate(angle+PI/2);
               image(chairimg,0, 0, 200, 130);
@@ -182,7 +184,7 @@ function draw() {
             case 'sofa':
               push();
               imageMode(CENTER);
-              translate(x+100, y+65);
+              translate(x, y);
               angleMode(RADIANS);
               rotate(angle+PI/2);
               image(sofaimg,0, 0, 200, 130);
@@ -244,7 +246,21 @@ function draw() {
         translate(_object.x, _object.y);
         angleMode(DEGREES);
         rotate(_object.angle);
-        text(_object.inputText, 0, 0);
+        text(_object.inputText, -60, -30, _object.swidth, _object.sheight);
+        pop();
+      }
+      if(activeObject === _object){
+        push();
+        rectMode(CENTER); 
+        console.log(_object.x)
+        translate(_object.x, _object.y);
+        stroke('#2e7bf6');
+        noFill();
+        strokeWeight(1);
+        drawingContext.setLineDash([5, 5]);
+        rotate(_object.angle);
+        rect(0, 0, _object.swidth + 5, _object.sheight + 5,
+          _object.topLeftRadius, _object.topRightRadius, _object.bottomRightRadius, _object.bottomLeftRadius);
         pop();
       }
     }
@@ -262,9 +278,9 @@ function mousePressed() {
     else if(objects.length && clickEvent == 'Move'){
       diffPositionX = mouseX * 100 / zoom - panel.getValue('x');
       diffPositionY = mouseY * 100 / zoom - panel.getValue('y');
-      object = { ...activeObject };
+      tmpObject = { ...activeObject };
       activeObject.visibility = false;
-      objects.push(object);
+      objects.push(tmpObject);
     }
   }
 }
@@ -276,21 +292,21 @@ function mouseDragged() {
       x2 = mouseX * 100 / zoom;
       y2 = mouseY * 100 / zoom;
       if(clickEvent == 'Draw_Rect') {
-        removeObject('Rectangle drawing');
-        addObject(true, objects.length, 'Rectangle drawing', x1+(x2-x1)/2, y1+(y2-y1)/2, abs(x2-x1), abs(y2-y1), undefined, 0, 0, 0, 0,
-        0, '#000000', false, '#ffffff', false, undefined, undefined, undefined, undefined, undefined);
+        if(objects.length && objects[objects.length - 1].name === 'Rectangle drawing') objects.pop();
+        addObject(arrayToObject([true, objects.length, 'Rectangle drawing', x1+(x2-x1)/2, y1+(y2-y1)/2, abs(x2-x1), abs(y2-y1), undefined,
+        0, 0, 0, 0, 0, '#000000', false, '#ffffff', false, undefined, undefined, undefined, undefined, undefined, undefined, undefined]));
       }
       if(clickEvent == 'Draw_Line') {
-        removeObject('Line drawing');
-        addObject(true, objects.length, 'Line drawing', x1+(x2-x1)/2, y1+(y2-y1)/2, 2, undefined, parseInt(sqrt((x1-x2)*(x1-x2)+(y1-y2)*(y1-y2)))
-          , atan((y2-y1)/(x2-x1)), undefined, undefined, undefined,undefined, undefined, undefined, undefined, 
-          undefined, '#000000', undefined, undefined, undefined, undefined);
+        if(objects.length && objects[objects.length - 1].name === 'Line drawing') objects.pop();
+        addObject(arrayToObject([true, objects.length, 'Line drawing', x1+(x2-x1)/2, y1+(y2-y1)/2, 2, undefined,
+        parseInt(sqrt((x1-x2)*(x1-x2)+(y1-y2)*(y1-y2))), atan((y2-y1)/(x2-x1)), undefined, undefined, undefined,undefined, undefined,
+        undefined, undefined, undefined, '#000000', undefined, undefined, undefined, undefined, undefined, undefined]));
       }
       redraw();
     }
     else if(diffPositionX && diffPositionY  && clickEvent == 'Move') {
       cursor(MOVE);
-      createPanel(object);
+      createPanel(tmpObject);
       panel.setValue('x',parseInt(mouseX * 100 / zoom - diffPositionX));
       panel.setValue('y',parseInt(mouseY * 100 / zoom - diffPositionY));
     }
@@ -301,42 +317,49 @@ function mouseReleased() {
   if(mouseX > 0 && mouseX < canvasWidth && mouseY > 0 && mouseY < canvasHeight) {
     if(clickEvent == 'Draw_Rect' || clickEvent == 'Draw_Line') {
       if(clickEvent == 'Draw_Rect') {
-        removeObject('Rectangle drawing');
-        addObject(true, objects.length,'Rectangle ' + id, x1+(x2-x1)/2, y1+(y2-y1)/2, abs(x2-x1), abs(y2-y1), undefined, 0, 0, 0, 0,
-        0, '#000000', false, '#ffffff', false, undefined, undefined, undefined, undefined, undefined);
+        objects.pop();
+        addObject(arrayToObject([true, objects.length, 'Rectangle ' + id, x1+(x2-x1)/2, y1+(y2-y1)/2, abs(x2-x1), abs(y2-y1), undefined,
+        0, 0, 0, 0, 0, '#000000', false, '#ffffff', false, undefined, undefined, undefined, undefined, undefined, abs(x2-x1), abs(y2-y1)]));
       }
       else if(clickEvent == 'Draw_Line') {
-        removeObject('Line drawing');
-        addObject(true, objects.length, 'Line ' + id, x1+(x2-x1)/2, y1+(y2-y1)/2, 2, undefined,
+        objects.pop();
+        addObject(arrayToObject([true, objects.length, 'Line ' + id, x1+(x2-x1)/2, y1+(y2-y1)/2, 2, undefined,
         parseInt(sqrt((x1-x2)*(x1-x2)+(y1-y2)*(y1-y2))), atan((y2-y1)/(x2-x1)), undefined, undefined, undefined,undefined,
-        undefined, undefined, undefined, undefined, '#000000', undefined, undefined, undefined, undefined);
+        undefined, undefined, undefined, undefined, '#000000', undefined, undefined, undefined, undefined,
+        parseInt(sqrt((x1-x2)*(x1-x2)+(y1-y2)*(y1-y2))), 2]));
       }
       refresh();
       x1 = 0, y1 = 0, x2 = 0, y2 = 0;
     }
     else if(clickEvent == 'Table') {
-      addObject(true, objects.length, 'Table ' + id, mouseX * 100 / zoom - 50, mouseY * 100 / zoom - 32, undefined, undefined, undefined,
+      addObject(arrayToObject([true, objects.length, 'Table ' + id, mouseX * 100 / zoom, mouseY * 100 / zoom, undefined, undefined, undefined,
       undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, 2, 'chair', undefined,
-      undefined);
+      undefined, 70, 70]));
       refresh();
     }
-    else if(['Door', 'Window', 'TV', 'Toilet', 'Sink'].includes(clickEvent)){
-      addObject(true, objects.length, clickEvent + ' ' + id, mouseX * 100 / zoom, mouseY * 100 / zoom, undefined, undefined, undefined,
+    else if(['Door', 'Toilet', 'Sink'].includes(clickEvent)){
+      addObject(arrayToObject([true, objects.length, clickEvent + ' ' + id, mouseX * 100 / zoom, mouseY * 100 / zoom, undefined, undefined, undefined,
       0, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined,
-      undefined);
+      undefined, 70, 70]));
+      refresh();
+    }
+    else if(['Window', 'TV'].includes(clickEvent)){
+      addObject(arrayToObject([true, objects.length, clickEvent + ' ' + id, mouseX * 100 / zoom, mouseY * 100 / zoom, undefined, undefined, undefined,
+      0, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined,
+      undefined, 150, 20]));
       refresh();
     }
     else if(clickEvent == 'Text') {
-      addObject(true, objects.length, 'Text ' + id, mouseX * 100 / zoom - 70, mouseY * 100 / zoom + 10, undefined, undefined, undefined,
+      addObject(arrayToObject([true, objects.length, 'Text ' + id, mouseX * 100 / zoom, mouseY * 100 / zoom, undefined, undefined, undefined,
       0, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, '#000000', undefined, undefined,
-      'Your text', 32);
+      'Your text', 14, 120, 60]));
       refresh();
     }
     else if(objects.length && clickEvent == 'Move') {
       objects.pop();
       const index = objects.indexOf(activeObject);
       activeObject.visibility = true;
-      if(object.x != activeObject.x) dragObject(object.x - activeObject.x, object.y - activeObject.y, index);
+      if(tmpObject.x != activeObject.x) dragObject(tmpObject.x - activeObject.x, tmpObject.y - activeObject.y, index);
       diffPositionX = 0;
       diffPositionY = 0;
       cursor(ARROW);
@@ -344,89 +367,74 @@ function mouseReleased() {
   }
 }
 
-function resetObject() {
-  object = {}
+function arrayToObject(array) {
+  let object = {
+    visibility : array[0],
+    index : array[1],
+    name : array[2],
+    x : array[3],
+    y : array[4],
+    w : array[5],
+    h : array[6],
+    l : array[7],
+    angle : array[8],
+    topLeftRadius : array[9],
+    topRightRadius : array[10],
+    bottomRightRadius : array[11],
+    bottomLeftRadius : array[12],
+    strokeColor : array[13],
+    noStroke : array[14],
+    fillColor : array[15],
+    noFill : array[16],
+    color : array[17], // color for text and line
+    numPlace : array[18],
+    typeChair : array[19],
+    inputText : array[20],
+    size : array[21],
+    swidth : array[22],
+    sheight : array[23]
+  }
+  return object;
 }
 
-function addObject(_visibility, _index, _name, _x, _y, _w, _h, _l, _angle, _topLeftRadius, _topRightRadius, _bottomRightRadius,
-_bottomLeftRadius, _strokeColor, _noStroke, _fillColor, _noFill, _color, _numPlace, _typeChair, _inputText, _size) {
-
-  resetObject();
-  
-  object = {
-    visibility : _visibility,
-    index : _index,
-    name : _name,
-    x : _x,
-    y : _y,
-    w : _w,
-    h : _h,
-    l : _l,
-    angle : _angle,
-    topLeftRadius : _topLeftRadius,
-    topRightRadius : _topRightRadius,
-    bottomRightRadius : _bottomRightRadius,
-    bottomLeftRadius : _bottomLeftRadius,
-    strokeColor : _strokeColor,
-    noStroke : _noStroke,
-    fillColor : _fillColor,
-    noFill : _noFill,
-    color : _color, // color for text and line
-    numPlace : _numPlace,
-    typeChair : _typeChair,
-    inputText : _inputText,
-    size : _size
-  }
-
-  Object.keys(object).forEach(key => {
-    if (object[key] === undefined) {
-      delete object[key];
+function addObject(_object) {
+  Object.keys(_object).forEach(key => {
+    if (_object[key] === undefined) {
+      delete _object[key];
     }
   });
-
-  if(!_name.endsWith('drawing')) {
+  if(_object.name && !_object.name.endsWith('drawing')) {
     id ++;
     undoManager.add({
       undo: function() {
-        removeObject(_name);
+        removeObject(_object);
       },
       redo: function() {
-        addObject(_visibility, _index, _name, _x, _y, _w, _h, _l, _angle, _topLeftRadius, _topRightRadius, _bottomRightRadius,
-          _bottomLeftRadius, _strokeColor, _noStroke, _fillColor, _noFill, _color, _numPlace, _typeChair, _inputText, _size);
+        addObject(_object);
       }
     });
   }
-
-  objects.splice(_index, 0, object);
-  activeObject = objects[_index];
+  objects.splice(_object.index, 0, _object);
+  activeObject = _object;
 }
 
-function removeObject(_name) {
-
-  const index = objects.findIndex(_object => _object.name === _name);
-  _object = objects[index];
-
-  objects = objects.filter(function( _object ) {
-    return _object.name !== _name;
-  });
-
+function removeObject(_object) {
+  const index = objects.indexOf(_object);
+  if (index > -1) {
+    objects.splice(index, 1);
+  }
   if(activeObject === _object) {
     if(objects.length == 0) activeObject = {};
     else if(index == 0) activeObject = objects[index];
     else activeObject = objects[index-1];
   }
-
-  if(!_name.endsWith('drawing')) {
+  if(_object.name && !_object.name.endsWith('drawing')) {
     undoManager.add({
       undo: function() {
-        addObject(_object.visibility, _object.index, _object.name, _object.x, _object.y, _object.w, _object.h, _object.l, 
-          _object.angle, _object.topLeftRadius, _object.topRightRadius, _object.bottomRightRadius, 
-          _object.bottomLeftRadius, _object.strokeColor, _object.noStroke, _object.fillColor, 
-          _object.noFill, _object.color, _object.numPlace, _object.typeChair, _object.inputText, 
-          _object.size);
+        addObject(_object);
       },
       redo: function() {
-        removeObject(_name);
+        removeObject(_object);
       }
     });
   }
@@ -502,23 +510,18 @@ function refreshLayers() {
   layerDelete.setGlobalChangeHandler(refresh);
 
   objects.slice().reverse().forEach(function(_object) {
-
     layers.addButton(_object.name, function() {
       activeObject = _object;
     });
-
     layerUp.addButton('🡡', function() {
       moveUpObject(_object.name);
     });
-
     layerDown.addButton('🡣', function() {
       moveDownObject(_object.name);
     });
-    
     layerDelete.addButton('🗑️', function() {
-      removeObject(_object.name);
+      removeObject(_object);
     });
-
     if(activeObject == _object) {
       layers.overrideStyle(_object.name, 'font-weight', 'bold');
       layerUp.overrideStyle('🡡', 'font-weight', 'bold');
@@ -537,9 +540,7 @@ function moveUpObject(_name) {
   activeObject = objects[index];
   const len = objects.length;
   if(index < len - 1) {
-
     [objects[index], objects[index + 1]] = [objects[index + 1], objects[index]];
-
     undoManager.add({
       undo: function() {
         moveDownObject(_name);
@@ -555,9 +556,7 @@ function moveDownObject(_name) {
   const index = objects.findIndex(_object => _object.name === _name);
   activeObject = objects[index];
   if(index > 0) {
-
     [objects[index], objects[index - 1]] = [objects[index - 1], objects[index]];
-
     undoManager.add({
       undo: function() {
         moveUpObject(_name);
@@ -610,3 +609,7 @@ function createBtnTool(_name, _x, _y, _clickEvent){
     }
   });
 }
+
+// function selectObject(_mouseX, _mouseY){
+  
+// }
