@@ -251,15 +251,14 @@ function draw() {
       }
       if(activeObject === _object){
         push();
-        rectMode(CENTER); 
-        console.log(_object.x)
+        rectMode(CENTER);
         translate(_object.x, _object.y);
         stroke('#2e7bf6');
         noFill();
         strokeWeight(1);
         drawingContext.setLineDash([5, 5]);
         rotate(_object.angle);
-        rect(0, 0, _object.swidth + 5, _object.sheight + 5,
+        rect(0, 0, _object.swidth, _object.sheight,
           _object.topLeftRadius, _object.topRightRadius, _object.bottomRightRadius, _object.bottomLeftRadius);
         pop();
       }
@@ -275,9 +274,11 @@ function mousePressed() {
       x1 = mouseX * 100 / zoom;
       y1 = mouseY * 100 / zoom;
     }
-    else if(objects.length && clickEvent == 'Move'){
-      diffPositionX = mouseX * 100 / zoom - panel.getValue('x');
-      diffPositionY = mouseY * 100 / zoom - panel.getValue('y');
+    else if(selectObject(mouseX, mouseY) && objects.length && clickEvent == 'Move'){
+      activeObject = selectObject(mouseX, mouseY);
+      refresh();
+      diffPositionX = mouseX * 100 / zoom - panel.getValue('x') + 0.01;
+      diffPositionY = mouseY * 100 / zoom - panel.getValue('y') + 0.01;
       tmpObject = { ...activeObject };
       activeObject.visibility = false;
       objects.push(tmpObject);
@@ -304,7 +305,7 @@ function mouseDragged() {
       }
       redraw();
     }
-    else if(diffPositionX && diffPositionY  && clickEvent == 'Move') {
+    else if(diffPositionX && diffPositionY && clickEvent == 'Move') {
       cursor(MOVE);
       createPanel(tmpObject);
       panel.setValue('x',parseInt(mouseX * 100 / zoom - diffPositionX));
@@ -319,14 +320,15 @@ function mouseReleased() {
       if(clickEvent == 'Draw_Rect') {
         objects.pop();
         addObject(arrayToObject([true, objects.length, 'Rectangle ' + id, x1+(x2-x1)/2, y1+(y2-y1)/2, abs(x2-x1), abs(y2-y1), undefined,
-        0, 0, 0, 0, 0, '#000000', false, '#ffffff', false, undefined, undefined, undefined, undefined, undefined, abs(x2-x1), abs(y2-y1)]));
+        0, 0, 0, 0, 0, '#000000', false, '#ffffff', false, undefined, undefined, undefined, undefined, undefined, abs(x2-x1) + 5,
+        abs(y2-y1) + 5]));
       }
       else if(clickEvent == 'Draw_Line') {
         objects.pop();
         addObject(arrayToObject([true, objects.length, 'Line ' + id, x1+(x2-x1)/2, y1+(y2-y1)/2, 2, undefined,
         parseInt(sqrt((x1-x2)*(x1-x2)+(y1-y2)*(y1-y2))), atan((y2-y1)/(x2-x1)), undefined, undefined, undefined,undefined,
         undefined, undefined, undefined, undefined, '#000000', undefined, undefined, undefined, undefined,
-        parseInt(sqrt((x1-x2)*(x1-x2)+(y1-y2)*(y1-y2))), 2]));
+        parseInt(sqrt((x1-x2)*(x1-x2)+(y1-y2)*(y1-y2))) + 5, 7]));
       }
       refresh();
       x1 = 0, y1 = 0, x2 = 0, y2 = 0;
@@ -334,28 +336,28 @@ function mouseReleased() {
     else if(clickEvent == 'Table') {
       addObject(arrayToObject([true, objects.length, 'Table ' + id, mouseX * 100 / zoom, mouseY * 100 / zoom, undefined, undefined, undefined,
       undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, 2, 'chair', undefined,
-      undefined, 70, 70]));
+      undefined, 75, 75]));
       refresh();
     }
     else if(['Door', 'Toilet', 'Sink'].includes(clickEvent)){
       addObject(arrayToObject([true, objects.length, clickEvent + ' ' + id, mouseX * 100 / zoom, mouseY * 100 / zoom, undefined, undefined, undefined,
       0, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined,
-      undefined, 70, 70]));
+      undefined, 75, 75]));
       refresh();
     }
     else if(['Window', 'TV'].includes(clickEvent)){
       addObject(arrayToObject([true, objects.length, clickEvent + ' ' + id, mouseX * 100 / zoom, mouseY * 100 / zoom, undefined, undefined, undefined,
       0, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined,
-      undefined, 150, 20]));
+      undefined, 155, 25]));
       refresh();
     }
     else if(clickEvent == 'Text') {
       addObject(arrayToObject([true, objects.length, 'Text ' + id, mouseX * 100 / zoom, mouseY * 100 / zoom, undefined, undefined, undefined,
       0, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, '#000000', undefined, undefined,
-      'Your text', 14, 120, 60]));
+      'Your text', 14, 125, 65]));
       refresh();
     }
-    else if(objects.length && clickEvent == 'Move') {
+    else if(diffPositionX && diffPositionY && objects.length && clickEvent == 'Move') {
       objects.pop();
       const index = objects.indexOf(activeObject);
       activeObject.visibility = true;
@@ -610,6 +612,19 @@ function createBtnTool(_name, _x, _y, _clickEvent){
   });
 }
 
-// function selectObject(_mouseX, _mouseY){
-  
-// }
+function selectObject(_mouseX, _mouseY){
+  let sObj = [];
+  let xPrime;
+  let yPrime;
+  objects.forEach(function(_object) {
+    xPrime = (_mouseX - _object.x) * cos(_object.angle) + (_mouseY-_object.y) * sin(_object.angle) + _object.x;
+    yPrime = (_mouseY - _object.y) * cos(_object.angle) - (_mouseX-_object.x) * sin(_object.angle) + _object.y;
+    if(xPrime < _object.x + _object.swidth / 2 && xPrime > _object.x - _object.swidth / 2
+    && yPrime < _object.y + _object.sheight / 2 && yPrime > _object.y - _object.sheight / 2){
+      sObj.push(_object);
+    }
+  });
+  const maxI =  Math.max(...sObj.map(_object => _object.index));
+  const index = sObj.findIndex(_object => _object.index === maxI);
+  return sObj[index];
+}
