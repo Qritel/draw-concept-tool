@@ -617,8 +617,14 @@ function selectObject(_mouseX, _mouseY){
   let xPrime;
   let yPrime;
   objects.forEach(function(_object) {
-    xPrime = (_mouseX - _object.x) * cos(_object.angle) + (_mouseY-_object.y) * sin(_object.angle) + _object.x;
-    yPrime = (_mouseY - _object.y) * cos(_object.angle) - (_mouseX-_object.x) * sin(_object.angle) + _object.y;
+    if(_object.angle){
+      xPrime = (_mouseX - _object.x) * cos(_object.angle) + (_mouseY-_object.y) * sin(_object.angle) + _object.x;
+      yPrime = (_mouseY - _object.y) * cos(_object.angle) - (_mouseX-_object.x) * sin(_object.angle) + _object.y;
+    }
+    else{
+      xPrime = _mouseX;
+      yPrime = _mouseY;
+    }
     if(xPrime < _object.x + _object.swidth / 2 && xPrime > _object.x - _object.swidth / 2
     && yPrime < _object.y + _object.sheight / 2 && yPrime > _object.y - _object.sheight / 2){
       sObj.push(_object);
