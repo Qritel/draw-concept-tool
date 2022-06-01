@@ -26,6 +26,9 @@ let zoom;
 let buttons = [];
 let btnUndo;
 let btnRedo;
+let btnUp;
+let btnDown;
+let btnDelete;
 
 //An array will contain all the objects on the map -canvas-
 let objects = [];
@@ -34,9 +37,6 @@ let activeObject = {};
 
 //A panel lists the names of the created objects
 let layers;
-let layerUp;
-let layerDown;
-let layerDelete;
 
 //A panel lists the properties of selected object
 let panel;
@@ -65,7 +65,7 @@ function setup() {
 
   //p5: Creates a canvas element in the document, and sets the dimensions of it in pixels
   canvasX = 100;
-  canvasY = 1;
+  canvasY = 35;
   canvasWidth = windowWidth - 191 - canvasX;
   canvasHeight = windowHeight - 2 - canvasY;
   let canv = createCanvas(canvasWidth, canvasHeight);
@@ -85,23 +85,30 @@ function setup() {
 
   //zoom slider
   slider = createSlider(0, 250, 100, 5);
-  slider.position(1, canvasHeight - 20);
+  slider.position(1, canvasHeight + canvasY - 20);
   slider.style('width', '94px');
   slider.input(redraw);
 
   btnUndo = createButton('⟲');
-  btnUndo.position(10,20);
+  btnUndo.position(10, 20);
   btnUndo.mousePressed(function() {
     undoManager.undo();
     refresh();
   });
 
   btnRedo = createButton('⟳');
-  btnRedo.position(61,20);
+  btnRedo.position(61, 20);
   btnRedo.mousePressed(function() {
     undoManager.redo();
     refresh();
   });
+
+  btnUp = createButton('🡡');
+  btnUp.position(canvasWidth, 5);
+  btnDown = createButton('🡣');
+  btnDown.position(canvasWidth + 30, 5);
+  btnDelete = createButton('🗑️');
+  btnDelete.position(canvasWidth + 60, 5);
 
   noLoop();
 }
@@ -249,21 +256,42 @@ function draw() {
         text(_object.inputText, -60, -30, _object.swidth, _object.sheight);
         pop();
       }
-      if(activeObject === _object){
-        push();
-        rectMode(CENTER);
-        translate(_object.x, _object.y);
-        stroke('#2e7bf6');
-        noFill();
-        strokeWeight(1);
-        drawingContext.setLineDash([5, 5]);
-        rotate(_object.angle);
-        rect(0, 0, _object.swidth, _object.sheight,
-          _object.topLeftRadius, _object.topRightRadius, _object.bottomRightRadius, _object.bottomLeftRadius);
-        pop();
-      }
     }
   });
+  if(activeObject.visibility){
+    push();
+    rectMode(CENTER);
+    translate( activeObject.x, activeObject.y);
+    stroke('#2e7bf6');
+    noFill();
+    strokeWeight(1);
+    drawingContext.setLineDash([5, 5]);
+    rotate(activeObject.angle);
+    rect(0, 0, activeObject.swidth, activeObject.sheight,
+      activeObject.topLeftRadius, activeObject.topRightRadius, activeObject.bottomRightRadius, activeObject.bottomLeftRadius);
+    // fill('#000000');
+    // ellipse(activeObject.swidth / 2, activeObject.sheight / 2, 7, 7);
+    // ellipse(-activeObject.swidth / 2, -activeObject.sheight / 2, 7, 7);
+    // ellipse(-activeObject.swidth / 2, activeObject.sheight / 2, 7, 7);
+    // ellipse(activeObject.swidth / 2, -activeObject.sheight /2, 7, 7);
+    pop();
+    
+    if(activeObject.name != 'Rectangle drawing'){
+      btnUp.mousePressed(function() { moveUpObject(activeObject.name); refresh(); });
+      btnDown.mousePressed(function() { moveDownObject(activeObject.name); refresh(); });
+      btnDelete.mousePressed(function() { removeObject(activeObject); refresh(); });
+    }
+  }
+  if(objects.length){
+    btnUp.show();
+    btnDown.show();
+    btnDelete.show();
+  }
+  else{
+    btnUp.hide();
+    btnDown.hide();
+    btnDelete.hide();
+  }
   pop();
 }
 
@@ -274,7 +302,7 @@ function mousePressed() {
       x1 = mouseX * 100 / zoom;
       y1 = mouseY * 100 / zoom;
     }
-    else if(selectObject(mouseX, mouseY) && objects.length && clickEvent == 'Move'){
+    else if(selectObject(mouseX, mouseY) && clickEvent == 'Move'){
       activeObject = selectObject(mouseX, mouseY);
       refresh();
       diffPositionX = mouseX * 100 / zoom - panel.getValue('x') + 0.01;
@@ -289,7 +317,7 @@ function mousePressed() {
 //p5 function: called once every time the mouse moves and a mouse button is pressed.
 function mouseDragged() {
   if(mouseX > 0 && mouseX < canvasWidth && mouseY > 0 && mouseY < canvasHeight) {
-    if(clickEvent == 'Draw_Rect' || clickEvent == 'Draw_Line') {
+    if(x1 && y1 && clickEvent == 'Draw_Rect' || clickEvent == 'Draw_Line') {
       x2 = mouseX * 100 / zoom;
       y2 = mouseY * 100 / zoom;
       if(clickEvent == 'Draw_Rect') {
@@ -316,7 +344,7 @@ function mouseDragged() {
 
 function mouseReleased() {
   if(mouseX > 0 && mouseX < canvasWidth && mouseY > 0 && mouseY < canvasHeight) {
-    if(clickEvent == 'Draw_Rect' || clickEvent == 'Draw_Line') {
+    if(x1 && y1 && x2 && y2 && clickEvent == 'Draw_Rect' || clickEvent == 'Draw_Line') {
       if(clickEvent == 'Draw_Rect') {
         objects.pop();
         addObject(arrayToObject([true, objects.length, 'Rectangle ' + id, x1+(x2-x1)/2, y1+(y2-y1)/2, abs(x2-x1), abs(y2-y1), undefined,
@@ -488,51 +516,19 @@ function refreshLayers() {
   }
 
   layers = QuickSettings.create(windowWidth - 190, 0, 'Layers');
-  layers.setSize(108, windowHeight - windowHeight * 0.4 - 2);
+  layers.setSize(188, windowHeight - windowHeight * 0.4 - 2);
   layers.setDraggable(false);
   layers.setCollapsible(false);
   layers.setGlobalChangeHandler(refresh);
-
-  layerUp = QuickSettings.create(windowWidth - 82, 0, ' ');
-  layerUp.setSize(26, windowHeight - windowHeight * 0.4 - 2);
-  layerUp.setDraggable(false);
-  layerUp.setCollapsible(false);
-  layerUp.setGlobalChangeHandler(refresh);
-
-  layerDown = QuickSettings.create(windowWidth - 56, 0, ' ');
-  layerDown.setSize(26, windowHeight - windowHeight * 0.4 - 2);
-  layerDown.setDraggable(false);
-  layerDown.setCollapsible(false);
-  layerDown.setGlobalChangeHandler(refresh);
-
-  layerDelete = QuickSettings.create(windowWidth - 30, 0, ' ');
-  layerDelete.setSize(28, windowHeight - windowHeight * 0.4 - 2);
-  layerDelete.setDraggable(false);
-  layerDelete.setCollapsible(false);
-  layerDelete.setGlobalChangeHandler(refresh);
 
   objects.slice().reverse().forEach(function(_object) {
     layers.addButton(_object.name, function() {
       activeObject = _object;
     });
-    layerUp.addButton('🡡', function() {
-      moveUpObject(_object.name);
-    });
-    layerDown.addButton('🡣', function() {
-      moveDownObject(_object.name);
-    });
-    layerDelete.addButton('🗑️', function() {
-      removeObject(_object);
-    });
     if(activeObject == _object) {
       layers.overrideStyle(_object.name, 'font-weight', 'bold');
-      layerUp.overrideStyle('🡡', 'font-weight', 'bold');
-      layerDown.overrideStyle('🡣', 'font-weight', 'bold');
-    }
-    else {
-      layers.overrideStyle(_object.name, 'color', '#000000');
-      layerUp.overrideStyle('🡡', 'color', '#000000');
-      layerDown.overrideStyle('🡣', 'color', '#000000');
+      layers.overrideStyle(_object.name, 'background-color', '#2e7bb6');
+      layers.overrideStyle(_object.name, 'color', '#ffffff');
     }
   });
 }

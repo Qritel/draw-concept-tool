@@ -140,7 +140,7 @@
   font: 11.5px sans-serif;
   text-align: left;
   width: 100%;
-  padding-left: 0px;
+  padding-left: 5px;
 }
 .qs_button:active {
   background-color: #ffffff;

@@ -10,6 +10,17 @@
     padding-top: 20px;
 }
 
+.topnav {
+    height: 35px;
+    width: 100%;
+    position: fixed;
+    z-index: 0;
+    top: 0;
+    left: 0;
+    background-color: #efefef;
+    overflow-x: hidden;
+}
+
 .button {
     background-color: #efefef;
     color: #000000;
