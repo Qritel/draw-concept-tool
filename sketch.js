@@ -6,6 +6,8 @@ This code uses 2 libraries :
 
 let x1 = 0, y1 = 0, x2 = 0, y2 = 0;
 let clickEvent = '';
+let tmpClickEvent = '';
+let corner ='';
 let id = 1;
 let canvasWidth;
 let canvasHeight;
@@ -269,13 +271,19 @@ function draw() {
     rotate(activeObject.angle);
     rect(0, 0, activeObject.swidth, activeObject.sheight,
       activeObject.topLeftRadius, activeObject.topRightRadius, activeObject.bottomRightRadius, activeObject.bottomLeftRadius);
-    // fill('#000000');
-    // ellipse(activeObject.swidth / 2, activeObject.sheight / 2, 7, 7);
-    // ellipse(-activeObject.swidth / 2, -activeObject.sheight / 2, 7, 7);
-    // ellipse(-activeObject.swidth / 2, activeObject.sheight / 2, 7, 7);
-    // ellipse(activeObject.swidth / 2, -activeObject.sheight /2, 7, 7);
-    pop();
-    
+    if(activeObject.name.startsWith('Rectangle')){
+      stroke('#999999');
+      drawingContext.setLineDash([]);
+      fill('#000000');
+      textSize(20);
+      textStyle(BOLD);
+      textAlign(CENTER, CENTER);
+      text('⬌', activeObject.swidth / 2, 1);
+      text('⬍', 0, -activeObject.sheight / 2 + 4);
+      text('⬌', -activeObject.swidth / 2 + 1, 1);
+      text('⬍', 0, activeObject.sheight /2);
+      pop();
+    }
     if(activeObject.name != 'Rectangle drawing'){
       btnUp.mousePressed(function() { moveUpObject(activeObject.name); refresh(); });
       btnDown.mousePressed(function() { moveDownObject(activeObject.name); refresh(); });
@@ -298,12 +306,22 @@ function draw() {
 //p5 function: called once after every time a mouse button is pressed.
 function mousePressed() {
   if(mouseX > 0 && mouseX < canvasWidth && mouseY > 0 && mouseY < canvasHeight) {
-    if(clickEvent == 'Draw_Rect' || clickEvent == 'Draw_Line') {
+    if(objectCorner(mouseX,mouseY)){
+      corner = objectCorner(mouseX, mouseY);
+      tmpClickEvent = clickEvent;
+      clickEvent = 'Resize';
+      diffPositionX = mouseX * 100 / zoom - panel.getValue('x') + 0.01;
+      diffPositionY = mouseY * 100 / zoom - panel.getValue('y') + 0.01;
+      tmpObject = { ...activeObject };
+      activeObject.visibility = false;
+      objects.push(tmpObject);
+    }
+    else if(clickEvent == 'Draw_Rect' || clickEvent == 'Draw_Line') {
       x1 = mouseX * 100 / zoom;
       y1 = mouseY * 100 / zoom;
     }
-    else if(selectObject(mouseX, mouseY) && clickEvent == 'Move'){
-      activeObject = selectObject(mouseX, mouseY);
+    else if(selectedObject(mouseX, mouseY) && clickEvent == 'Move'){
+      activeObject = selectedObject(mouseX, mouseY);
       refresh();
       diffPositionX = mouseX * 100 / zoom - panel.getValue('x') + 0.01;
       diffPositionY = mouseY * 100 / zoom - panel.getValue('y') + 0.01;
@@ -317,7 +335,26 @@ function mousePressed() {
 //p5 function: called once every time the mouse moves and a mouse button is pressed.
 function mouseDragged() {
   if(mouseX > 0 && mouseX < canvasWidth && mouseY > 0 && mouseY < canvasHeight) {
-    if(x1 && y1 && clickEvent == 'Draw_Rect' || clickEvent == 'Draw_Line') {
+    if(diffPositionX && diffPositionY && clickEvent == 'Resize') {
+      createPanel(tmpObject);
+      if(corner == 'U'){
+        panel.setValue('h',parseInt(activeObject.h - mouseY * 100 / zoom + diffPositionY + activeObject.y));
+        panel.setValue('y',parseInt((mouseY * 100 / zoom - diffPositionY + activeObject.y) / 2));
+      }
+      if(corner == 'D'){
+        panel.setValue('h',parseInt(activeObject.h + mouseY * 100 / zoom - diffPositionY - activeObject.y));
+        panel.setValue('y',parseInt((mouseY * 100 / zoom - diffPositionY + activeObject.y) / 2));
+      }
+      if(corner == 'L'){
+        panel.setValue('w',parseInt(activeObject.w - mouseX * 100 / zoom + diffPositionX + activeObject.x));
+        panel.setValue('x',parseInt((mouseX * 100 / zoom - diffPositionX + activeObject.x) / 2));
+      }
+      if(corner == 'R'){
+        panel.setValue('w',parseInt(activeObject.w + mouseX * 100 / zoom - diffPositionX - activeObject.x));
+        panel.setValue('x',parseInt((mouseX * 100 / zoom - diffPositionX + activeObject.x) / 2));
+      }
+    }
+    else if(x1 && y1 && clickEvent == 'Draw_Rect' || clickEvent == 'Draw_Line') {
       x2 = mouseX * 100 / zoom;
       y2 = mouseY * 100 / zoom;
       if(clickEvent == 'Draw_Rect') {
@@ -343,7 +380,18 @@ function mouseDragged() {
 }
 
 function mouseReleased() {
-  if(mouseX > 0 && mouseX < canvasWidth && mouseY > 0 && mouseY < canvasHeight) {
+  if(clickEvent == 'Resize') {
+    objects.pop();
+    const index = objects.indexOf(activeObject);
+    activeObject.visibility = true;
+    clickEvent = tmpClickEvent;
+    if(tmpObject.x != activeObject.x || tmpObject.y != activeObject.y) 
+      resizeObject(tmpObject.x - activeObject.x, tmpObject.y - activeObject.y, tmpObject.w - activeObject.w,
+        tmpObject.h - activeObject.h, index);
+    diffPositionX = 0;
+    diffPositionY = 0;
+  }
+  else if(mouseX > 0 && mouseX < canvasWidth && mouseY > 0 && mouseY < canvasHeight) {
     if(x1 && y1 && x2 && y2 && clickEvent == 'Draw_Rect' || clickEvent == 'Draw_Line') {
       if(clickEvent == 'Draw_Rect') {
         objects.pop();
@@ -608,7 +656,7 @@ function createBtnTool(_name, _x, _y, _clickEvent){
   });
 }
 
-function selectObject(_mouseX, _mouseY){
+function selectedObject(_mouseX, _mouseY){
   let sObj = [];
   let xPrime;
   let yPrime;
@@ -629,4 +677,47 @@ function selectObject(_mouseX, _mouseY){
   const maxI =  Math.max(...sObj.map(_object => _object.index));
   const index = sObj.findIndex(_object => _object.index === maxI);
   return sObj[index];
+}
+
+function objectCorner(_mouseX, _mouseY){
+  let corner;
+  let xPrime;
+  let yPrime;
+  if(activeObject.angle){
+    xPrime = (_mouseX - activeObject.x) * cos(activeObject.angle) + (_mouseY-activeObject.y) * sin(activeObject.angle) + activeObject.x;
+    yPrime = (_mouseY - activeObject.y) * cos(activeObject.angle) - (_mouseX-activeObject.x) * sin(activeObject.angle) + activeObject.y;
+  }
+  else{
+    xPrime = _mouseX;
+    yPrime = _mouseY;
+  }
+  if(xPrime < activeObject.x + 5 && xPrime > activeObject.x - 5 && yPrime < activeObject.y - activeObject.sheight / 2 + 10
+    && yPrime > activeObject.y - activeObject.sheight / 2 - 10){
+    corner = 'U';
+  }
+  else if(xPrime < activeObject.x + 5 && xPrime > activeObject.x - 5 && yPrime < activeObject.y + activeObject.sheight / 2 + 10
+    && yPrime > activeObject.y + activeObject.sheight / 2 - 10){
+    corner = 'D';
+  }
+  else if(xPrime < activeObject.x - activeObject.swidth / 2 + 10 && xPrime > activeObject.x - activeObject.swidth / 2 - 10 
+    && yPrime < activeObject.y + 5 && yPrime > activeObject.y - 5){
+    corner = 'L';
+  }
+  else if(xPrime < activeObject.x + activeObject.swidth / 2 + 10 && xPrime > activeObject.x + activeObject.swidth / 2 - 10 
+    && yPrime < activeObject.y + 5 && yPrime > activeObject.y - 5){
+    corner = 'R';
+  }
+  return corner;
+}
+
+function resizeObject(_dx, _dy, _dw, _dh, _index) {
+  console.log("hi")
+  objects[_index].x += _dx;
+  objects[_index].y += _dy;
+  objects[_index].w += _dw;
+  objects[_index].h += _dh;
+  objects[_index].swidth += _dw;
+  objects[_index].sheight += _dh;
+  activeObject = objects[_index];
+  refresh();
 }
