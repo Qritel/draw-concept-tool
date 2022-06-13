@@ -271,7 +271,7 @@ function draw() {
     rotate(activeObject.angle);
     rect(0, 0, activeObject.swidth, activeObject.sheight,
       activeObject.topLeftRadius, activeObject.topRightRadius, activeObject.bottomRightRadius, activeObject.bottomLeftRadius);
-    if(activeObject.name.startsWith('Rectangle')){
+    if(activeObject.name.startsWith('Rectangle') || activeObject.name.startsWith('Line')){
       stroke('#999999');
       drawingContext.setLineDash([]);
       fill('#000000');
@@ -279,9 +279,11 @@ function draw() {
       textStyle(BOLD);
       textAlign(CENTER, CENTER);
       text('⬌', activeObject.swidth / 2, 1);
-      text('⬍', 0, -activeObject.sheight / 2 + 4);
       text('⬌', -activeObject.swidth / 2 + 1, 1);
-      text('⬍', 0, activeObject.sheight /2);
+      if(activeObject.name.startsWith('Rectangle')){
+        text('⬍', 0, -activeObject.sheight / 2 + 4);
+        text('⬍', 0, activeObject.sheight /2);
+      }
       pop();
     }
     if(activeObject.name != 'Rectangle drawing'){
@@ -306,12 +308,14 @@ function draw() {
 //p5 function: called once after every time a mouse button is pressed.
 function mousePressed() {
   if(mouseX > 0 && mouseX < canvasWidth && mouseY > 0 && mouseY < canvasHeight) {
-    if(objectCorner(mouseX,mouseY)){
+    if(objectCorner(mouseX,mouseY) && (activeObject.name.startsWith('Rectangle') || activeObject.name.startsWith('Line'))){
       corner = objectCorner(mouseX, mouseY);
       tmpClickEvent = clickEvent;
       clickEvent = 'Resize';
-      diffPositionX = mouseX * 100 / zoom - panel.getValue('x') + 0.01;
-      diffPositionY = mouseY * 100 / zoom - panel.getValue('y') + 0.01;
+      let mouseXp = (mouseX - activeObject.x) * cos(activeObject.angle) + (mouseY-activeObject.y) * sin(activeObject.angle) + activeObject.x;
+      let mouseYp = (mouseY - activeObject.y) * cos(activeObject.angle) - (mouseX-activeObject.x) * sin(activeObject.angle) + activeObject.y;
+      diffPositionX = mouseXp * 100 / zoom - panel.getValue('x') + 0.01;
+      diffPositionY = mouseYp * 100 / zoom - panel.getValue('y') + 0.01;
       tmpObject = { ...activeObject };
       activeObject.visibility = false;
       objects.push(tmpObject);
@@ -336,22 +340,30 @@ function mousePressed() {
 function mouseDragged() {
   if(mouseX > 0 && mouseX < canvasWidth && mouseY > 0 && mouseY < canvasHeight) {
     if(diffPositionX && diffPositionY && clickEvent == 'Resize') {
+      let mouseXp = (mouseX - activeObject.x) * cos(activeObject.angle) + (mouseY-activeObject.y) * sin(activeObject.angle) + activeObject.x;
+      let mouseYp = (mouseY - activeObject.y) * cos(activeObject.angle) - (mouseX-activeObject.x) * sin(activeObject.angle) + activeObject.y;
+      let dragX = - mouseXp * 100 / zoom + diffPositionX + activeObject.x;
+      let dragY = - mouseYp * 100 / zoom + diffPositionY + activeObject.y;
       createPanel(tmpObject);
-      if(corner == 'U'){
-        panel.setValue('h',parseInt(activeObject.h - mouseY * 100 / zoom + diffPositionY + activeObject.y));
-        panel.setValue('y',parseInt((mouseY * 100 / zoom - diffPositionY + activeObject.y) / 2));
+      panel.setValue('y',parseInt(activeObject.y - dragY / 2 * cos(activeObject.angle) - dragX / 2 * sin(activeObject.angle)));
+      panel.setValue('x',parseInt(activeObject.x + dragY / 2 * sin(activeObject.angle) - dragX / 2 * cos(activeObject.angle)));
+      if(corner == 'U' && activeObject.name.startsWith('Rectangle')){
+        panel.setValue('h',parseInt(activeObject.h + dragY));
       }
-      if(corner == 'D'){
-        panel.setValue('h',parseInt(activeObject.h + mouseY * 100 / zoom - diffPositionY - activeObject.y));
-        panel.setValue('y',parseInt((mouseY * 100 / zoom - diffPositionY + activeObject.y) / 2));
+      else if(corner == 'D' && activeObject.name.startsWith('Rectangle')){
+        panel.setValue('h',parseInt(activeObject.h - dragY));
       }
-      if(corner == 'L'){
-        panel.setValue('w',parseInt(activeObject.w - mouseX * 100 / zoom + diffPositionX + activeObject.x));
-        panel.setValue('x',parseInt((mouseX * 100 / zoom - diffPositionX + activeObject.x) / 2));
+      else if(corner == 'L'){
+        if(activeObject.name.startsWith('Rectangle'))
+          panel.setValue('w',parseInt(activeObject.w + dragX));
+        else if(activeObject.name.startsWith('Line'))
+          panel.setValue('l',parseInt(activeObject.l + dragX));
       }
-      if(corner == 'R'){
-        panel.setValue('w',parseInt(activeObject.w + mouseX * 100 / zoom - diffPositionX - activeObject.x));
-        panel.setValue('x',parseInt((mouseX * 100 / zoom - diffPositionX + activeObject.x) / 2));
+      else if(corner == 'R'){
+        if(activeObject.name.startsWith('Rectangle'))
+          panel.setValue('w',parseInt(activeObject.w - dragX));
+        else if(activeObject.name.startsWith('Line'))
+          panel.setValue('l',parseInt(activeObject.l - dragX));
       }
     }
     else if(x1 && y1 && clickEvent == 'Draw_Rect' || clickEvent == 'Draw_Line') {
@@ -681,16 +693,8 @@ function selectedObject(_mouseX, _mouseY){
 
 function objectCorner(_mouseX, _mouseY){
   let corner;
-  let xPrime;
-  let yPrime;
-  if(activeObject.angle){
-    xPrime = (_mouseX - activeObject.x) * cos(activeObject.angle) + (_mouseY-activeObject.y) * sin(activeObject.angle) + activeObject.x;
-    yPrime = (_mouseY - activeObject.y) * cos(activeObject.angle) - (_mouseX-activeObject.x) * sin(activeObject.angle) + activeObject.y;
-  }
-  else{
-    xPrime = _mouseX;
-    yPrime = _mouseY;
-  }
+  let xPrime = (_mouseX - activeObject.x) * cos(activeObject.angle) + (_mouseY-activeObject.y) * sin(activeObject.angle) + activeObject.x;
+  let yPrime = (_mouseY - activeObject.y) * cos(activeObject.angle) - (_mouseX-activeObject.x) * sin(activeObject.angle) + activeObject.y;
   if(xPrime < activeObject.x + 5 && xPrime > activeObject.x - 5 && yPrime < activeObject.y - activeObject.sheight / 2 + 10
     && yPrime > activeObject.y - activeObject.sheight / 2 - 10){
     corner = 'U';
@@ -711,7 +715,6 @@ function objectCorner(_mouseX, _mouseY){
 }
 
 function resizeObject(_dx, _dy, _dw, _dh, _index) {
-  console.log("hi")
   objects[_index].x += _dx;
   objects[_index].y += _dy;
   objects[_index].w += _dw;
