@@ -731,5 +731,13 @@ function resizeObject(_dx, _dy, _dw, _dh, _index){
   objects[_index].swidth += _dw;
   objects[_index].sheight += _dh;
   activeObject = objects[_index];
+  undoManager.add({
+    undo: function() {
+      resizeObject(-_dx, -_dy, -_dw, -_dh, _index);
+    },
+    redo: function() {
+      resizeObject(_dx, _dy, _dw, _dh, _index);
+    }
+  });
   refresh();
 }
