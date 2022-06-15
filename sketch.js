@@ -397,9 +397,13 @@ function mouseReleased() {
     const index = objects.indexOf(activeObject);
     activeObject.visibility = true;
     clickEvent = tmpClickEvent;
-    if(tmpObject.x != activeObject.x || tmpObject.y != activeObject.y) 
-      resizeObject(tmpObject.x - activeObject.x, tmpObject.y - activeObject.y, tmpObject.w - activeObject.w,
-        tmpObject.h - activeObject.h, index);
+    if(tmpObject.x != activeObject.x || tmpObject.y != activeObject.y) {
+      if(activeObject.name.startsWith('Rectangle'))
+        resizeObject(tmpObject.x - activeObject.x, tmpObject.y - activeObject.y, tmpObject.w - activeObject.w,
+          tmpObject.h - activeObject.h, index);
+      else if(activeObject.name.startsWith('Line'))
+        resizeObject(tmpObject.x - activeObject.x, tmpObject.y - activeObject.y, tmpObject.l - activeObject.l, 0, index);   
+    }
     diffPositionX = 0;
     diffPositionY = 0;
   }
@@ -714,11 +718,16 @@ function objectCorner(_mouseX, _mouseY){
   return corner;
 }
 
-function resizeObject(_dx, _dy, _dw, _dh, _index) {
+function resizeObject(_dx, _dy, _dw, _dh, _index){
   objects[_index].x += _dx;
   objects[_index].y += _dy;
-  objects[_index].w += _dw;
-  objects[_index].h += _dh;
+  if(objects[_index].name.startsWith('Rectangle')){
+    objects[_index].h += _dh;
+    objects[_index].w += _dw;
+  }
+  else if(objects[_index].name.startsWith('Line')){
+    objects[_index].l += _dw;
+  }
   objects[_index].swidth += _dw;
   objects[_index].sheight += _dh;
   activeObject = objects[_index];
