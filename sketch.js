@@ -356,27 +356,27 @@ function mouseDragged() {
       let dragY = - mouseYp + diffPositionY + activeObject.y;
       createPanel(tmpObject);
       if(corner == 'U' || corner == 'D' && activeObject.name.startsWith('Rectangle')){
-        panel.setValue('y',parseInt(activeObject.y - dragY / 2 * cos(activeObject.angle)));
-        panel.setValue('x',parseInt(activeObject.x + dragY / 2 * sin(activeObject.angle)));
+        panel.setValue('y',Number(activeObject.y - dragY / 2 * cos(activeObject.angle)).toFixed(2));
+        panel.setValue('x',Number(activeObject.x + dragY / 2 * sin(activeObject.angle)).toFixed(2));
         if(corner == 'U')
-          panel.setValue('h',parseInt(activeObject.h + dragY));
+          panel.setValue('h',Number(activeObject.h + dragY).toFixed(2));
         else 
-          panel.setValue('h',parseInt(activeObject.h - dragY));
+          panel.setValue('h',Number(activeObject.h - dragY).toFixed(2));
       }
       else if(corner == 'L' || corner == 'R'){
-        panel.setValue('y',parseInt(activeObject.y - dragX / 2 * sin(activeObject.angle)));
-        panel.setValue('x',parseInt(activeObject.x - dragX / 2 * cos(activeObject.angle)));
+        panel.setValue('y',Number(activeObject.y - dragX / 2 * sin(activeObject.angle)).toFixed(2));
+        panel.setValue('x',Number(activeObject.x - dragX / 2 * cos(activeObject.angle)).toFixed(2));
         if(corner == 'L'){
           if(activeObject.name.startsWith('Rectangle'))
-            panel.setValue('w',parseInt(activeObject.w + dragX));
+            panel.setValue('w',Number(activeObject.w + dragX).toFixed(2));
           else if(activeObject.name.startsWith('Line'))
-            panel.setValue('l',parseInt(activeObject.l + dragX));
+            panel.setValue('l',Number(activeObject.l + dragX).toFixed(2));
         }
         else{
           if(activeObject.name.startsWith('Rectangle'))
-            panel.setValue('w',parseInt(activeObject.w - dragX));
+            panel.setValue('w',Number(activeObject.w - dragX).toFixed(2));
           else if(activeObject.name.startsWith('Line'))
-            panel.setValue('l',parseInt(activeObject.l - dragX));
+            panel.setValue('l',Number(activeObject.l - dragX).toFixed(2));
         }
       }
     }
@@ -391,7 +391,7 @@ function mouseDragged() {
       if(clickEvent == 'Draw_Line') {
         if(objects.length && objects[objects.length - 1].name === 'Line drawing') objects.pop();
         addObject(arrayToObject([true, objects.length, 'Line drawing', x1+(x2-x1)/2, y1+(y2-y1)/2, 2, undefined,
-        parseInt(sqrt((x1-x2)*(x1-x2)+(y1-y2)*(y1-y2))), atan((y2-y1)/(x2-x1)), undefined, undefined, undefined,undefined, undefined,
+        Number(sqrt((x1-x2)*(x1-x2)+(y1-y2)*(y1-y2))).toFixed(2), atan((y2-y1)/(x2-x1)), undefined, undefined, undefined,undefined, undefined,
         undefined, undefined, undefined, '#000000', undefined, undefined, undefined, undefined, undefined, undefined]));
       }
       redraw();
@@ -399,8 +399,8 @@ function mouseDragged() {
     else if(diffPositionX && diffPositionY && clickEvent == 'Move') {
       cursor(MOVE);
       createPanel(tmpObject);
-      panel.setValue('x',parseInt(mouseX * zoomR - diffPositionX));
-      panel.setValue('y',parseInt(mouseY * zoomR - diffPositionY));
+      panel.setValue('x',Number(mouseX * zoomR - diffPositionX).toFixed(2));
+      panel.setValue('y',Number(mouseY * zoomR - diffPositionY).toFixed(2));
     }
   }
 }
@@ -434,9 +434,9 @@ function mouseReleased() {
       else if(clickEvent == 'Draw_Line') {
         objects.pop();
         addObject(arrayToObject([true, objects.length, 'Line ' + id, x1+(x2-x1)/2, y1+(y2-y1)/2, 2, undefined,
-        parseInt(sqrt((x1-x2)*(x1-x2)+(y1-y2)*(y1-y2))), atan((y2-y1)/(x2-x1)), undefined, undefined, undefined,undefined,
+        Number(sqrt((x1-x2)*(x1-x2)+(y1-y2)*(y1-y2))).toFixed(2), atan((y2-y1)/(x2-x1)), undefined, undefined, undefined,undefined,
         undefined, undefined, undefined, undefined, '#000000', undefined, undefined, undefined, undefined,
-        parseInt(sqrt((x1-x2)*(x1-x2)+(y1-y2)*(y1-y2))) + 5, 7]));
+        Number(sqrt((x1-x2)*(x1-x2)+(y1-y2)*(y1-y2))).toFixed(2) + 5, 7]));
       }
       refresh();
       x1 = 0, y1 = 0, x2 = 0, y2 = 0;
@@ -562,11 +562,11 @@ function createPanel(_object) {
   panel.setCollapsible(false);
   panel.setGlobalChangeHandler(function() {redraw()});
 
-  panel.bindNumber('x', 0, windowWidth, parseInt(_object.x), 1, _object);
-  panel.bindNumber('y', 0, windowHeight, parseInt(_object.y), 1, _object);
-  panel.bindNumber('w', 0, windowWidth, parseInt(_object.w), 1, _object);
-  panel.bindNumber('h', 0, windowHeight, parseInt(_object.h), 1, _object);
-  panel.bindNumber('l', 0, windowHeight, parseInt(_object.l), 1, _object);
+  panel.bindNumber('x', 0, windowWidth, Number(_object.x).toFixed(2), 1, _object);
+  panel.bindNumber('y', 0, windowHeight, Number(_object.y).toFixed(2), 1, _object);
+  panel.bindNumber('w', 0, windowWidth, Number(_object.w).toFixed(2), 1, _object);
+  panel.bindNumber('h', 0, windowHeight, Number(_object.h).toFixed(2), 1, _object);
+  panel.bindNumber('l', 0, windowHeight, Number(_object.l).toFixed(2), 1, _object);
   panel.bindRange('angle', -180, 180, _object.angle, 1, _object);
   panel.bindNumber('topLeftRadius', 0, 200, _object.topLeftRadius, 1, _object);
   panel.bindNumber('topRightRadius', 0, 200, _object.topRightRadius, 1, _object);
