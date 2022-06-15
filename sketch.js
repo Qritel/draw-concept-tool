@@ -25,6 +25,7 @@ let toiletimg;
 let tvimg;
 let slider;
 let zoom;
+let zoomR;
 let buttons = [];
 let btnUndo;
 let btnRedo;
@@ -125,6 +126,7 @@ function draw() {
   rect(0, 0, canvasWidth - 1, canvasHeight - 1);
 
   zoom = slider.value();
+  zoomR = 100 / zoom;
   stroke('#2e7bb6');
   text(zoom + '%', 5, canvasHeight - 6);
   push();
@@ -307,28 +309,32 @@ function draw() {
 
 //p5 function: called once after every time a mouse button is pressed.
 function mousePressed() {
+  let mouseXR = mouseX * zoomR;
+  let mouseYR = mouseY * zoomR;
   if(mouseX > 0 && mouseX < canvasWidth && mouseY > 0 && mouseY < canvasHeight) {
-    if(objectCorner(mouseX,mouseY) && (activeObject.name.startsWith('Rectangle') || activeObject.name.startsWith('Line'))){
-      corner = objectCorner(mouseX, mouseY);
+    if(objectCorner(mouseXR, mouseYR) && (activeObject.name.startsWith('Rectangle') || activeObject.name.startsWith('Line'))){
+      corner = objectCorner(mouseXR, mouseYR);
       tmpClickEvent = clickEvent;
       clickEvent = 'Resize';
-      let mouseXp = (mouseX - activeObject.x) * cos(activeObject.angle) + (mouseY-activeObject.y) * sin(activeObject.angle) + activeObject.x;
-      let mouseYp = (mouseY - activeObject.y) * cos(activeObject.angle) - (mouseX-activeObject.x) * sin(activeObject.angle) + activeObject.y;
-      diffPositionX = mouseXp * 100 / zoom - panel.getValue('x') + 0.01;
-      diffPositionY = mouseYp * 100 / zoom - panel.getValue('y') + 0.01;
+      let mouseXp = (mouseXR - activeObject.x) * cos(activeObject.angle) 
+                    + (mouseYR - activeObject.y) * sin(activeObject.angle) + activeObject.x;
+      let mouseYp = (mouseYR - activeObject.y) * cos(activeObject.angle)
+                    - (mouseXR - activeObject.x) * sin(activeObject.angle) + activeObject.y;
+      diffPositionX = mouseXp - panel.getValue('x') + 0.01;
+      diffPositionY = mouseYp - panel.getValue('y') + 0.01;
       tmpObject = { ...activeObject };
       activeObject.visibility = false;
       objects.push(tmpObject);
     }
     else if(clickEvent == 'Draw_Rect' || clickEvent == 'Draw_Line') {
-      x1 = mouseX * 100 / zoom;
-      y1 = mouseY * 100 / zoom;
+      x1 = mouseXR;
+      y1 = mouseYR;
     }
-    else if(selectedObject(mouseX, mouseY) && clickEvent == 'Move'){
-      activeObject = selectedObject(mouseX, mouseY);
+    else if(selectedObject(mouseXR, mouseYR) && clickEvent == 'Move'){
+      activeObject = selectedObject(mouseXR, mouseYR);
       refresh();
-      diffPositionX = mouseX * 100 / zoom - panel.getValue('x') + 0.01;
-      diffPositionY = mouseY * 100 / zoom - panel.getValue('y') + 0.01;
+      diffPositionX = mouseXR - panel.getValue('x') + 0.01;
+      diffPositionY = mouseYR - panel.getValue('y') + 0.01;
       tmpObject = { ...activeObject };
       activeObject.visibility = false;
       objects.push(tmpObject);
@@ -338,12 +344,16 @@ function mousePressed() {
 
 //p5 function: called once every time the mouse moves and a mouse button is pressed.
 function mouseDragged() {
+  let mouseXR = mouseX * zoomR;
+  let mouseYR = mouseY * zoomR;
   if(mouseX > 0 && mouseX < canvasWidth && mouseY > 0 && mouseY < canvasHeight) {
     if(diffPositionX && diffPositionY && clickEvent == 'Resize') {
-      let mouseXp = (mouseX - activeObject.x) * cos(activeObject.angle) + (mouseY - activeObject.y) * sin(activeObject.angle) + activeObject.x;
-      let mouseYp = (mouseY - activeObject.y) * cos(activeObject.angle) - (mouseX - activeObject.x) * sin(activeObject.angle) + activeObject.y;
-      let dragX = - mouseXp * 100 / zoom + diffPositionX + activeObject.x;
-      let dragY = - mouseYp * 100 / zoom + diffPositionY + activeObject.y;
+      let mouseXp = (mouseXR - activeObject.x) * cos(activeObject.angle) 
+                    + (mouseYR - activeObject.y) * sin(activeObject.angle) + activeObject.x;
+      let mouseYp = (mouseYR - activeObject.y) * cos(activeObject.angle) 
+                    - (mouseXR - activeObject.x) * sin(activeObject.angle) + activeObject.y;
+      let dragX = - mouseXp + diffPositionX + activeObject.x;
+      let dragY = - mouseYp + diffPositionY + activeObject.y;
       createPanel(tmpObject);
       if(corner == 'U' || corner == 'D' && activeObject.name.startsWith('Rectangle')){
         panel.setValue('y',parseInt(activeObject.y - dragY / 2 * cos(activeObject.angle)));
@@ -371,8 +381,8 @@ function mouseDragged() {
       }
     }
     else if(x1 && y1 && clickEvent == 'Draw_Rect' || clickEvent == 'Draw_Line') {
-      x2 = mouseX * 100 / zoom;
-      y2 = mouseY * 100 / zoom;
+      x2 = mouseX * zoomR;
+      y2 = mouseY * zoomR;
       if(clickEvent == 'Draw_Rect') {
         if(objects.length && objects[objects.length - 1].name === 'Rectangle drawing') objects.pop();
         addObject(arrayToObject([true, objects.length, 'Rectangle drawing', x1+(x2-x1)/2, y1+(y2-y1)/2, abs(x2-x1), abs(y2-y1), undefined,
@@ -389,13 +399,15 @@ function mouseDragged() {
     else if(diffPositionX && diffPositionY && clickEvent == 'Move') {
       cursor(MOVE);
       createPanel(tmpObject);
-      panel.setValue('x',parseInt(mouseX * 100 / zoom - diffPositionX));
-      panel.setValue('y',parseInt(mouseY * 100 / zoom - diffPositionY));
+      panel.setValue('x',parseInt(mouseX * zoomR - diffPositionX));
+      panel.setValue('y',parseInt(mouseY * zoomR - diffPositionY));
     }
   }
 }
 
 function mouseReleased() {
+  let mouseXR = mouseX * zoomR;
+  let mouseYR = mouseY * zoomR;
   if(clickEvent == 'Resize') {
     objects.pop();
     const index = objects.indexOf(activeObject);
@@ -430,25 +442,25 @@ function mouseReleased() {
       x1 = 0, y1 = 0, x2 = 0, y2 = 0;
     }
     else if(clickEvent == 'Table') {
-      addObject(arrayToObject([true, objects.length, 'Table ' + id, mouseX * 100 / zoom, mouseY * 100 / zoom, undefined, undefined, undefined,
+      addObject(arrayToObject([true, objects.length, 'Table ' + id, mouseXR, mouseYR, undefined, undefined, undefined,
       undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, 2, 'chair', undefined,
       undefined, 75, 75]));
       refresh();
     }
     else if(['Door', 'Toilet', 'Sink'].includes(clickEvent)){
-      addObject(arrayToObject([true, objects.length, clickEvent + ' ' + id, mouseX * 100 / zoom, mouseY * 100 / zoom, undefined, undefined, undefined,
+      addObject(arrayToObject([true, objects.length, clickEvent + ' ' + id, mouseXR, mouseYR, undefined, undefined, undefined,
       0, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined,
       undefined, 75, 75]));
       refresh();
     }
     else if(['Window', 'TV'].includes(clickEvent)){
-      addObject(arrayToObject([true, objects.length, clickEvent + ' ' + id, mouseX * 100 / zoom, mouseY * 100 / zoom, undefined, undefined, undefined,
+      addObject(arrayToObject([true, objects.length, clickEvent + ' ' + id, mouseXR, mouseYR, undefined, undefined, undefined,
       0, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined,
       undefined, 155, 25]));
       refresh();
     }
     else if(clickEvent == 'Text') {
-      addObject(arrayToObject([true, objects.length, 'Text ' + id, mouseX * 100 / zoom, mouseY * 100 / zoom, undefined, undefined, undefined,
+      addObject(arrayToObject([true, objects.length, 'Text ' + id, mouseXR, mouseYR, undefined, undefined, undefined,
       0, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, '#000000', undefined, undefined,
       'Your text', 14, 125, 65]));
       refresh();
