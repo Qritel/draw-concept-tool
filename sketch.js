@@ -340,30 +340,34 @@ function mousePressed() {
 function mouseDragged() {
   if(mouseX > 0 && mouseX < canvasWidth && mouseY > 0 && mouseY < canvasHeight) {
     if(diffPositionX && diffPositionY && clickEvent == 'Resize') {
-      let mouseXp = (mouseX - activeObject.x) * cos(activeObject.angle) + (mouseY-activeObject.y) * sin(activeObject.angle) + activeObject.x;
-      let mouseYp = (mouseY - activeObject.y) * cos(activeObject.angle) - (mouseX-activeObject.x) * sin(activeObject.angle) + activeObject.y;
+      let mouseXp = (mouseX - activeObject.x) * cos(activeObject.angle) + (mouseY - activeObject.y) * sin(activeObject.angle) + activeObject.x;
+      let mouseYp = (mouseY - activeObject.y) * cos(activeObject.angle) - (mouseX - activeObject.x) * sin(activeObject.angle) + activeObject.y;
       let dragX = - mouseXp * 100 / zoom + diffPositionX + activeObject.x;
       let dragY = - mouseYp * 100 / zoom + diffPositionY + activeObject.y;
       createPanel(tmpObject);
-      panel.setValue('y',parseInt(activeObject.y - dragY / 2 * cos(activeObject.angle) - dragX / 2 * sin(activeObject.angle)));
-      panel.setValue('x',parseInt(activeObject.x + dragY / 2 * sin(activeObject.angle) - dragX / 2 * cos(activeObject.angle)));
-      if(corner == 'U' && activeObject.name.startsWith('Rectangle')){
-        panel.setValue('h',parseInt(activeObject.h + dragY));
+      if(corner == 'U' || corner == 'D' && activeObject.name.startsWith('Rectangle')){
+        panel.setValue('y',parseInt(activeObject.y - dragY / 2 * cos(activeObject.angle)));
+        panel.setValue('x',parseInt(activeObject.x + dragY / 2 * sin(activeObject.angle)));
+        if(corner == 'U')
+          panel.setValue('h',parseInt(activeObject.h + dragY));
+        else 
+          panel.setValue('h',parseInt(activeObject.h - dragY));
       }
-      else if(corner == 'D' && activeObject.name.startsWith('Rectangle')){
-        panel.setValue('h',parseInt(activeObject.h - dragY));
-      }
-      else if(corner == 'L'){
-        if(activeObject.name.startsWith('Rectangle'))
-          panel.setValue('w',parseInt(activeObject.w + dragX));
-        else if(activeObject.name.startsWith('Line'))
-          panel.setValue('l',parseInt(activeObject.l + dragX));
-      }
-      else if(corner == 'R'){
-        if(activeObject.name.startsWith('Rectangle'))
-          panel.setValue('w',parseInt(activeObject.w - dragX));
-        else if(activeObject.name.startsWith('Line'))
-          panel.setValue('l',parseInt(activeObject.l - dragX));
+      else if(corner == 'L' || corner == 'R'){
+        panel.setValue('y',parseInt(activeObject.y - dragX / 2 * sin(activeObject.angle)));
+        panel.setValue('x',parseInt(activeObject.x - dragX / 2 * cos(activeObject.angle)));
+        if(corner == 'L'){
+          if(activeObject.name.startsWith('Rectangle'))
+            panel.setValue('w',parseInt(activeObject.w + dragX));
+          else if(activeObject.name.startsWith('Line'))
+            panel.setValue('l',parseInt(activeObject.l + dragX));
+        }
+        else{
+          if(activeObject.name.startsWith('Rectangle'))
+            panel.setValue('w',parseInt(activeObject.w - dragX));
+          else if(activeObject.name.startsWith('Line'))
+            panel.setValue('l',parseInt(activeObject.l - dragX));
+        }
       }
     }
     else if(x1 && y1 && clickEvent == 'Draw_Rect' || clickEvent == 'Draw_Line') {
