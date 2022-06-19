@@ -702,6 +702,7 @@ function moveUpObject(_name) {
   activeObject = objects[index];
   const len = objects.length;
   if(index < len - 1) {
+    [objects[index].index, objects[index + 1].index] = [objects[index + 1].index, objects[index].index];
     [objects[index], objects[index + 1]] = [objects[index + 1], objects[index]];
     undoManager.add({
       undo: function() {
@@ -718,6 +719,7 @@ function moveDownObject(_name) {
   const index = objects.findIndex(_object => _object.name === _name);
   activeObject = objects[index];
   if(index > 0) {
+    [objects[index].index, objects[index - 1].index] = [objects[index - 1].index, objects[index].index];
     [objects[index], objects[index - 1]] = [objects[index - 1], objects[index]];
     undoManager.add({
       undo: function() {
