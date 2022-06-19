@@ -262,37 +262,74 @@ function draw() {
       }
     }
   });
-  if(activeObject.visibility){
+  if(activeObject.visibility && activeObject.name != 'Rectangle drawing' && activeObject.name != 'Line drawing'){
     push();
     rectMode(CENTER);
-    translate( activeObject.x, activeObject.y);
+    translate(activeObject.x, activeObject.y);
     stroke('#2e7bf6');
     noFill();
     strokeWeight(1);
     drawingContext.setLineDash([5, 5]);
+    angleMode(DEGREES);
     rotate(activeObject.angle);
     rect(0, 0, activeObject.swidth, activeObject.sheight,
       activeObject.topLeftRadius, activeObject.topRightRadius, activeObject.bottomRightRadius, activeObject.bottomLeftRadius);
+    stroke('#999999');
+    drawingContext.setLineDash([]);
+    fill('#000000');
+    textSize(20);
+    textStyle(BOLD);
+    textAlign(CENTER, CENTER);
     if(activeObject.name.startsWith('Rectangle') || activeObject.name.startsWith('Line')){
-      stroke('#999999');
-      drawingContext.setLineDash([]);
-      fill('#000000');
-      textSize(20);
-      textStyle(BOLD);
-      textAlign(CENTER, CENTER);
       text('⬌', activeObject.swidth / 2, 1);
       text('⬌', -activeObject.swidth / 2 + 1, 1);
       if(activeObject.name.startsWith('Rectangle')){
         text('⬍', 0, -activeObject.sheight / 2 + 4);
         text('⬍', 0, activeObject.sheight /2);
       }
-      pop();
     }
-    if(activeObject.name != 'Rectangle drawing'){
-      btnUp.mousePressed(function() { moveUpObject(activeObject.name); refresh(); });
-      btnDown.mousePressed(function() { moveDownObject(activeObject.name); refresh(); });
-      btnDelete.mousePressed(function() { removeObject(activeObject); refresh(); });
+    translate(activeObject.swidth / 2, - activeObject.sheight /2);
+    noStroke();
+    if(!activeObject.name.startsWith('Line')){
+      rotate(-90);
+      text('⤾', 2, 7);
+      rotate(-90);
+      text('⤿', -3, 6)
+      translate(0, - activeObject.sheight);
+      rotate(180);
+      text('⤾', 2, 7);
+      rotate(-90);
+      text('⤿', -3, 6);
+      translate(0, - activeObject.swidth);
+      rotate(180);
+      text('⤾', 2, 7);
+      rotate(-90);
+      text('⤿', -3, 6);
+      translate(0, - activeObject.sheight);
+      rotate(180);
+      text('⤾', 2, 7);
+      rotate(-90);
+      text('⤿', -3, 6);
     }
+    else{
+      translate(7, 3);
+      rotate(-45);
+      text('⤾', 2, 7);
+      rotate(-90);
+      text('⤿', -3, 6);
+      rotate(-45);
+      translate(activeObject.swidth + 14, 0);
+      rotate(-45);
+      text('⤾', 2, 7);
+      rotate(-90);
+      text('⤿', -3, 6);
+    }
+    pop();
+  }
+  if(activeObject.name != 'Rectangle drawing' && activeObject.name != 'Line drawing'){
+    btnUp.mousePressed(function() { moveUpObject(activeObject.name); refresh(); });
+    btnDown.mousePressed(function() { moveDownObject(activeObject.name); refresh(); });
+    btnDelete.mousePressed(function() { removeObject(activeObject); refresh(); });
   }
   if(objects.length){
     btnUp.show();
@@ -311,17 +348,26 @@ function draw() {
 function mousePressed() {
   let mouseXR = mouseX * zoomR;
   let mouseYR = mouseY * zoomR;
+  let mouseXp = (mouseXR - activeObject.x) * cos(activeObject.angle) 
+                + (mouseYR - activeObject.y) * sin(activeObject.angle) + activeObject.x;
+  let mouseYp = (mouseYR - activeObject.y) * cos(activeObject.angle)
+                - (mouseXR - activeObject.x) * sin(activeObject.angle) + activeObject.y;
   if(mouseX > 0 && mouseX < canvasWidth && mouseY > 0 && mouseY < canvasHeight) {
-    if(objectCorner(mouseXR, mouseYR) && (activeObject.name.startsWith('Rectangle') || activeObject.name.startsWith('Line'))){
-      corner = objectCorner(mouseXR, mouseYR);
+    if(objects.length && rotateCorner(mouseXR, mouseYR)){
+      tmpClickEvent = clickEvent;
+      clickEvent = 'Rotate';
+      diffPositionX = mouseXR;
+      diffPositionY = mouseYR;
+      tmpObject = { ...activeObject };
+      activeObject.visibility = false;
+      objects.push(tmpObject);
+    }
+    else if(objects.length && resizeCorner(mouseXR, mouseYR)){
+      corner = resizeCorner(mouseXR, mouseYR);
       tmpClickEvent = clickEvent;
       clickEvent = 'Resize';
-      let mouseXp = (mouseXR - activeObject.x) * cos(activeObject.angle) 
-                    + (mouseYR - activeObject.y) * sin(activeObject.angle) + activeObject.x;
-      let mouseYp = (mouseYR - activeObject.y) * cos(activeObject.angle)
-                    - (mouseXR - activeObject.x) * sin(activeObject.angle) + activeObject.y;
-      diffPositionX = mouseXp - panel.getValue('x') + 0.01;
-      diffPositionY = mouseYp - panel.getValue('y') + 0.01;
+      diffPositionX = mouseXp - panel.getValue('x');
+      diffPositionY = mouseYp - panel.getValue('y');
       tmpObject = { ...activeObject };
       activeObject.visibility = false;
       objects.push(tmpObject);
@@ -347,7 +393,12 @@ function mouseDragged() {
   let mouseXR = mouseX * zoomR;
   let mouseYR = mouseY * zoomR;
   if(mouseX > 0 && mouseX < canvasWidth && mouseY > 0 && mouseY < canvasHeight) {
-    if(diffPositionX && diffPositionY && clickEvent == 'Resize') {
+    if(clickEvent == 'Rotate'){
+      createPanel(tmpObject);
+      panel.setValue('angle', activeObject.angle + atan2(mouseY - activeObject.y, mouseX - activeObject.x) - 
+      atan2(diffPositionY - activeObject.y, diffPositionX - activeObject.x));
+    }
+    else if(clickEvent == 'Resize') {
       let mouseXp = (mouseXR - activeObject.x) * cos(activeObject.angle) 
                     + (mouseYR - activeObject.y) * sin(activeObject.angle) + activeObject.x;
       let mouseYp = (mouseYR - activeObject.y) * cos(activeObject.angle) 
@@ -420,8 +471,15 @@ function mouseReleased() {
       else if(activeObject.name.startsWith('Line'))
         resizeObject(tmpObject.x - activeObject.x, tmpObject.y - activeObject.y, tmpObject.l - activeObject.l, 0, index);   
     }
-    diffPositionX = 0;
-    diffPositionY = 0;
+  }
+  if(clickEvent == 'Rotate') {
+    objects.pop();
+    const index = objects.indexOf(activeObject);
+    activeObject.visibility = true;
+    clickEvent = tmpClickEvent;
+    if(tmpObject.angle != activeObject.angle) {
+      rotateObject(tmpObject.angle - activeObject.angle, index);
+    }
   }
   else if(mouseX > 0 && mouseX < canvasWidth && mouseY > 0 && mouseY < canvasHeight) {
     if(x1 && y1 && x2 && y2 && clickEvent == 'Draw_Rect' || clickEvent == 'Draw_Line') {
@@ -434,9 +492,9 @@ function mouseReleased() {
       else if(clickEvent == 'Draw_Line') {
         objects.pop();
         addObject(arrayToObject([true, objects.length, 'Line ' + id, x1+(x2-x1)/2, y1+(y2-y1)/2, 2, undefined,
-        Number(sqrt((x1-x2)*(x1-x2)+(y1-y2)*(y1-y2))).toFixed(2), atan((y2-y1)/(x2-x1)), undefined, undefined, undefined,undefined,
+        sqrt((x1-x2)*(x1-x2)+(y1-y2)*(y1-y2)), atan((y2-y1)/(x2-x1)), undefined, undefined, undefined,undefined,
         undefined, undefined, undefined, undefined, '#000000', undefined, undefined, undefined, undefined,
-        Number(sqrt((x1-x2)*(x1-x2)+(y1-y2)*(y1-y2))).toFixed(2) + 5, 7]));
+        sqrt((x1-x2)*(x1-x2)+(y1-y2)*(y1-y2)) + 5, 7]));
       }
       refresh();
       x1 = 0, y1 = 0, x2 = 0, y2 = 0;
@@ -711,25 +769,62 @@ function selectedObject(_mouseX, _mouseY){
   return sObj[index];
 }
 
-function objectCorner(_mouseX, _mouseY){
+function resizeCorner(_mouseX, _mouseY){
   let corner;
   let xPrime = (_mouseX - activeObject.x) * cos(activeObject.angle) + (_mouseY-activeObject.y) * sin(activeObject.angle) + activeObject.x;
   let yPrime = (_mouseY - activeObject.y) * cos(activeObject.angle) - (_mouseX-activeObject.x) * sin(activeObject.angle) + activeObject.y;
-  if(xPrime < activeObject.x + 5 && xPrime > activeObject.x - 5 && yPrime < activeObject.y - activeObject.sheight / 2 + 10
-    && yPrime > activeObject.y - activeObject.sheight / 2 - 10){
-    corner = 'U';
+  if(activeObject.name.startsWith('Rectangle') || activeObject.name.startsWith('Line')){
+    if(xPrime < activeObject.x + 5 && xPrime > activeObject.x - 5 && yPrime < activeObject.y - activeObject.sheight / 2 + 10
+      && yPrime > activeObject.y - activeObject.sheight / 2 - 10){
+      corner = 'U';
+    }
+    else if(xPrime < activeObject.x + 5 && xPrime > activeObject.x - 5 && yPrime < activeObject.y + activeObject.sheight / 2 + 10
+      && yPrime > activeObject.y + activeObject.sheight / 2 - 10){
+      corner = 'D';
+    }
+    else if(xPrime < activeObject.x - activeObject.swidth / 2 + 10 && xPrime > activeObject.x - activeObject.swidth / 2 - 10 
+      && yPrime < activeObject.y + 5 && yPrime > activeObject.y - 5){
+      corner = 'L';
+    }
+    else if(xPrime < activeObject.x + activeObject.swidth / 2 + 10 && xPrime > activeObject.x + activeObject.swidth / 2 - 10 
+      && yPrime < activeObject.y + 5 && yPrime > activeObject.y - 5){
+      corner = 'R';
+    }
   }
-  else if(xPrime < activeObject.x + 5 && xPrime > activeObject.x - 5 && yPrime < activeObject.y + activeObject.sheight / 2 + 10
-    && yPrime > activeObject.y + activeObject.sheight / 2 - 10){
-    corner = 'D';
-  }
-  else if(xPrime < activeObject.x - activeObject.swidth / 2 + 10 && xPrime > activeObject.x - activeObject.swidth / 2 - 10 
+  return corner;
+}
+
+function rotateCorner(_mouseX, _mouseY){
+  let corner;
+  let xPrime = (_mouseX - activeObject.x) * cos(activeObject.angle) + (_mouseY-activeObject.y) * sin(activeObject.angle) + activeObject.x;
+  let yPrime = (_mouseY - activeObject.y) * cos(activeObject.angle) - (_mouseX-activeObject.x) * sin(activeObject.angle) + activeObject.y;
+  if(activeObject.name.startsWith('Line')){
+    if(xPrime < activeObject.x + activeObject.swidth / 2 + 20 && xPrime > activeObject.x + activeObject.swidth / 2 + 10
+      && yPrime < activeObject.y + 5 && yPrime > activeObject.y - 5){
+      corner = 'R';
+    }
+    else if(xPrime < activeObject.x - activeObject.swidth / 2 - 10 && xPrime > activeObject.x - activeObject.swidth / 2 - 20
     && yPrime < activeObject.y + 5 && yPrime > activeObject.y - 5){
-    corner = 'L';
+      corner = 'L';
+    }
   }
-  else if(xPrime < activeObject.x + activeObject.swidth / 2 + 10 && xPrime > activeObject.x + activeObject.swidth / 2 - 10 
-    && yPrime < activeObject.y + 5 && yPrime > activeObject.y - 5){
-    corner = 'R';
+  else if(!activeObject.name.startsWith('Table')){
+    if(xPrime < activeObject.x + activeObject.swidth / 2 + 10 && xPrime > activeObject.x + activeObject.swidth / 2
+      && yPrime < activeObject.y - activeObject.sheight / 2 && yPrime > activeObject.y - activeObject.sheight / 2 - 10){
+      corner = 'UR';
+    }
+    else if(xPrime < activeObject.x + activeObject.swidth / 2 + 10 && xPrime > activeObject.x + activeObject.swidth / 2
+      && yPrime < activeObject.y + activeObject.sheight / 2 + 10 && yPrime > activeObject.y + activeObject.sheight / 2){
+      corner = 'DR';
+    }
+    else if(xPrime < activeObject.x - activeObject.swidth / 2 && xPrime > activeObject.x - activeObject.swidth / 2 - 10
+    && yPrime < activeObject.y + activeObject.sheight / 2 + 10 && yPrime > activeObject.y + activeObject.sheight / 2){
+      corner = 'DL';
+    }
+    else if(xPrime < activeObject.x - activeObject.swidth / 2 && xPrime > activeObject.x - activeObject.swidth / 2 - 10
+    && yPrime < activeObject.y + activeObject.sheight / 2 && yPrime > activeObject.y - activeObject.sheight / 2 - 10){
+      corner = 'UL';
+    }
   }
   return corner;
 }
@@ -753,6 +848,20 @@ function resizeObject(_dx, _dy, _dw, _dh, _index){
     },
     redo: function() {
       resizeObject(_dx, _dy, _dw, _dh, _index);
+    }
+  });
+  refresh();
+}
+
+function rotateObject(_da, _index){
+  objects[_index].angle += _da;
+  activeObject = objects[_index];
+  undoManager.add({
+    undo: function() {
+      rotateObject(-_da, _index);
+    },
+    redo: function() {
+      rotateObject(_da, _index);
     }
   });
   refresh();
