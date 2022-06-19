@@ -170,14 +170,16 @@ function draw() {
       else if(_object.name.startsWith('Table')) {
         push();
         imageMode(CENTER);
-        image(tableimg, _object.x, _object.y, 100, 73);
-        pop();
+        translate(_object.x, _object.y);
+        angleMode(DEGREES);
+        rotate(_object.angle)
+        image(tableimg, 0, 0, 100, 73);
         // draw chairs arranged in a circle
         for(let i = 0; i < _object.numPlace; i++) {
 
           let angle = TWO_PI / _object.numPlace * i;
-          let x = _object.x + cos(angle) * 55;
-          let y = _object.y + sin(angle) * 55;
+          let x = cos(angle) * 55;
+          let y = sin(angle) * 55;
 
           switch(_object.typeChair) {
 
@@ -203,6 +205,7 @@ function draw() {
               break;
           }
         }
+        pop();
       }
       else if(_object.name.startsWith('Door')) {
         push();
@@ -394,6 +397,7 @@ function mouseDragged() {
   let mouseYR = mouseY * zoomR;
   if(mouseX > 0 && mouseX < canvasWidth && mouseY > 0 && mouseY < canvasHeight) {
     if(clickEvent == 'Rotate'){
+      angleMode(DEGREES);
       createPanel(tmpObject);
       panel.setValue('angle', activeObject.angle + atan2(mouseY - activeObject.y, mouseX - activeObject.x) - 
       atan2(diffPositionY - activeObject.y, diffPositionX - activeObject.x));
@@ -431,7 +435,7 @@ function mouseDragged() {
         }
       }
     }
-    else if(x1 && y1 && clickEvent == 'Draw_Rect' || clickEvent == 'Draw_Line') {
+    else if(x1 && y1 && (clickEvent == 'Draw_Rect' || clickEvent == 'Draw_Line')) {
       x2 = mouseX * zoomR;
       y2 = mouseY * zoomR;
       if(clickEvent == 'Draw_Rect') {
@@ -459,19 +463,6 @@ function mouseDragged() {
 function mouseReleased() {
   let mouseXR = mouseX * zoomR;
   let mouseYR = mouseY * zoomR;
-  if(clickEvent == 'Resize') {
-    objects.pop();
-    const index = objects.indexOf(activeObject);
-    activeObject.visibility = true;
-    clickEvent = tmpClickEvent;
-    if(tmpObject.x != activeObject.x || tmpObject.y != activeObject.y) {
-      if(activeObject.name.startsWith('Rectangle'))
-        resizeObject(tmpObject.x - activeObject.x, tmpObject.y - activeObject.y, tmpObject.w - activeObject.w,
-          tmpObject.h - activeObject.h, index);
-      else if(activeObject.name.startsWith('Line'))
-        resizeObject(tmpObject.x - activeObject.x, tmpObject.y - activeObject.y, tmpObject.l - activeObject.l, 0, index);   
-    }
-  }
   if(clickEvent == 'Rotate') {
     objects.pop();
     const index = objects.indexOf(activeObject);
@@ -481,8 +472,21 @@ function mouseReleased() {
       rotateObject(tmpObject.angle - activeObject.angle, index);
     }
   }
+  else if(clickEvent == 'Resize') {
+    objects.pop();
+    const index = objects.indexOf(activeObject);
+    activeObject.visibility = true;
+    clickEvent = tmpClickEvent;
+    if(tmpObject.x != activeObject.x || tmpObject.y != activeObject.y) {
+      if(activeObject.name.startsWith('Rectangle'))
+        resizeObject(tmpObject.x - activeObject.x, tmpObject.y - activeObject.y, tmpObject.w - activeObject.w,
+          tmpObject.h - activeObject.h, index);
+      else if(activeObject.name.startsWith('Line'))
+        resizeObject(tmpObject.x - activeObject.x, tmpObject.y - activeObject.y, tmpObject.l - activeObject.l, 0, index);
+    }
+  }
   else if(mouseX > 0 && mouseX < canvasWidth && mouseY > 0 && mouseY < canvasHeight) {
-    if(x1 && y1 && x2 && y2 && clickEvent == 'Draw_Rect' || clickEvent == 'Draw_Line') {
+    if(x1 && y1 && x2 && y2 && (clickEvent == 'Draw_Rect' || clickEvent == 'Draw_Line')) {
       if(clickEvent == 'Draw_Rect') {
         objects.pop();
         addObject(arrayToObject([true, objects.length, 'Rectangle ' + id, x1+(x2-x1)/2, y1+(y2-y1)/2, abs(x2-x1), abs(y2-y1), undefined,
@@ -501,7 +505,7 @@ function mouseReleased() {
     }
     else if(clickEvent == 'Table') {
       addObject(arrayToObject([true, objects.length, 'Table ' + id, mouseXR, mouseYR, undefined, undefined, undefined,
-      undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, 2, 'chair', undefined,
+      0, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, 2, 'chair', undefined,
       undefined, 75, 75]));
       refresh();
     }
@@ -798,35 +802,24 @@ function rotateCorner(_mouseX, _mouseY){
   let corner;
   let xPrime = (_mouseX - activeObject.x) * cos(activeObject.angle) + (_mouseY-activeObject.y) * sin(activeObject.angle) + activeObject.x;
   let yPrime = (_mouseY - activeObject.y) * cos(activeObject.angle) - (_mouseX-activeObject.x) * sin(activeObject.angle) + activeObject.y;
-  if(activeObject.name.startsWith('Line')){
-    if(xPrime < activeObject.x + activeObject.swidth / 2 + 20 && xPrime > activeObject.x + activeObject.swidth / 2 + 10
-      && yPrime < activeObject.y + 5 && yPrime > activeObject.y - 5){
-      corner = 'R';
-    }
-    else if(xPrime < activeObject.x - activeObject.swidth / 2 - 10 && xPrime > activeObject.x - activeObject.swidth / 2 - 20
-    && yPrime < activeObject.y + 5 && yPrime > activeObject.y - 5){
-      corner = 'L';
-    }
+  if(activeObject.name.startsWith('Line') && 
+    ((xPrime < activeObject.x + activeObject.swidth / 2 + 20 && xPrime > activeObject.x + activeObject.swidth / 2 + 10
+      && yPrime < activeObject.y + 5 && yPrime > activeObject.y - 5)
+    || (xPrime < activeObject.x - activeObject.swidth / 2 - 10 && xPrime > activeObject.x - activeObject.swidth / 2 - 20
+      && yPrime < activeObject.y + 5 && yPrime > activeObject.y - 5))){
+    return true;
   }
-  else if(!activeObject.name.startsWith('Table')){
-    if(xPrime < activeObject.x + activeObject.swidth / 2 + 10 && xPrime > activeObject.x + activeObject.swidth / 2
-      && yPrime < activeObject.y - activeObject.sheight / 2 && yPrime > activeObject.y - activeObject.sheight / 2 - 10){
-      corner = 'UR';
-    }
-    else if(xPrime < activeObject.x + activeObject.swidth / 2 + 10 && xPrime > activeObject.x + activeObject.swidth / 2
-      && yPrime < activeObject.y + activeObject.sheight / 2 + 10 && yPrime > activeObject.y + activeObject.sheight / 2){
-      corner = 'DR';
-    }
-    else if(xPrime < activeObject.x - activeObject.swidth / 2 && xPrime > activeObject.x - activeObject.swidth / 2 - 10
-    && yPrime < activeObject.y + activeObject.sheight / 2 + 10 && yPrime > activeObject.y + activeObject.sheight / 2){
-      corner = 'DL';
-    }
-    else if(xPrime < activeObject.x - activeObject.swidth / 2 && xPrime > activeObject.x - activeObject.swidth / 2 - 10
-    && yPrime < activeObject.y + activeObject.sheight / 2 && yPrime > activeObject.y - activeObject.sheight / 2 - 10){
-      corner = 'UL';
-    }
+  else if((xPrime < activeObject.x + activeObject.swidth / 2 + 10 && xPrime > activeObject.x + activeObject.swidth / 2
+            && yPrime < activeObject.y - activeObject.sheight / 2 && yPrime > activeObject.y - activeObject.sheight / 2 - 10)
+        || (xPrime < activeObject.x + activeObject.swidth / 2 + 10 && xPrime > activeObject.x + activeObject.swidth / 2
+            && yPrime < activeObject.y + activeObject.sheight / 2 + 10 && yPrime > activeObject.y + activeObject.sheight / 2)
+        || (xPrime < activeObject.x - activeObject.swidth / 2 && xPrime > activeObject.x - activeObject.swidth / 2 - 10
+            && yPrime < activeObject.y + activeObject.sheight / 2 + 10 && yPrime > activeObject.y + activeObject.sheight / 2)
+        || (xPrime < activeObject.x - activeObject.swidth / 2 && xPrime > activeObject.x - activeObject.swidth / 2 - 10
+            && yPrime < activeObject.y + activeObject.sheight / 2 && yPrime > activeObject.y - activeObject.sheight / 2 - 10)){
+    return true;
   }
-  return corner;
+  return false;
 }
 
 function resizeObject(_dx, _dy, _dw, _dh, _index){
