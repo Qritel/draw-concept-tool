@@ -265,50 +265,55 @@ function draw() {
       }
     }
   });
-  if(activeObject.visibility && activeObject.name != 'Rectangle drawing' && activeObject.name != 'Line drawing'){
+  if(activeObject.visibility || tmpObject.visibility){
+    let whichObject;
+    if(tmpObject.visibility)
+      whichObject = tmpObject;
+    else
+      whichObject = activeObject;
     push();
     rectMode(CENTER);
-    translate(activeObject.x, activeObject.y);
+    translate(whichObject.x, whichObject.y);
     stroke('#2e7bf6');
     noFill();
     strokeWeight(1);
     drawingContext.setLineDash([5, 5]);
     angleMode(DEGREES);
-    rotate(activeObject.angle);
-    rect(0, 0, activeObject.swidth, activeObject.sheight,
-      activeObject.topLeftRadius, activeObject.topRightRadius, activeObject.bottomRightRadius, activeObject.bottomLeftRadius);
+    rotate(whichObject.angle);
+    rect(0, 0, whichObject.swidth, whichObject.sheight,
+      whichObject.topLeftRadius, whichObject.topRightRadius, whichObject.bottomRightRadius, whichObject.bottomLeftRadius);
     stroke('#999999');
     drawingContext.setLineDash([]);
     fill('#000000');
     textSize(20);
     textStyle(BOLD);
     textAlign(CENTER, CENTER);
-    if(activeObject.name.startsWith('Rectangle') || activeObject.name.startsWith('Line')){
-      text('⬌', activeObject.swidth / 2, 1);
-      text('⬌', -activeObject.swidth / 2 + 1, 1);
-      if(activeObject.name.startsWith('Rectangle')){
-        text('⬍', 0, -activeObject.sheight / 2 + 4);
-        text('⬍', 0, activeObject.sheight /2);
+    if(whichObject.name.startsWith('Rectangle') || whichObject.name.startsWith('Line')){
+      text('⬌', whichObject.swidth / 2, 1);
+      text('⬌', -whichObject.swidth / 2 + 1, 1);
+      if(whichObject.name.startsWith('Rectangle')){
+        text('⬍', 0, -whichObject.sheight / 2 + 4);
+        text('⬍', 0, whichObject.sheight /2);
       }
     }
-    translate(activeObject.swidth / 2, - activeObject.sheight /2);
+    translate(whichObject.swidth / 2, - whichObject.sheight /2);
     noStroke();
-    if(!activeObject.name.startsWith('Line')){
+    if(!whichObject.name.startsWith('Line')){
       rotate(-90);
       text('⤾', 2, 7);
       rotate(-90);
       text('⤿', -3, 6)
-      translate(0, - activeObject.sheight);
+      translate(0, - whichObject.sheight);
       rotate(180);
       text('⤾', 2, 7);
       rotate(-90);
       text('⤿', -3, 6);
-      translate(0, - activeObject.swidth);
+      translate(0, - whichObject.swidth);
       rotate(180);
       text('⤾', 2, 7);
       rotate(-90);
       text('⤿', -3, 6);
-      translate(0, - activeObject.sheight);
+      translate(0, - whichObject.sheight);
       rotate(180);
       text('⤾', 2, 7);
       rotate(-90);
@@ -321,7 +326,7 @@ function draw() {
       rotate(-90);
       text('⤿', -3, 6);
       rotate(-45);
-      translate(activeObject.swidth + 14, 0);
+      translate(whichObject.swidth + 14, 0);
       rotate(-45);
       text('⤾', 2, 7);
       rotate(-90);
@@ -413,25 +418,37 @@ function mouseDragged() {
       if(corner == 'U' || corner == 'D' && activeObject.name.startsWith('Rectangle')){
         panel.setValue('y',Number(activeObject.y - dragY / 2 * cos(activeObject.angle)).toFixed(2));
         panel.setValue('x',Number(activeObject.x + dragY / 2 * sin(activeObject.angle)).toFixed(2));
-        if(corner == 'U')
+        if(corner == 'U'){
           panel.setValue('h',Number(activeObject.h + dragY).toFixed(2));
-        else 
+          tmpObject.sheight = activeObject.sheight + dragY;
+        }
+        else{
           panel.setValue('h',Number(activeObject.h - dragY).toFixed(2));
+          tmpObject.sheight = activeObject.sheight - dragY;
+        }
       }
       else if(corner == 'L' || corner == 'R'){
         panel.setValue('y',Number(activeObject.y - dragX / 2 * sin(activeObject.angle)).toFixed(2));
         panel.setValue('x',Number(activeObject.x - dragX / 2 * cos(activeObject.angle)).toFixed(2));
         if(corner == 'L'){
-          if(activeObject.name.startsWith('Rectangle'))
+          if(activeObject.name.startsWith('Rectangle')){
             panel.setValue('w',Number(activeObject.w + dragX).toFixed(2));
-          else if(activeObject.name.startsWith('Line'))
+            tmpObject.swidth = activeObject.swidth + dragX;
+          }
+          else if(activeObject.name.startsWith('Line')){
             panel.setValue('l',Number(activeObject.l + dragX).toFixed(2));
+            tmpObject.swidth = activeObject.swidth + dragX;
+          }
         }
         else{
-          if(activeObject.name.startsWith('Rectangle'))
+          if(activeObject.name.startsWith('Rectangle')){
             panel.setValue('w',Number(activeObject.w - dragX).toFixed(2));
-          else if(activeObject.name.startsWith('Line'))
+            tmpObject.swidth = activeObject.swidth - dragX;
+          }
+          else if(activeObject.name.startsWith('Line')){
             panel.setValue('l',Number(activeObject.l - dragX).toFixed(2));
+            tmpObject.swidth = activeObject.swidth - dragX;
+          }
         }
       }
     }
@@ -441,13 +458,15 @@ function mouseDragged() {
       if(clickEvent == 'Draw_Rect') {
         if(objects.length && objects[objects.length - 1].name === 'Rectangle drawing') objects.pop();
         addObject(arrayToObject([true, objects.length, 'Rectangle drawing', x1+(x2-x1)/2, y1+(y2-y1)/2, abs(x2-x1), abs(y2-y1), undefined,
-        0, 0, 0, 0, 0, '#000000', false, '#ffffff', false, undefined, undefined, undefined, undefined, undefined, undefined, undefined]));
+        0, 0, 0, 0, 0, '#000000', false, '#ffffff', false, undefined, undefined, undefined, undefined, undefined, abs(x2-x1) + 5,
+        abs(y2-y1) + 5]));
       }
       if(clickEvent == 'Draw_Line') {
         if(objects.length && objects[objects.length - 1].name === 'Line drawing') objects.pop();
         addObject(arrayToObject([true, objects.length, 'Line drawing', x1+(x2-x1)/2, y1+(y2-y1)/2, 2, undefined,
         Number(sqrt((x1-x2)*(x1-x2)+(y1-y2)*(y1-y2))).toFixed(2), atan((y2-y1)/(x2-x1)), undefined, undefined, undefined,undefined, undefined,
-        undefined, undefined, undefined, '#000000', undefined, undefined, undefined, undefined, undefined, undefined]));
+        undefined, undefined, undefined, '#000000', undefined, undefined, undefined, undefined,
+        sqrt((x1-x2)*(x1-x2)+(y1-y2)*(y1-y2)) + 5, 7]));
       }
       redraw();
     }
@@ -471,6 +490,7 @@ function mouseReleased() {
     if(tmpObject.angle != activeObject.angle) {
       rotateObject(tmpObject.angle - activeObject.angle, index);
     }
+    tmpObject = {};
   }
   else if(clickEvent == 'Resize') {
     objects.pop();
@@ -484,6 +504,7 @@ function mouseReleased() {
       else if(activeObject.name.startsWith('Line'))
         resizeObject(tmpObject.x - activeObject.x, tmpObject.y - activeObject.y, tmpObject.l - activeObject.l, 0, index);
     }
+    tmpObject = {};
   }
   else if(mouseX > 0 && mouseX < canvasWidth && mouseY > 0 && mouseY < canvasHeight) {
     if(x1 && y1 && x2 && y2 && (clickEvent == 'Draw_Rect' || clickEvent == 'Draw_Line')) {
@@ -532,6 +553,7 @@ function mouseReleased() {
       const index = objects.indexOf(activeObject);
       activeObject.visibility = true;
       if(tmpObject.x != activeObject.x) dragObject(tmpObject.x - activeObject.x, tmpObject.y - activeObject.y, index);
+      tmpObject = {};
       diffPositionX = 0;
       diffPositionY = 0;
       cursor(ARROW);
@@ -770,6 +792,7 @@ function selectedObject(_mouseX, _mouseY){
   });
   const maxI =  Math.max(...sObj.map(_object => _object.index));
   const index = sObj.findIndex(_object => _object.index === maxI);
+  console.log(sObj);
   return sObj[index];
 }
 
