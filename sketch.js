@@ -362,9 +362,9 @@ function mousePressed() {
       clickEvent = 'Rotate';
       diffPositionX = mouseXR;
       diffPositionY = mouseYR;
-      tmpObject = { ...activeObject };
+      tmpObject = { ...activeObject }; //make a copy of 'activeObject', and store it in the new variable 'tmpObject'.
       activeObject.visibility = false;
-      objects.splice(activeObject.index, 0, tmpObject);
+      objects.splice(activeObject.index, 0, tmpObject); //insert 'tmpObject' into the 'objects' array at the position 'activeObject.index'.
     }
     else if(objects.length && resizeCorner(mouseXR, mouseYR)){
       corner = resizeCorner(mouseXR, mouseYR);
