@@ -1,0 +1,20 @@
+{
+  "scripts": {
+    "build": "webpack --mode=production"
+  },
+  "devDependencies": {
+    "@babel/core": "^7.21.4",
+    "@babel/preset-env": "^7.21.4",
+    "babel-loader": "^9.1.2",
+    "css-loader": "^6.7.3",
+    "file-loader": "^6.2.0",
+    "html-webpack-plugin": "^5.5.0",
+    "p5": "^1.6.0",
+    "quicksettings": "^3.0.1",
+    "style-loader": "^3.3.2",
+    "undo-manager": "^1.1.0",
+    "url-loader": "^4.1.1",
+    "webpack": "^5.78.0",
+    "webpack-cli": "^5.0.1"
+  }
+}

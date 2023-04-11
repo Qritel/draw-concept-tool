@@ -4,6 +4,15 @@ This code uses 2 libraries :
   P5 : https://p5js.org/reference/
 */
 
+import p5 from 'p5';
+import UndoManager from 'undo-manager';
+import QuickSettings from 'quicksettings';
+import Shape from './shapes/shape';
+
+import './styles/quicksettings.css';
+
+const sketch = (p) => {
+
 let x1 = 0, y1 = 0, x2 = 0, y2 = 0;
 let clickEvent = '';
 let tmpClickEvent = '';
@@ -47,19 +56,19 @@ let panel;
 let undoManager = new UndoManager();
 
 //p5 function: used to handle asynchronous loading of external files
-function preload() {
-  tableimg = loadImage('images/table.png');
-  chairimg = loadImage('images/chair.png');
-  sofaimg = loadImage('images/sofa.png');
-  doorimg = loadImage('images/door.png');
-  windowimg = loadImage('images/window.png');
-  sinkimg = loadImage('images/sink.png');
-  toiletimg = loadImage('images/toilet.png');
-  tvimg = loadImage('images/TV.png');
+p.preload = function () {
+  tableimg = p.loadImage('images/table.png');
+  chairimg = p.loadImage('images/chair.png');
+  sofaimg = p.loadImage('images/sofa.png');
+  doorimg = p.loadImage('images/door.png');
+  windowimg = p.loadImage('images/window.png');
+  sinkimg = p.loadImage('images/sink.png');
+  toiletimg = p.loadImage('images/toilet.png');
+  tvimg = p.loadImage('images/TV.png');
 }
 
 //p5 function: called once when the program starts
-function setup() {
+p.setup = function () {
 
   QuickSettings.useExtStyleSheet();
 
@@ -69,9 +78,9 @@ function setup() {
   //p5: Creates a canvas element in the document, and sets the dimensions of it in pixels
   canvasX = 100;
   canvasY = 35;
-  canvasWidth = windowWidth - 191 - canvasX;
-  canvasHeight = windowHeight - 2 - canvasY;
-  let canv = createCanvas(canvasWidth, canvasHeight);
+  canvasWidth = p.windowWidth - 191 - canvasX;
+  canvasHeight = p.windowHeight - 2 - canvasY;
+  let canv = p.createCanvas(canvasWidth, canvasHeight);
   //p5: Set its postion
   canv.position(canvasX, canvasY);
 
@@ -83,54 +92,54 @@ function setup() {
   createBtnTool('Window', 0, 260, 'Window');
   createBtnTool('TV', 0, 300, 'TV');
   createBtnTool('Toilet', 0, 340, 'Toilet');
-  createBtnTool('Sink', 0, 380, 'Sink');
+  createBtnTool('sink', 0, 380, 'sink');
   createBtnTool('Text', 0, 420, 'Text');
 
   //zoom slider
-  slider = createSlider(0, 250, 100, 5);
+  slider = p.createSlider(0, 250, 100, 5);
   slider.position(1, canvasHeight + canvasY - 20);
   slider.style('width', '94px');
-  slider.input(redraw);
+  slider.input(p.redraw);
 
-  btnUndo = createButton('⟲');
+  btnUndo = p.createButton('⟲');
   btnUndo.position(10, 20);
   btnUndo.mousePressed(function() {
     undoManager.undo();
     refresh();
   });
 
-  btnRedo = createButton('⟳');
+  btnRedo = p.createButton('⟳');
   btnRedo.position(61, 20);
   btnRedo.mousePressed(function() {
     undoManager.redo();
     refresh();
   });
 
-  btnUp = createButton('🡡');
+  btnUp = p.createButton('🡡');
   btnUp.position(canvasWidth, 5);
-  btnDown = createButton('🡣');
+  btnDown = p.createButton('🡣');
   btnDown.position(canvasWidth + 30, 5);
-  btnDelete = createButton('🗑️');
+  btnDelete = p.createButton('🗑️');
   btnDelete.position(canvasWidth + 60, 5);
 
-  noLoop();
+  p.noLoop();
 }
 
-//p5 function: continuously executes the lines of code contained inside its block until the program is stopped or noLoop() is called(as our case)
+//p5 function: continuously executes the lines of code contained inside its block until the program is stopped or p.noLoop() is called(as our case)
 //draw() will be executed one time, when an object is added or its properties is changed.
-function draw() {
+p.draw = function () {
   //set the color for the background of the canvas
-  background('#ffffff')
-  noFill();
-  stroke('#d8d8d8');
-  rect(0, 0, canvasWidth - 1, canvasHeight - 1);
+  p.background('#ffffff')
+  p.noFill();
+  p.stroke('#d8d8d8');
+  p.rect(0, 0, canvasWidth - 1, canvasHeight - 1);
 
   zoom = slider.value();
   zoomR = 100 / zoom;
-  stroke('#2e7bb6');
-  text(zoom + '%', 5, canvasHeight - 6);
-  push();
-  scale(zoom / 100);
+  p.stroke('#2e7bb6');
+  p.text(zoom + '%', 5, canvasHeight - 6);
+  p.push();
+  p.scale(zoom / 100);
   
   if(!undoManager.hasUndo()) btnUndo.hide();
   else btnUndo.show();
@@ -142,126 +151,126 @@ function draw() {
   objects.forEach(function(_object) {
     if(_object.visibility){
       if(_object.name.startsWith('Rectangle')) {
-        push();
-        strokeWeight(3);
-        stroke(_object.strokeColor);
-        fill(_object.fillColor);
-        if(_object.noFill) noFill();
-        if(_object.noStroke) noStroke();
-        rectMode(CENTER); 
-        translate(_object.x, _object.y);
-        angleMode(DEGREES);
-        rotate(_object.angle);
-        rect(0, 0, _object.w, _object.h,
+        p.push();
+        p.strokeWeight(3);
+        p.stroke(_object.strokeColor);
+        p.fill(_object.fillColor);
+        if(_object.noFill) p.noFill();
+        if(_object.noStroke) p.noStroke();
+        p.rectMode(p.CENTER); 
+        p.translate(_object.x, _object.y);
+        p.angleMode(p.DEGREES);
+        p.rotate(_object.angle);
+        p.rect(0, 0, _object.w, _object.h,
           _object.topLeftRadius, _object.topRightRadius, _object.bottomRightRadius, _object.bottomLeftRadius);
-        pop();
+        p.pop();
       }
       else if(_object.name.startsWith('Line')) {
-        push();
-        strokeWeight(_object.w);
-        stroke(_object.color);
-        rectMode(CENTER); 
-        translate(_object.x, _object.y);
-        angleMode(DEGREES);
-        rotate(_object.angle);
-        rect(0,0,_object.l,1);
-        pop();
+        p.push();
+        p.strokeWeight(_object.w);
+        p.stroke(_object.color);
+        p.rectMode(p.CENTER); 
+        p.translate(_object.x, _object.y);
+        p.angleMode(p.DEGREES);
+        p.rotate(_object.angle);
+        p.rect(0,0,_object.l,1);
+        p.pop();
       }
       else if(_object.name.startsWith('Table')) {
-        push();
-        imageMode(CENTER);
-        translate(_object.x, _object.y);
-        angleMode(DEGREES);
-        rotate(_object.angle)
-        image(tableimg, 0, 0, 100, 73);
+        p.push();
+        p.imageMode(p.CENTER);
+        p.translate(_object.x, _object.y);
+        p.angleMode(p.DEGREES);
+        p.rotate(_object.angle)
+        p.image(tableimg, 0, 0, 100, 73);
         // draw chairs arranged in a circle
         for(let i = 0; i < _object.numPlace; i++) {
 
-          let angle = TWO_PI / _object.numPlace * i;
-          let x = cos(angle) * 55;
-          let y = sin(angle) * 55;
+          let angle = p.TWO_PI / _object.numPlace * i;
+          let x = p.cos(angle) * 55;
+          let y = p.sin(angle) * 55;
 
           switch(_object.typeChair) {
 
             case 'chair':
             //p5: The push() function saves the current drawing style settings and transformations, while pop() restores these settings
-              push();
-              imageMode(CENTER);
-              translate(x, y);
-              angleMode(RADIANS);
-              rotate(angle+PI/2);
-              image(chairimg,0, 0, 200, 130);
-              pop();
+              p.push();
+              p.imageMode(p.CENTER);
+              p.translate(x, y);
+              p.angleMode(p.RADIANS);
+              p.rotate(angle+p.PI/2);
+              p.image(chairimg,0, 0, 200, 130);
+              p.pop();
               break;
 
             case 'sofa':
-              push();
-              imageMode(CENTER);
-              translate(x, y);
-              angleMode(RADIANS);
-              rotate(angle+PI/2);
-              image(sofaimg,0, 0, 200, 130);
-              pop();
+              p.push();
+              p.imageMode(p.CENTER);
+              p.translate(x, y);
+              p.angleMode(p.RADIANS);
+              p.rotate(angle+p.PI/2);
+              p.image(sofaimg,0, 0, 200, 130);
+              p.pop();
               break;
           }
         }
-        pop();
+        p.pop();
       }
       else if(_object.name.startsWith('Door')) {
-        push();
-        imageMode(CENTER);
-        translate(_object.x, _object.y);
-        angleMode(DEGREES);
-        rotate(_object.angle);
-        image(doorimg, 0, 0, 200, 75);
-        pop();
+        p.push();
+        p.imageMode(p.CENTER);
+        p.translate(_object.x, _object.y);
+        p.angleMode(p.DEGREES);
+        p.rotate(_object.angle);
+        p.image(doorimg, 0, 0, 200, 75);
+        p.pop();
       }
       else if(_object.name.startsWith('Window')) {
-        push();
-        imageMode(CENTER);
-        translate(_object.x, _object.y);
-        angleMode(DEGREES);
-        rotate(_object.angle);
-        image(windowimg, 0, 0, 200, 150);
-        pop();
+        p.push();
+        p.imageMode(p.CENTER);
+        p.translate(_object.x, _object.y);
+        p.angleMode(p.DEGREES);
+        p.rotate(_object.angle);
+        p.image(windowimg, 0, 0, 200, 150);
+        p.pop();
       }
       else if(_object.name.startsWith('TV')) {
-        push();
-        imageMode(CENTER);
-        translate(_object.x, _object.y);
-        angleMode(DEGREES);
-        rotate(_object.angle);
-        image(tvimg, 0, 0, 120, 75);
-        pop();
+        p.push();
+        p.imageMode(p.CENTER);
+        p.translate(_object.x, _object.y);
+        p.angleMode(p.DEGREES);
+        p.rotate(_object.angle);
+        p.image(tvimg, 0, 0, 120, 75);
+        p.pop();
       }
       else if(_object.name.startsWith('Toilet')) {
-        push();
-        imageMode(CENTER);
-        translate(_object.x, _object.y);
-        angleMode(DEGREES);
-        rotate(_object.angle);
-        image(toiletimg, 0, 0, 55, 70);
-        pop();
+        p.push();
+        p.imageMode(p.CENTER);
+        p.translate(_object.x, _object.y);
+        p.angleMode(p.DEGREES);
+        p.rotate(_object.angle);
+        p.image(toiletimg, 0, 0, 55, 70);
+        p.pop();
       }
-      else if(_object.name.startsWith('Sink')) {
-        push();
-        imageMode(CENTER);
-        translate(_object.x, _object.y);
-        angleMode(DEGREES);
-        rotate(_object.angle);
-        image(sinkimg, 0, 0, 70, 85);
-        pop();
+      else if(_object.name.startsWith('sink')) {
+        p.push();
+        p.imageMode(p.CENTER);
+        p.translate(_object.x, _object.y);
+        p.angleMode(p.DEGREES);
+        p.rotate(_object.angle);
+        p.image(p.sinkimg, 0, 0, 70, 85);
+        p.pop();
       }
       else if(_object.name.startsWith('Text')) {
-        push();
-        noStroke();
-        textSize(_object.size);
-        fill(_object.color);
-        translate(_object.x, _object.y);
-        angleMode(DEGREES);
-        rotate(_object.angle);
-        text(_object.inputText, -60, -30, _object.swidth, _object.sheight);
-        pop();
+        p.push();
+        p.noStroke();
+        p.textSize(_object.size);
+        p.fill(_object.color);
+        p.translate(_object.x, _object.y);
+        p.angleMode(p.DEGREES);
+        p.rotate(_object.angle);
+        p.text(_object.inputText, -60, -30, _object.swidth, _object.sheight);
+        p.pop();
       }
     }
   });
@@ -271,68 +280,68 @@ function draw() {
       whichObject = tmpObject;
     else
       whichObject = activeObject;
-    push();
-    rectMode(CENTER);
-    translate(whichObject.x, whichObject.y);
-    stroke('#2e7bf6');
-    noFill();
-    strokeWeight(1);
-    drawingContext.setLineDash([5, 5]);
-    angleMode(DEGREES);
-    rotate(whichObject.angle);
-    rect(0, 0, whichObject.swidth, whichObject.sheight,
+    p.push();
+    p.rectMode(p.CENTER);
+    p.translate(whichObject.x, whichObject.y);
+    p.stroke('#2e7bf6');
+    p.noFill();
+    p.strokeWeight(1);
+    p.drawingContext.setLineDash([5, 5]);
+    p.angleMode(p.DEGREES);
+    p.rotate(whichObject.angle);
+    p.rect(0, 0, whichObject.swidth, whichObject.sheight,
       whichObject.topLeftRadius, whichObject.topRightRadius, whichObject.bottomRightRadius, whichObject.bottomLeftRadius);
-    stroke('#999999');
-    drawingContext.setLineDash([]);
-    fill('#000000');
-    textSize(20);
-    textStyle(BOLD);
-    textAlign(CENTER, CENTER);
+    p.stroke('#999999');
+    p.drawingContext.setLineDash([]);
+    p.fill('#000000');
+    p.textSize(20);
+    p.textStyle(p.BOLD);
+    p.textAlign(p.CENTER, p.CENTER);
     if(whichObject.name.startsWith('Rectangle') || whichObject.name.startsWith('Line')){
-      text('⬌', whichObject.swidth / 2, 1);
-      text('⬌', -whichObject.swidth / 2 + 1, 1);
+      p.text('⬌', whichObject.swidth / 2, 1);
+      p.text('⬌', -whichObject.swidth / 2 + 1, 1);
       if(whichObject.name.startsWith('Rectangle')){
-        text('⬍', 0, -whichObject.sheight / 2 + 4);
-        text('⬍', 0, whichObject.sheight /2);
+        p.text('⬍', 0, -whichObject.sheight / 2 + 4);
+        p.text('⬍', 0, whichObject.sheight /2);
       }
     }
-    translate(whichObject.swidth / 2, - whichObject.sheight /2);
-    noStroke();
+    p.translate(whichObject.swidth / 2, - whichObject.sheight /2);
+    p.noStroke();
     if(!whichObject.name.startsWith('Line')){
-      rotate(-90);
-      text('⤾', 2, 7);
-      rotate(-90);
-      text('⤿', -3, 6)
-      translate(0, - whichObject.sheight);
-      rotate(180);
-      text('⤾', 2, 7);
-      rotate(-90);
-      text('⤿', -3, 6);
-      translate(0, - whichObject.swidth);
-      rotate(180);
-      text('⤾', 2, 7);
-      rotate(-90);
-      text('⤿', -3, 6);
-      translate(0, - whichObject.sheight);
-      rotate(180);
-      text('⤾', 2, 7);
-      rotate(-90);
-      text('⤿', -3, 6);
+      p.rotate(-90);
+      p.text('⤾', 2, 7);
+      p.rotate(-90);
+      p.text('⤿', -3, 6)
+      p.translate(0, - whichObject.sheight);
+      p.rotate(180);
+      p.text('⤾', 2, 7);
+      p.rotate(-90);
+      p.text('⤿', -3, 6);
+      p.translate(0, - whichObject.swidth);
+      p.rotate(180);
+      p.text('⤾', 2, 7);
+      p.rotate(-90);
+      p.text('⤿', -3, 6);
+      p.translate(0, - whichObject.sheight);
+      p.rotate(180);
+      p.text('⤾', 2, 7);
+      p.rotate(-90);
+      p.text('⤿', -3, 6);
     }
     else{
-      translate(7, 3);
-      rotate(-45);
-      text('⤾', 2, 7);
-      rotate(-90);
-      text('⤿', -3, 6);
-      rotate(-45);
-      translate(whichObject.swidth + 14, 0);
-      rotate(-45);
-      text('⤾', 2, 7);
-      rotate(-90);
-      text('⤿', -3, 6);
+      p.translate(7, 3);
+      p.rotate(-45);
+      p.text('⤾', 2, 7);
+      p.rotate(-90);
+      p.text('⤿', -3, 6);
+      p.rotate(-45);
+      p.translate(whichObject.swidth + 14, 0);
+      p.rotate(-45);
+      p.text('⤾', 2, 7);
+      p.rotate(-90);
+      p.text('⤿', -3, 6);
     }
-    pop();
+    p.pop();
   }
   if(activeObject.name != 'Rectangle drawing' && activeObject.name != 'Line drawing'){
     btnUp.mousePressed(function() { moveUpObject(activeObject.name); refresh(); });
@@ -349,14 +358,14 @@ function draw() {
     btnDown.hide();
     btnDelete.hide();
   }
-  pop();
+  p.pop();
 }
 
 //p5 function: called once after every time a mouse button is pressed.
-function mousePressed() {
-  let mouseXR = mouseX * zoomR;
-  let mouseYR = mouseY * zoomR;
-  if(mouseX > 0 && mouseX < canvasWidth && mouseY > 0 && mouseY < canvasHeight) {
+p.mousePressed = function () {
+  let mouseXR = p.mouseX * zoomR;
+  let mouseYR = p.mouseY* zoomR;
+  if(p.mouseX > 0 && p.mouseX < canvasWidth && p.mouseY> 0 && p.mouseY< canvasHeight) {
     if(objects.length && rotateCorner(mouseXR, mouseYR)){
       tmpClickEvent = clickEvent;
       clickEvent = 'Rotate';
@@ -370,10 +379,10 @@ function mousePressed() {
       corner = resizeCorner(mouseXR, mouseYR);
       tmpClickEvent = clickEvent;
       clickEvent = 'Resize';
-      diffPositionX = (mouseXR - activeObject.x) * cos(activeObject.angle) 
-                + (mouseYR - activeObject.y) * sin(activeObject.angle) + activeObject.x - panel.getValue('x');
-      diffPositionY = (mouseYR - activeObject.y) * cos(activeObject.angle)
-                - (mouseXR - activeObject.x) * sin(activeObject.angle) + activeObject.y - panel.getValue('y');
+      diffPositionX = (mouseXR - activeObject.x) * p.cos(activeObject.angle) 
+                + (mouseYR - activeObject.y) * p.sin(activeObject.angle) + activeObject.x - panel.getValue('x');
+      diffPositionY = (mouseYR - activeObject.y) * p.cos(activeObject.angle)
+                - (mouseXR - activeObject.x) * p.sin(activeObject.angle) + activeObject.y - panel.getValue('y');
       tmpObject = { ...activeObject };
       activeObject.visibility = false;
       objects.splice(activeObject.index, 0, tmpObject);
@@ -395,26 +404,26 @@ function mousePressed() {
 }
 
 //p5 function: called once every time the mouse moves and a mouse button is pressed.
-function mouseDragged() {
-  let mouseXR = mouseX * zoomR;
-  let mouseYR = mouseY * zoomR;
-  if(mouseX > 0 && mouseX < canvasWidth && mouseY > 0 && mouseY < canvasHeight) {
+p.mouseDragged = function () {
+  let mouseXR = p.mouseX * zoomR;
+  let mouseYR = p.mouseY* zoomR;
+  if(p.mouseX > 0 && p.mouseX < canvasWidth && p.mouseY> 0 && p.mouseY< canvasHeight) {
     if(clickEvent == 'Rotate'){
-      angleMode(DEGREES);
+      p.angleMode(p.DEGREES);
       createPanel(tmpObject);
-      panel.setValue('angle', activeObject.angle + atan2(mouseYR - activeObject.y, mouseXR - activeObject.x) - 
-      atan2(diffPositionY - activeObject.y, diffPositionX - activeObject.x));
+      panel.setValue('angle', activeObject.angle + p.atan2(mouseYR - activeObject.y, mouseXR - activeObject.x) - 
+      p.atan2(diffPositionY - activeObject.y, diffPositionX - activeObject.x));
     }
     else if(clickEvent == 'Resize') {
-      let dragX = diffPositionX + activeObject.x - ((mouseXR - activeObject.x) * cos(activeObject.angle) 
-                  + (mouseYR - activeObject.y) * sin(activeObject.angle) + activeObject.x);
-      let dragY = diffPositionY + activeObject.y - ((mouseYR - activeObject.y) * cos(activeObject.angle) 
-                  - (mouseXR - activeObject.x) * sin(activeObject.angle) + activeObject.y);
+      let dragX = diffPositionX + activeObject.x - ((mouseXR - activeObject.x) * p.cos(activeObject.angle) 
+                  + (mouseYR - activeObject.y) * p.sin(activeObject.angle) + activeObject.x);
+      let dragY = diffPositionY + activeObject.y - ((mouseYR - activeObject.y) * p.cos(activeObject.angle) 
+                  - (mouseXR - activeObject.x) * p.sin(activeObject.angle) + activeObject.y);
       createPanel(tmpObject);
       if((corner == 'T' && activeObject.h + dragY > 0 || corner == 'B'  && activeObject.h - dragY > 0) 
           && activeObject.name.startsWith('Rectangle')){
-        panel.setValue('y',Number(activeObject.y - dragY / 2 * cos(activeObject.angle)).toFixed(2));
-        panel.setValue('x',Number(activeObject.x + dragY / 2 * sin(activeObject.angle)).toFixed(2));
+        panel.setValue('y',Number(activeObject.y - dragY / 2 * p.cos(activeObject.angle)).toFixed(2));
+        panel.setValue('x',Number(activeObject.x + dragY / 2 * p.sin(activeObject.angle)).toFixed(2));
         if(corner == 'T'){
           panel.setValue('h',Number(activeObject.h + dragY).toFixed(2));
           tmpObject.sheight = activeObject.sheight + dragY;
@@ -426,8 +435,8 @@ function mouseDragged() {
       }
       else if(corner == 'L' && activeObject.w + dragX > 0 || corner == 'R' && activeObject.w - dragX > 0
               || (corner == 'L' || corner == 'R') && activeObject.name.startsWith('Line')){
-        panel.setValue('y',Number(activeObject.y - dragX / 2 * sin(activeObject.angle)).toFixed(2));
-        panel.setValue('x',Number(activeObject.x - dragX / 2 * cos(activeObject.angle)).toFixed(2));
+        panel.setValue('y',Number(activeObject.y - dragX / 2 * p.sin(activeObject.angle)).toFixed(2));
+        panel.setValue('x',Number(activeObject.x - dragX / 2 * p.cos(activeObject.angle)).toFixed(2));
         if(corner == 'L'){
           if(activeObject.name.startsWith('Rectangle')){
             panel.setValue('w',Number(activeObject.w + dragX).toFixed(2));
@@ -451,35 +460,35 @@ function mouseDragged() {
       }
     }
     else if(x1 && y1 && (clickEvent == 'Draw_Rect' || clickEvent == 'Draw_Line')) {
-      x2 = mouseX * zoomR;
-      y2 = mouseY * zoomR;
+      x2 = p.mouseX * zoomR;
+      y2 = p.mouseY* zoomR;
       if(clickEvent == 'Draw_Rect') {
         if(objects.length && objects[objects.length - 1].name === 'Rectangle drawing') objects.pop();
-        addObject(arrayToObject([true, objects.length, 'Rectangle drawing', x1+(x2-x1)/2, y1+(y2-y1)/2, abs(x2-x1), abs(y2-y1), undefined,
-        0, 0, 0, 0, 0, '#000000', false, '#ffffff', false, undefined, undefined, undefined, undefined, undefined, abs(x2-x1) + 5,
-        abs(y2-y1) + 5]));
+        addObject(new Shape([true, objects.length, 'Rectangle drawing', x1+(x2-x1)/2, y1+(y2-y1)/2, p.abs (x2-x1), p.abs (y2-y1), undefined,
+        0, 0, 0, 0, 0, '#000000', false, '#ffffff', false, undefined, undefined, undefined, undefined, undefined, p.abs (x2-x1) + 5,
+        p.abs (y2-y1) + 5]));
       }
       if(clickEvent == 'Draw_Line') {
         if(objects.length && objects[objects.length - 1].name === 'Line drawing') objects.pop();
-        addObject(arrayToObject([true, objects.length, 'Line drawing', x1+(x2-x1)/2, y1+(y2-y1)/2, 2, undefined,
-        Number(sqrt((x1-x2)*(x1-x2)+(y1-y2)*(y1-y2))).toFixed(2), atan((y2-y1)/(x2-x1)), undefined, undefined, undefined,undefined, undefined,
+        addObject(new Shape([true, objects.length, 'Line drawing', x1+(x2-x1)/2, y1+(y2-y1)/2, 2, undefined,
+        Number(p.sqrt((x1-x2)*(x1-x2)+(y1-y2)*(y1-y2))).toFixed(2), p.atan((y2-y1)/(x2-x1)), undefined, undefined, undefined,undefined, undefined,
         undefined, undefined, undefined, '#000000', undefined, undefined, undefined, undefined,
-        sqrt((x1-x2)*(x1-x2)+(y1-y2)*(y1-y2)) + 5, 7]));
+        p.sqrt((x1-x2)*(x1-x2)+(y1-y2)*(y1-y2)) + 5, 7]));
       }
-      redraw();
+      p.redraw();
     }
     else if(diffPositionX && diffPositionY && clickEvent == 'Move') {
-      cursor(MOVE);
+      p.cursor(p.MOVE);
       createPanel(tmpObject);
-      panel.setValue('x',Number(mouseX * zoomR - diffPositionX).toFixed(2));
-      panel.setValue('y',Number(mouseY * zoomR - diffPositionY).toFixed(2));
+      panel.setValue('x',Number(p.mouseX * zoomR - diffPositionX).toFixed(2));
+      panel.setValue('y',Number(p.mouseY* zoomR - diffPositionY).toFixed(2));
     }
   }
 }
 
-function mouseReleased() {
-  let mouseXR = mouseX * zoomR;
-  let mouseYR = mouseY * zoomR;
+p.mouseReleased = function () {
+  let mouseXR = p.mouseX * zoomR;
+  let mouseYR = p.mouseY* zoomR;
   if(clickEvent == 'Rotate') {
     objects.splice(activeObject.index, 1);
     const index = objects.indexOf(activeObject);
@@ -504,44 +513,44 @@ function mouseReleased() {
     }
     tmpObject = {};
   }
-  else if(mouseX > 0 && mouseX < canvasWidth && mouseY > 0 && mouseY < canvasHeight) {
+  else if(p.mouseX > 0 && p.mouseX < canvasWidth && p.mouseY> 0 && p.mouseY< canvasHeight) {
     if(x1 && y1 && x2 && y2 && (clickEvent == 'Draw_Rect' || clickEvent == 'Draw_Line')) {
       if(clickEvent == 'Draw_Rect') {
         objects.pop();
-        addObject(arrayToObject([true, objects.length, 'Rectangle ' + id, x1+(x2-x1)/2, y1+(y2-y1)/2, abs(x2-x1), abs(y2-y1), undefined,
-        0, 0, 0, 0, 0, '#000000', false, '#ffffff', false, undefined, undefined, undefined, undefined, undefined, abs(x2-x1) + 5,
-        abs(y2-y1) + 5]));
+        addObject(new Shape([true, objects.length, 'Rectangle ' + id, x1+(x2-x1)/2, y1+(y2-y1)/2, p.abs (x2-x1), p.abs (y2-y1), undefined,
+        0, 0, 0, 0, 0, '#000000', false, '#ffffff', false, undefined, undefined, undefined, undefined, undefined, p.abs (x2-x1) + 5,
+        p.abs (y2-y1) + 5]));
       }
       else if(clickEvent == 'Draw_Line') {
         objects.pop();
-        addObject(arrayToObject([true, objects.length, 'Line ' + id, x1+(x2-x1)/2, y1+(y2-y1)/2, 2, undefined,
-        sqrt((x1-x2)*(x1-x2)+(y1-y2)*(y1-y2)), atan((y2-y1)/(x2-x1)), undefined, undefined, undefined,undefined,
+        addObject(new Shape([true, objects.length, 'Line ' + id, x1+(x2-x1)/2, y1+(y2-y1)/2, 2, undefined,
+        p.sqrt((x1-x2)*(x1-x2)+(y1-y2)*(y1-y2)), p.atan((y2-y1)/(x2-x1)), undefined, undefined, undefined,undefined,
         undefined, undefined, undefined, undefined, '#000000', undefined, undefined, undefined, undefined,
-        sqrt((x1-x2)*(x1-x2)+(y1-y2)*(y1-y2)) + 5, 7]));
+        p.sqrt((x1-x2)*(x1-x2)+(y1-y2)*(y1-y2)) + 5, 7]));
       }
       refresh();
       x1 = 0, y1 = 0, x2 = 0, y2 = 0;
     }
     else if(clickEvent == 'Table') {
-      addObject(arrayToObject([true, objects.length, 'Table ' + id, mouseXR, mouseYR, undefined, undefined, undefined,
+      addObject(new Shape([true, objects.length, 'Table ' + id, mouseXR, mouseYR, undefined, undefined, undefined,
       0, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, 2, 'chair', undefined,
       undefined, 75, 75]));
       refresh();
     }
-    else if(['Door', 'Toilet', 'Sink'].includes(clickEvent)){
-      addObject(arrayToObject([true, objects.length, clickEvent + ' ' + id, mouseXR, mouseYR, undefined, undefined, undefined,
+    else if(['Door', 'Toilet', 'sink'].includes(clickEvent)){
+      addObject(new Shape([true, objects.length, clickEvent + ' ' + id, mouseXR, mouseYR, undefined, undefined, undefined,
       0, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined,
       undefined, 75, 75]));
       refresh();
     }
     else if(['Window', 'TV'].includes(clickEvent)){
-      addObject(arrayToObject([true, objects.length, clickEvent + ' ' + id, mouseXR, mouseYR, undefined, undefined, undefined,
+      addObject(new Shape([true, objects.length, clickEvent + ' ' + id, mouseXR, mouseYR, undefined, undefined, undefined,
       0, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined,
       undefined, 155, 25]));
       refresh();
     }
     else if(clickEvent == 'Text') {
-      addObject(arrayToObject([true, objects.length, 'Text ' + id, mouseXR, mouseYR, undefined, undefined, undefined,
+      addObject(new Shape([true, objects.length, 'Text ' + id, mouseXR, mouseYR, undefined, undefined, undefined,
       0, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, '#000000', undefined, undefined,
       'Your text', 14, 125, 65]));
       refresh();
@@ -554,39 +563,9 @@ function mouseReleased() {
       tmpObject = {};
       diffPositionX = 0;
       diffPositionY = 0;
-      cursor(ARROW);
+      p.cursor(p.ARROW);
     }
   }
-}
-
-function arrayToObject(array) {
-  let object = {
-    visibility : array[0],
-    index : array[1],
-    name : array[2],
-    x : array[3],
-    y : array[4],
-    w : array[5],
-    h : array[6],
-    l : array[7],
-    angle : array[8],
-    topLeftRadius : array[9],
-    topRightRadius : array[10],
-    bottomRightRadius : array[11],
-    bottomLeftRadius : array[12],
-    strokeColor : array[13],
-    noStroke : array[14],
-    fillColor : array[15],
-    noFill : array[16],
-    color : array[17], // color for text and line
-    numPlace : array[18],
-    typeChair : array[19],
-    inputText : array[20],
-    size : array[21],
-    swidth : array[22],
-    sheight : array[23]
-  }
-  return object;
 }
 
 function addObject(_object) {
@@ -638,17 +617,17 @@ function createPanel(_object) {
     panel.destroy();
   }
 
-  panel=QuickSettings.create(windowWidth - 190, windowHeight - windowHeight * 0.4 - 2, 'Properties');
-  panel.setSize(188, windowHeight * 0.4);
+  panel=QuickSettings.create(p.windowWidth - 190, p.windowHeight - p.windowHeight * 0.4 - 2, 'Properties');
+  panel.setSize(188, p.windowHeight * 0.4);
   panel.setDraggable(false);
   panel.setCollapsible(false);
-  panel.setGlobalChangeHandler(function() {redraw()});
+  panel.setGlobalChangeHandler(function() {p.redraw()});
 
-  panel.bindNumber('x', 0, windowWidth, Number(_object.x).toFixed(2), 1, _object);
-  panel.bindNumber('y', 0, windowHeight, Number(_object.y).toFixed(2), 1, _object);
-  panel.bindNumber('w', 0, windowWidth, Number(_object.w).toFixed(2), 1, _object);
-  panel.bindNumber('h', 0, windowHeight, Number(_object.h).toFixed(2), 1, _object);
-  panel.bindNumber('l', 0, windowHeight, Number(_object.l).toFixed(2), 1, _object);
+  panel.bindNumber('x', 0, p.windowWidth, Number(_object.x).toFixed(2), 1, _object);
+  panel.bindNumber('y', 0, p.windowHeight, Number(_object.y).toFixed(2), 1, _object);
+  panel.bindNumber('w', 0, p.windowWidth, Number(_object.w).toFixed(2), 1, _object);
+  panel.bindNumber('h', 0, p.windowHeight, Number(_object.h).toFixed(2), 1, _object);
+  panel.bindNumber('l', 0, p.windowHeight, Number(_object.l).toFixed(2), 1, _object);
   panel.bindRange('angle', -180, 180, _object.angle, 1, _object);
   panel.bindRange('topLeftRadius', 0, Math.min(_object.w,_object.h) / 2, _object.topLeftRadius, 1, _object);
   panel.bindRange('topRightRadius', 0, Math.min(_object.w,_object.h) / 2, _object.topRightRadius, 1, _object);
@@ -664,11 +643,11 @@ function createPanel(_object) {
   panel.bindTextArea('inputText', _object.inputText, _object);
   panel.bindRange('size', 0, 100, _object.size, 1, _object);
 
-  for(control in panel._controls) {
-    if(!Object.keys(_object).includes(control)) {
-      panel.hideControl(control);
-    }
-  }
+  // for(control in panel._controls) {
+  //   if(!Object.keys(_object).includes(control)) {
+  //     panel.hideControl(control);
+  //   }
+  // }
 }
 
 function refreshLayers() {
@@ -677,8 +656,8 @@ function refreshLayers() {
     layers.destroy();
   }
 
-  layers = QuickSettings.create(windowWidth - 190, 0, 'Layers');
-  layers.setSize(188, windowHeight - windowHeight * 0.4 - 2);
+  layers = QuickSettings.create(p.windowWidth - 190, 0, 'Layers');
+  layers.setSize(188, p.windowHeight - p.windowHeight * 0.4 - 2);
   layers.setDraggable(false);
   layers.setCollapsible(false);
   layers.setGlobalChangeHandler(refresh);
@@ -688,8 +667,8 @@ function refreshLayers() {
       activeObject = _object;
     });
     if(activeObject == _object) {
-      layers.overrideStyle(_object.name, 'font-weight', 'bold');
-      layers.overrideStyle(_object.name, 'background-color', '#2e7bb6');
+      layers.overrideStyle(_object.name, 'font-weight', 'p.BOLD');
+      layers.overrideStyle(_object.name, 'p.background-color', '#2e7bb6');
       layers.overrideStyle(_object.name, 'color', '#ffffff');
     }
   });
@@ -748,11 +727,11 @@ function dragObject(_dx, _dy, _index) {
 function refresh() {
   refreshLayers();
   createPanel(activeObject);
-  redraw();
+  p.redraw();
 }
 
 function createBtnTool(_name, _x, _y, _clickEvent){
-  buttons.push({pointer : createButton(_name), clickEvent : _clickEvent});
+  buttons.push({pointer : p.createButton(_name), clickEvent : _clickEvent});
   const l = buttons.length
   buttons[l - 1]['pointer'].position(_x, _y);
   buttons[l - 1]['pointer'].class('button');
@@ -764,10 +743,10 @@ function createBtnTool(_name, _x, _y, _clickEvent){
     clickEvent = _clickEvent;
     buttons[l - 1]['pointer'].class('button_pressed');
     if(clickEvent == 'Move') {
-      cursor(ARROW);
+      p.cursor(p.ARROW);
     }
     else {
-      cursor(CROSS);
+      p.cursor(p.CROSS);
     }
   });
 }
@@ -778,8 +757,8 @@ function selectedObject(_mouseX, _mouseY){
   let yPrime;
   objects.forEach(function(_object) {
     if(_object.angle){
-      xPrime = (_mouseX - _object.x) * cos(_object.angle) + (_mouseY-_object.y) * sin(_object.angle) + _object.x;
-      yPrime = (_mouseY - _object.y) * cos(_object.angle) - (_mouseX-_object.x) * sin(_object.angle) + _object.y;
+      xPrime = (_mouseX - _object.x) * p.cos(_object.angle) + (_mouseY-_object.y) * p.sin(_object.angle) + _object.x;
+      yPrime = (_mouseY- _object.y) * p.cos(_object.angle) - (_mouseX-_object.x) * p.sin(_object.angle) + _object.y;
     }
     else{
       xPrime = _mouseX;
@@ -797,8 +776,8 @@ function selectedObject(_mouseX, _mouseY){
 
 function resizeCorner(_mouseX, _mouseY){
   let corner;
-  let xPrime = (_mouseX - activeObject.x) * cos(activeObject.angle) + (_mouseY-activeObject.y) * sin(activeObject.angle) + activeObject.x;
-  let yPrime = (_mouseY - activeObject.y) * cos(activeObject.angle) - (_mouseX-activeObject.x) * sin(activeObject.angle) + activeObject.y;
+  let xPrime = (_mouseX - activeObject.x) * p.cos(activeObject.angle) + (_mouseY-activeObject.y) * p.sin(activeObject.angle) + activeObject.x;
+  let yPrime = (_mouseY- activeObject.y) * p.cos(activeObject.angle) - (_mouseX-activeObject.x) * p.sin(activeObject.angle) + activeObject.y;
   if(activeObject.name.startsWith('Rectangle') || activeObject.name.startsWith('Line')){
     if(xPrime < activeObject.x + 5 && xPrime > activeObject.x - 5 && yPrime < activeObject.y - activeObject.sheight / 2 + 10
       && yPrime > activeObject.y - activeObject.sheight / 2 - 10){
@@ -821,8 +800,8 @@ function resizeCorner(_mouseX, _mouseY){
 }
 
 function rotateCorner(_mouseX, _mouseY){
-  let xPrime = (_mouseX - activeObject.x) * cos(activeObject.angle) + (_mouseY-activeObject.y) * sin(activeObject.angle) + activeObject.x;
-  let yPrime = (_mouseY - activeObject.y) * cos(activeObject.angle) - (_mouseX-activeObject.x) * sin(activeObject.angle) + activeObject.y;
+  let xPrime = (_mouseX - activeObject.x) * p.cos(activeObject.angle) + (_mouseY-activeObject.y) * p.sin(activeObject.angle) + activeObject.x;
+  let yPrime = (_mouseY- activeObject.y) * p.cos(activeObject.angle) - (_mouseX-activeObject.x) * p.sin(activeObject.angle) + activeObject.y;
   if(activeObject.name.startsWith('Line') && 
     ((xPrime < activeObject.x + activeObject.swidth / 2 + 20 && xPrime > activeObject.x + activeObject.swidth / 2 + 10
       && yPrime < activeObject.y + 5 && yPrime > activeObject.y - 5)
@@ -880,3 +859,6 @@ function rotateObject(_da, _index){
   });
   refresh();
 }
+}
+
+new p5(sketch);
