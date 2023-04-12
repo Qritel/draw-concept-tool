@@ -258,7 +258,7 @@ p.draw = function () {
         p.translate(_object.x, _object.y);
         p.angleMode(p.DEGREES);
         p.rotate(_object.angle);
-        p.image(p.sinkimg, 0, 0, 70, 85);
+        p.image(sinkimg, 0, 0, 70, 85);
         p.pop();
       }
       else if(_object.name.startsWith('Text')) {
@@ -643,11 +643,11 @@ function createPanel(_object) {
   panel.bindTextArea('inputText', _object.inputText, _object);
   panel.bindRange('size', 0, 100, _object.size, 1, _object);
 
-  // for(control in panel._controls) {
-  //   if(!Object.keys(_object).includes(control)) {
-  //     panel.hideControl(control);
-  //   }
-  // }
+  for(let control in panel._controls) {
+    if(!Object.keys(_object).includes(control)) {
+      panel.hideControl(control);
+    }
+  }
 }
 
 function refreshLayers() {
