@@ -8,10 +8,10 @@ import p5 from 'p5';
 import UndoManager from 'undo-manager';
 import QuickSettings from 'quicksettings';
 import Shape from './shapes/shape';
+import createPanel from './utilities/createPanel';
+import refresh from './utilities/refresh';
 
 import './styles/quicksettings.css';
-
-const sketch = (p) => {
 
 let x1 = 0, y1 = 0, x2 = 0, y2 = 0;
 let clickEvent = '';
@@ -55,6 +55,8 @@ let panel;
 
 let undoManager = new UndoManager();
 
+const sketch = (p) => {
+
 //p5 function: used to handle asynchronous loading of external files
 p.preload = function () {
   tableimg = p.loadImage('images/table.png');
@@ -72,8 +74,8 @@ p.setup = function () {
 
   QuickSettings.useExtStyleSheet();
 
-  createPanel(activeObject);
-  refreshLayers();
+  // createPanel(p, activeObject);
+  // refreshLayers();
 
   //p5: Creates a canvas element in the document, and sets the dimensions of it in pixels
   canvasX = 100;
@@ -105,14 +107,14 @@ p.setup = function () {
   btnUndo.position(10, 20);
   btnUndo.mousePressed(function() {
     undoManager.undo();
-    refresh();
+    refresh(p);
   });
 
   btnRedo = p.createButton('⟳');
   btnRedo.position(61, 20);
   btnRedo.mousePressed(function() {
     undoManager.redo();
-    refresh();
+    refresh(p);
   });
 
   btnUp = p.createButton('🡡');
@@ -344,9 +346,9 @@ p.draw = function () {
     p.pop();
   }
   if(activeObject.name != 'Rectangle drawing' && activeObject.name != 'Line drawing'){
-    btnUp.mousePressed(function() { moveUpObject(activeObject.name); refresh(); });
-    btnDown.mousePressed(function() { moveDownObject(activeObject.name); refresh(); });
-    btnDelete.mousePressed(function() { removeObject(activeObject); refresh(); });
+    btnUp.mousePressed(function() { moveUpObject(activeObject.name); refresh(p); });
+    btnDown.mousePressed(function() { moveDownObject(activeObject.name); refresh(p); });
+    btnDelete.mousePressed(function() { removeObject(activeObject); refresh(p); });
   }
   if(objects.length){
     btnUp.show();
@@ -393,7 +395,7 @@ p.mousePressed = function () {
     }
     else if(selectedObject(mouseXR, mouseYR) && clickEvent == 'Move'){
       activeObject = selectedObject(mouseXR, mouseYR);
-      refresh();
+      refresh(p);
       diffPositionX = mouseXR - panel.getValue('x') + 0.01;
       diffPositionY = mouseYR - panel.getValue('y') + 0.01;
       tmpObject = { ...activeObject };
@@ -410,7 +412,7 @@ p.mouseDragged = function () {
   if(p.mouseX > 0 && p.mouseX < canvasWidth && p.mouseY> 0 && p.mouseY< canvasHeight) {
     if(clickEvent == 'Rotate'){
       p.angleMode(p.DEGREES);
-      createPanel(tmpObject);
+      createPanel(p, tmpObject);
       panel.setValue('angle', activeObject.angle + p.atan2(mouseYR - activeObject.y, mouseXR - activeObject.x) - 
       p.atan2(diffPositionY - activeObject.y, diffPositionX - activeObject.x));
     }
@@ -419,7 +421,7 @@ p.mouseDragged = function () {
                   + (mouseYR - activeObject.y) * p.sin(activeObject.angle) + activeObject.x);
       let dragY = diffPositionY + activeObject.y - ((mouseYR - activeObject.y) * p.cos(activeObject.angle) 
                   - (mouseXR - activeObject.x) * p.sin(activeObject.angle) + activeObject.y);
-      createPanel(tmpObject);
+      createPanel(p, tmpObject);
       if((corner == 'T' && activeObject.h + dragY > 0 || corner == 'B'  && activeObject.h - dragY > 0) 
           && activeObject.name.startsWith('Rectangle')){
         panel.setValue('y',Number(activeObject.y - dragY / 2 * p.cos(activeObject.angle)).toFixed(2));
@@ -479,7 +481,7 @@ p.mouseDragged = function () {
     }
     else if(diffPositionX && diffPositionY && clickEvent == 'Move') {
       p.cursor(p.MOVE);
-      createPanel(tmpObject);
+      createPanel(p, tmpObject);
       panel.setValue('x',Number(p.mouseX * zoomR - diffPositionX).toFixed(2));
       panel.setValue('y',Number(p.mouseY* zoomR - diffPositionY).toFixed(2));
     }
@@ -528,32 +530,32 @@ p.mouseReleased = function () {
         undefined, undefined, undefined, undefined, '#000000', undefined, undefined, undefined, undefined,
         p.sqrt((x1-x2)*(x1-x2)+(y1-y2)*(y1-y2)) + 5, 7]));
       }
-      refresh();
+      refresh(p);
       x1 = 0, y1 = 0, x2 = 0, y2 = 0;
     }
     else if(clickEvent == 'Table') {
       addObject(new Shape([true, objects.length, 'Table ' + id, mouseXR, mouseYR, undefined, undefined, undefined,
       0, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, 2, 'chair', undefined,
       undefined, 75, 75]));
-      refresh();
+      refresh(p);
     }
     else if(['Door', 'Toilet', 'sink'].includes(clickEvent)){
       addObject(new Shape([true, objects.length, clickEvent + ' ' + id, mouseXR, mouseYR, undefined, undefined, undefined,
       0, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined,
       undefined, 75, 75]));
-      refresh();
+      refresh(p);
     }
     else if(['Window', 'TV'].includes(clickEvent)){
       addObject(new Shape([true, objects.length, clickEvent + ' ' + id, mouseXR, mouseYR, undefined, undefined, undefined,
       0, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined,
       undefined, 155, 25]));
-      refresh();
+      refresh(p);
     }
     else if(clickEvent == 'Text') {
       addObject(new Shape([true, objects.length, 'Text ' + id, mouseXR, mouseYR, undefined, undefined, undefined,
       0, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, '#000000', undefined, undefined,
       'Your text', 14, 125, 65]));
-      refresh();
+      refresh(p);
     }
     else if(diffPositionX && diffPositionY && objects.length && clickEvent == 'Move') {
       objects.splice(activeObject.index, 1);
@@ -611,68 +613,29 @@ function removeObject(_object) {
   }
 }
 
-function createPanel(_object) {
+// function refreshLayers() {
 
-  if(panel) {
-    panel.destroy();
-  }
+//   if(layers) {
+//     layers.destroy();
+//   }
 
-  panel=QuickSettings.create(p.windowWidth - 190, p.windowHeight - p.windowHeight * 0.4 - 2, 'Properties');
-  panel.setSize(188, p.windowHeight * 0.4);
-  panel.setDraggable(false);
-  panel.setCollapsible(false);
-  panel.setGlobalChangeHandler(function() {p.redraw()});
+//   layers = QuickSettings.create(p.windowWidth - 190, 0, 'Layers');
+//   layers.setSize(188, p.windowHeight - p.windowHeight * 0.4 - 2);
+//   layers.setDraggable(false);
+//   layers.setCollapsible(false);
+//   layers.setGlobalChangeHandler(refresh);
 
-  panel.bindNumber('x', 0, p.windowWidth, Number(_object.x).toFixed(2), 1, _object);
-  panel.bindNumber('y', 0, p.windowHeight, Number(_object.y).toFixed(2), 1, _object);
-  panel.bindNumber('w', 0, p.windowWidth, Number(_object.w).toFixed(2), 1, _object);
-  panel.bindNumber('h', 0, p.windowHeight, Number(_object.h).toFixed(2), 1, _object);
-  panel.bindNumber('l', 0, p.windowHeight, Number(_object.l).toFixed(2), 1, _object);
-  panel.bindRange('angle', -180, 180, _object.angle, 1, _object);
-  panel.bindRange('topLeftRadius', 0, Math.min(_object.w,_object.h) / 2, _object.topLeftRadius, 1, _object);
-  panel.bindRange('topRightRadius', 0, Math.min(_object.w,_object.h) / 2, _object.topRightRadius, 1, _object);
-  panel.bindRange('bottomRightRadius', 0, Math.min(_object.w,_object.h) / 2, _object.bottomRightRadius, 1, _object);
-  panel.bindRange('bottomLeftRadius', 0, Math.min(_object.w,_object.h) / 2, _object.bottomLeftRadius, 1, _object);
-  panel.bindColor('strokeColor', _object.strokeColor, _object);
-  panel.bindBoolean('noStroke', _object.noStroke, _object);
-  panel.bindColor('fillColor', _object.fillColor, _object);
-  panel.bindBoolean('noFill', _object.noFill, _object);
-  panel.bindColor('color', _object.color, _object);
-  panel.bindRange('numPlace', 1, 10, _object.numPlace, 1, _object);
-  panel.bindDropDown('typeChair',  ['chair','sofa'],  _object);
-  panel.bindTextArea('inputText', _object.inputText, _object);
-  panel.bindRange('size', 0, 100, _object.size, 1, _object);
-
-  for(let control in panel._controls) {
-    if(!Object.keys(_object).includes(control)) {
-      panel.hideControl(control);
-    }
-  }
-}
-
-function refreshLayers() {
-
-  if(layers) {
-    layers.destroy();
-  }
-
-  layers = QuickSettings.create(p.windowWidth - 190, 0, 'Layers');
-  layers.setSize(188, p.windowHeight - p.windowHeight * 0.4 - 2);
-  layers.setDraggable(false);
-  layers.setCollapsible(false);
-  layers.setGlobalChangeHandler(refresh);
-
-  objects.slice().reverse().forEach(function(_object) {
-    layers.addButton(_object.name, function() {
-      activeObject = _object;
-    });
-    if(activeObject == _object) {
-      layers.overrideStyle(_object.name, 'font-weight', 'p.BOLD');
-      layers.overrideStyle(_object.name, 'p.background-color', '#2e7bb6');
-      layers.overrideStyle(_object.name, 'color', '#ffffff');
-    }
-  });
-}
+//   objects.slice().reverse().forEach(function(_object) {
+//     layers.addButton(_object.name, function() {
+//       activeObject = _object;
+//     });
+//     if(activeObject == _object) {
+//       layers.overrideStyle(_object.name, 'font-weight', 'p.BOLD');
+//       layers.overrideStyle(_object.name, 'background-color', '#2e7bb6');
+//       layers.overrideStyle(_object.name, 'color', '#ffffff');
+//     }
+//   });
+// }
 
 function moveUpObject(_name) {
   const index = objects.findIndex(_object => _object.name === _name);
@@ -721,14 +684,14 @@ function dragObject(_dx, _dy, _index) {
       dragObject(_dx, _dy, _index);
     }
   });
-  refresh();
+  refresh(p);
 }
 
-function refresh() {
-  refreshLayers();
-  createPanel(activeObject);
-  p.redraw();
-}
+// function refresh(p) {
+//   refreshLayers();
+//   createPanel(p, activeObject);
+//   p.redraw();
+// }
 
 function createBtnTool(_name, _x, _y, _clickEvent){
   buttons.push({pointer : p.createButton(_name), clickEvent : _clickEvent});
@@ -843,7 +806,7 @@ function resizeObject(_dx, _dy, _dw, _dh, _index){
       resizeObject(_dx, _dy, _dw, _dh, _index);
     }
   });
-  refresh();
+  refresh(p);
 }
 
 function rotateObject(_da, _index){
@@ -857,8 +820,10 @@ function rotateObject(_da, _index){
       rotateObject(_da, _index);
     }
   });
-  refresh();
+  refresh(p);
 }
 }
 
 new p5(sketch);
+
+export { objects, activeObject, panel, layers };
