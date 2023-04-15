@@ -1,25 +1,25 @@
 import QuickSettings from 'quicksettings';
 import refresh from './refresh';
-import { layers, objects, activeObject } from "../sketch";
+import { mySketch, layers, items, activeItem } from "../sketch";
 
-export default function refreshLayers(p) {
+export default function refreshLayers() {
 
   if(layers) {
     layers.destroy();
   }
 
-  layers = QuickSettings.create(p.windowWidth - 190, 0, 'Layers');
-  layers.setSize(188, p.windowHeight - p.windowHeight * 0.4 - 2);
+  layers = QuickSettings.create(mySketch.windowWidth - 190, 0, 'Layers');
+  layers.setSize(188, mySketch.windowHeight - mySketch.windowHeight * 0.4 - 2);
   layers.setDraggable(false);
   layers.setCollapsible(false);
   layers.setGlobalChangeHandler(refresh);
 
-  objects.slice().reverse().forEach(function(_object) {
+  items.slice().reverse().forEach(function(_object) {
     layers.addButton(_object.name, function() {
-      activeObject = _object;
+      activeItem = _object;
     });
-    if(activeObject == _object) {
-      layers.overrideStyle(_object.name, 'font-weight', 'p.BOLD');
+    if(activeItem == _object) {
+      layers.overrideStyle(_object.name, 'font-weight', 'mySketch.BOLD');
       layers.overrideStyle(_object.name, 'background-color', '#2e7bb6');
       layers.overrideStyle(_object.name, 'color', '#ffffff');
     }

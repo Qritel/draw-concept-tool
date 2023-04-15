@@ -1,9 +1,9 @@
-import createPanel from "./createPanel";
+import createPanel from "../interactions/createPanel";
 import refreshLayers from "./refreshLayers";
-import { activeObject } from "../sketch";
+import { mySketch, activeItem } from "../sketch";
 
-export default function refresh(p) {
-  refreshLayers(p);
-  createPanel(p, activeObject);
-  p.redraw();
+export default function refresh() {
+  refreshLayers();
+  createPanel(activeItem);
+  mySketch.redraw();
 }

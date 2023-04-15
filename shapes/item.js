@@ -1,4 +1,4 @@
-class Shape {
+class Item {
     constructor(array) {
       this.visibility = array[0];
       this.index = array[1];
@@ -26,5 +26,5 @@ class Shape {
       this.sheight = array[23];
     }
 }
-export default Shape;
+export default Item;
   
