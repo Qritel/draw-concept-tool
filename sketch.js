@@ -7,7 +7,8 @@ This code uses 2 libraries :
 import p5 from 'p5';
 import UndoManager from 'undo-manager';
 import QuickSettings from 'quicksettings';
-import Item from './shapes/item';
+
+import Item from './Items/item';
 import createPanel from './interactions/createPanel';
 import refresh from './utilities/refresh';
 import createBtnTool from './interactions/createBtnTool';
@@ -349,9 +350,9 @@ p.draw = function () {
     p.pop();
   }
   if(activeItem.name != 'Rectangle drawing' && activeItem.name != 'Line drawing'){
-    btnUp.mousePressed(function() { moveUpObject(activeItem.name); refresh(); });
-    btnDown.mousePressed(function() { moveDownObject(activeItem.name); refresh(); });
-    btnDelete.mousePressed(function() { removeObject(activeItem); refresh(); });
+    btnUp.mousePressed(function() { Item.moveUpItem(activeItem.name); refresh(); });
+    btnDown.mousePressed(function() { Item.moveDownItem(activeItem.name); refresh(); });
+    btnDelete.mousePressed(function() { Item.removeItem(activeItem); refresh(); });
   }
   if(items.length){
     btnUp.show();
@@ -469,13 +470,13 @@ p.mouseDragged = function () {
       y2 = p.mouseY* zoomR;
       if(clickEvent == 'Draw_Rect') {
         if(items.length && items[items.length - 1].name === 'Rectangle drawing') items.pop();
-        addObject(new Item([true, items.length, 'Rectangle drawing', x1+(x2-x1)/2, y1+(y2-y1)/2, p.abs (x2-x1), p.abs (y2-y1), undefined,
+        Item.addItem(new Item([true, items.length, 'Rectangle drawing', x1+(x2-x1)/2, y1+(y2-y1)/2, p.abs (x2-x1), p.abs (y2-y1), undefined,
         0, 0, 0, 0, 0, '#000000', false, '#ffffff', false, undefined, undefined, undefined, undefined, undefined, p.abs (x2-x1) + 5,
         p.abs (y2-y1) + 5]));
       }
       if(clickEvent == 'Draw_Line') {
         if(items.length && items[items.length - 1].name === 'Line drawing') items.pop();
-        addObject(new Item([true, items.length, 'Line drawing', x1+(x2-x1)/2, y1+(y2-y1)/2, 2, undefined,
+        Item.addItem(new Item([true, items.length, 'Line drawing', x1+(x2-x1)/2, y1+(y2-y1)/2, 2, undefined,
         Number(p.sqrt((x1-x2)*(x1-x2)+(y1-y2)*(y1-y2))).toFixed(2), p.atan((y2-y1)/(x2-x1)), undefined, undefined, undefined,undefined, undefined,
         undefined, undefined, undefined, '#000000', undefined, undefined, undefined, undefined,
         p.sqrt((x1-x2)*(x1-x2)+(y1-y2)*(y1-y2)) + 5, 7]));
@@ -500,7 +501,7 @@ p.mouseReleased = function () {
     activeItem.visibility = true;
     clickEvent = tmpClickEvent;
     if(tmpItem.angle != activeItem.angle) {
-      rotateObject(tmpItem.angle - activeItem.angle, index);
+      Item.rotateItem(tmpItem.angle - activeItem.angle, index);
     }
     tmpItem = {};
   }
@@ -511,10 +512,10 @@ p.mouseReleased = function () {
     clickEvent = tmpClickEvent;
     if(tmpItem.x != activeItem.x || tmpItem.y != activeItem.y) {
       if(activeItem.name.startsWith('Rectangle'))
-        resizeObject(tmpItem.x - activeItem.x, tmpItem.y - activeItem.y, tmpItem.w - activeItem.w,
+        Item.resizeItem(tmpItem.x - activeItem.x, tmpItem.y - activeItem.y, tmpItem.w - activeItem.w,
           tmpItem.h - activeItem.h, index);
       else if(activeItem.name.startsWith('Line'))
-        resizeObject(tmpItem.x - activeItem.x, tmpItem.y - activeItem.y, tmpItem.l - activeItem.l, 0, index);
+        Item.resizeItem(tmpItem.x - activeItem.x, tmpItem.y - activeItem.y, tmpItem.l - activeItem.l, 0, index);
     }
     tmpItem = {};
   }
@@ -522,13 +523,13 @@ p.mouseReleased = function () {
     if(x1 && y1 && x2 && y2 && (clickEvent == 'Draw_Rect' || clickEvent == 'Draw_Line')) {
       if(clickEvent == 'Draw_Rect') {
         items.pop();
-        addObject(new Item([true, items.length, 'Rectangle ' + id, x1+(x2-x1)/2, y1+(y2-y1)/2, p.abs (x2-x1), p.abs (y2-y1), undefined,
+        Item.addItem(new Item([true, items.length, 'Rectangle ' + id, x1+(x2-x1)/2, y1+(y2-y1)/2, p.abs (x2-x1), p.abs (y2-y1), undefined,
         0, 0, 0, 0, 0, '#000000', false, '#ffffff', false, undefined, undefined, undefined, undefined, undefined, p.abs (x2-x1) + 5,
         p.abs (y2-y1) + 5]));
       }
       else if(clickEvent == 'Draw_Line') {
         items.pop();
-        addObject(new Item([true, items.length, 'Line ' + id, x1+(x2-x1)/2, y1+(y2-y1)/2, 2, undefined,
+        Item.addItem(new Item([true, items.length, 'Line ' + id, x1+(x2-x1)/2, y1+(y2-y1)/2, 2, undefined,
         p.sqrt((x1-x2)*(x1-x2)+(y1-y2)*(y1-y2)), p.atan((y2-y1)/(x2-x1)), undefined, undefined, undefined,undefined,
         undefined, undefined, undefined, undefined, '#000000', undefined, undefined, undefined, undefined,
         p.sqrt((x1-x2)*(x1-x2)+(y1-y2)*(y1-y2)) + 5, 7]));
@@ -537,25 +538,25 @@ p.mouseReleased = function () {
       x1 = 0, y1 = 0, x2 = 0, y2 = 0;
     }
     else if(clickEvent == 'Table') {
-      addObject(new Item([true, items.length, 'Table ' + id, mouseXR, mouseYR, undefined, undefined, undefined,
+      Item.addItem(new Item([true, items.length, 'Table ' + id, mouseXR, mouseYR, undefined, undefined, undefined,
       0, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, 2, 'chair', undefined,
       undefined, 75, 75]));
       refresh();
     }
     else if(['Door', 'Toilet', 'sink'].includes(clickEvent)){
-      addObject(new Item([true, items.length, clickEvent + ' ' + id, mouseXR, mouseYR, undefined, undefined, undefined,
+      Item.addItem(new Item([true, items.length, clickEvent + ' ' + id, mouseXR, mouseYR, undefined, undefined, undefined,
       0, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined,
       undefined, 75, 75]));
       refresh();
     }
     else if(['Window', 'TV'].includes(clickEvent)){
-      addObject(new Item([true, items.length, clickEvent + ' ' + id, mouseXR, mouseYR, undefined, undefined, undefined,
+      Item.addItem(new Item([true, items.length, clickEvent + ' ' + id, mouseXR, mouseYR, undefined, undefined, undefined,
       0, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined,
       undefined, 155, 25]));
       refresh();
     }
     else if(clickEvent == 'Text') {
-      addObject(new Item([true, items.length, 'Text ' + id, mouseXR, mouseYR, undefined, undefined, undefined,
+      Item.addItem(new Item([true, items.length, 'Text ' + id, mouseXR, mouseYR, undefined, undefined, undefined,
       0, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, '#000000', undefined, undefined,
       'Your text', 14, 125, 65]));
       refresh();
@@ -564,106 +565,16 @@ p.mouseReleased = function () {
       items.splice(activeItem.index, 1);
       const index = items.indexOf(activeItem);
       activeItem.visibility = true;
-      if(tmpItem.x != activeItem.x) dragObject(tmpItem.x - activeItem.x, tmpItem.y - activeItem.y, index);
+      if(tmpItem.x != activeItem.x)
+        {
+          Item.dragItem(tmpItem.x - activeItem.x, tmpItem.y - activeItem.y, index);
+        }
       tmpItem = {};
       diffPositionX = 0;
       diffPositionY = 0;
       p.cursor(p.ARROW);
     }
   }
-}
-
-function addObject(_object) {
-  Object.keys(_object).forEach(key => {
-    if (_object[key] === undefined) {
-      delete _object[key];
-    }
-  });
-  if(_object.name && !_object.name.endsWith('drawing')) {
-    id ++;
-    undoManager.add({
-      undo: function() {
-        removeObject(_object);
-      },
-      redo: function() {
-        addObject(_object);
-      }
-    });
-  }
-  items.splice(_object.index, 0, _object);
-  activeItem = _object;
-}
-
-function removeObject(_object) {
-  const index = items.indexOf(_object);
-  if (index > -1) {
-    items.splice(index, 1);
-  }
-  if(activeItem === _object) {
-    if(items.length == 0) activeItem = {};
-    else if(index == 0) activeItem = items[index];
-    else activeItem = items[index-1];
-  }
-  if(_object.name && !_object.name.endsWith('drawing')) {
-    undoManager.add({
-      undo: function() {
-        addObject(_object);
-      },
-      redo: function() {
-        removeObject(_object);
-      }
-    });
-  }
-}
-
-function moveUpObject(_name) {
-  const index = items.findIndex(_object => _object.name === _name);
-  activeItem = items[index];
-  const len = items.length;
-  if(index < len - 1) {
-    [items[index].index, items[index + 1].index] = [items[index + 1].index, items[index].index];
-    [items[index], items[index + 1]] = [items[index + 1], items[index]];
-    undoManager.add({
-      undo: function() {
-        moveDownObject(_name);
-      },
-      redo: function() {
-        moveUpObject(_name);
-      }
-    });
-  }
-}
-
-function moveDownObject(_name) {
-  const index = items.findIndex(_object => _object.name === _name);
-  activeItem = items[index];
-  if(index > 0) {
-    [items[index].index, items[index - 1].index] = [items[index - 1].index, items[index].index];
-    [items[index], items[index - 1]] = [items[index - 1], items[index]];
-    undoManager.add({
-      undo: function() {
-        moveUpObject(_name);
-      },
-      redo: function() {
-        moveDownObject(_name);
-      }
-    });
-  }
-}
-
-function dragObject(_dx, _dy, _index) {
-  items[_index].x += _dx;
-  items[_index].y += _dy;
-  activeItem = items[_index];
-  undoManager.add({
-    undo: function() {
-      dragObject(-_dx, -_dy, _index);
-    },
-    redo: function() {
-      dragObject(_dx, _dy, _index);
-    }
-  });
-  refresh();
 }
 
 function selectedObject(_mouseX, _mouseY){
@@ -737,45 +648,8 @@ function rotateCorner(_mouseX, _mouseY){
   return false;
 }
 
-function resizeObject(_dx, _dy, _dw, _dh, _index){
-  items[_index].x += _dx;
-  items[_index].y += _dy;
-  if(items[_index].name.startsWith('Rectangle')){
-    items[_index].h += _dh;
-    items[_index].w += _dw;
-  }
-  else if(items[_index].name.startsWith('Line')){
-    items[_index].l += _dw;
-  }
-  items[_index].swidth += _dw;
-  items[_index].sheight += _dh;
-  activeItem = items[_index];
-  undoManager.add({
-    undo: function() {
-      resizeObject(-_dx, -_dy, -_dw, -_dh, _index);
-    },
-    redo: function() {
-      resizeObject(_dx, _dy, _dw, _dh, _index);
-    }
-  });
-  refresh();
-}
-
-function rotateObject(_da, _index){
-  items[_index].angle += _da;
-  activeItem = items[_index];
-  undoManager.add({
-    undo: function() {
-      rotateObject(-_da, _index);
-    },
-    redo: function() {
-      rotateObject(_da, _index);
-    }
-  });
-  refresh();
-}
 }
 
 new p5(sketch);
 
-export { mySketch, items, activeItem, panel, layers, clickEvent, buttons };
+export { mySketch, items, activeItem, id, panel, layers, clickEvent, buttons, undoManager };
