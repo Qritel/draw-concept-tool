@@ -12,6 +12,8 @@ import Item from './Items/item';
 import createPanel from './interactions/createPanel';
 import refresh from './utilities/refresh';
 import createBtnTool from './interactions/createBtnTool';
+import getResizingCorner from './math/getResizingCorner';
+import isRotatingCorner from './math/isRotatingCorner';
 
 import './styles/quicksettings.css';
 
@@ -372,7 +374,7 @@ p.mousePressed = function () {
   let mouseXR = p.mouseX * zoomR;
   let mouseYR = p.mouseY* zoomR;
   if(p.mouseX > 0 && p.mouseX < canvasWidth && p.mouseY> 0 && p.mouseY< canvasHeight) {
-    if(items.length && rotateCorner(mouseXR, mouseYR)){
+    if(items.length && isRotatingCorner(activeItem, mouseXR, mouseYR)){
       tmpClickEvent = clickEvent;
       clickEvent = 'Rotate';
       diffPositionX = mouseXR;
@@ -381,8 +383,8 @@ p.mousePressed = function () {
       activeItem.visibility = false;
       items.splice(activeItem.index, 0, tmpItem); //insert 'tmpItem' into the 'items' array at the position 'activeItem.index'.
     }
-    else if(items.length && resizeCorner(mouseXR, mouseYR)){
-      corner = resizeCorner(mouseXR, mouseYR);
+    else if(items.length && getResizingCorner(activeItem, mouseXR, mouseYR)){
+      corner = getResizingCorner(activeItem, mouseXR, mouseYR);
       tmpClickEvent = clickEvent;
       clickEvent = 'Resize';
       diffPositionX = (mouseXR - activeItem.x) * p.cos(activeItem.angle) 
@@ -598,54 +600,6 @@ function selectedObject(_mouseX, _mouseY){
   const maxI =  Math.max(...sObj.map(_object => _object.index));
   const index = sObj.findIndex(_object => _object.index === maxI);
   return sObj[index];
-}
-
-function resizeCorner(_mouseX, _mouseY){
-  let corner;
-  let xPrime = (_mouseX - activeItem.x) * p.cos(activeItem.angle) + (_mouseY-activeItem.y) * p.sin(activeItem.angle) + activeItem.x;
-  let yPrime = (_mouseY- activeItem.y) * p.cos(activeItem.angle) - (_mouseX-activeItem.x) * p.sin(activeItem.angle) + activeItem.y;
-  if(activeItem.name.startsWith('Rectangle') || activeItem.name.startsWith('Line')){
-    if(xPrime < activeItem.x + 5 && xPrime > activeItem.x - 5 && yPrime < activeItem.y - activeItem.sheight / 2 + 10
-      && yPrime > activeItem.y - activeItem.sheight / 2 - 10){
-      corner = 'T';
-    }
-    else if(xPrime < activeItem.x + 5 && xPrime > activeItem.x - 5 && yPrime < activeItem.y + activeItem.sheight / 2 + 10
-      && yPrime > activeItem.y + activeItem.sheight / 2 - 10){
-      corner = 'B';
-    }
-    else if(xPrime < activeItem.x - activeItem.swidth / 2 + 10 && xPrime > activeItem.x - activeItem.swidth / 2 - 10 
-      && yPrime < activeItem.y + 5 && yPrime > activeItem.y - 5){
-      corner = 'L';
-    }
-    else if(xPrime < activeItem.x + activeItem.swidth / 2 + 10 && xPrime > activeItem.x + activeItem.swidth / 2 - 10 
-      && yPrime < activeItem.y + 5 && yPrime > activeItem.y - 5){
-      corner = 'R';
-    }
-  }
-  return corner;
-}
-
-function rotateCorner(_mouseX, _mouseY){
-  let xPrime = (_mouseX - activeItem.x) * p.cos(activeItem.angle) + (_mouseY-activeItem.y) * p.sin(activeItem.angle) + activeItem.x;
-  let yPrime = (_mouseY- activeItem.y) * p.cos(activeItem.angle) - (_mouseX-activeItem.x) * p.sin(activeItem.angle) + activeItem.y;
-  if(activeItem.name.startsWith('Line') && 
-    ((xPrime < activeItem.x + activeItem.swidth / 2 + 20 && xPrime > activeItem.x + activeItem.swidth / 2 + 10
-      && yPrime < activeItem.y + 5 && yPrime > activeItem.y - 5)
-    || (xPrime < activeItem.x - activeItem.swidth / 2 - 10 && xPrime > activeItem.x - activeItem.swidth / 2 - 20
-      && yPrime < activeItem.y + 5 && yPrime > activeItem.y - 5))){
-    return true;
-  }
-  else if((xPrime < activeItem.x + activeItem.swidth / 2 + 10 && xPrime > activeItem.x + activeItem.swidth / 2
-            && yPrime < activeItem.y - activeItem.sheight / 2 && yPrime > activeItem.y - activeItem.sheight / 2 - 10)
-        || (xPrime < activeItem.x + activeItem.swidth / 2 + 10 && xPrime > activeItem.x + activeItem.swidth / 2
-            && yPrime < activeItem.y + activeItem.sheight / 2 + 10 && yPrime > activeItem.y + activeItem.sheight / 2)
-        || (xPrime < activeItem.x - activeItem.swidth / 2 && xPrime > activeItem.x - activeItem.swidth / 2 - 10
-            && yPrime < activeItem.y + activeItem.sheight / 2 + 10 && yPrime > activeItem.y + activeItem.sheight / 2)
-        || (xPrime < activeItem.x - activeItem.swidth / 2 && xPrime > activeItem.x - activeItem.swidth / 2 - 10
-            && yPrime < activeItem.y + activeItem.sheight / 2 && yPrime > activeItem.y - activeItem.sheight / 2 - 10)){
-    return true;
-  }
-  return false;
 }
 
 }
