@@ -1,4 +1,5 @@
-import { items, activeItem, id } from "../sketch";
+import { items, activeItem, id, mySketch as p } from "../sketch";
+import { tableimg, chairimg, sofaimg, doorimg, windowimg, sinkimg, toiletimg, tvimg} from "../sketch";
 import { undoManager } from "../sketch";
 
 class Item {
@@ -155,6 +156,131 @@ class Item {
         Item.rotateItem(_da, _index);
       }
     });
+  }
+
+  static drawItem(_object){
+    if(_object.name.startsWith('Rectangle')) {
+      p.push();
+      p.strokeWeight(3);
+      p.stroke(_object.strokeColor);
+      p.fill(_object.fillColor);
+      if(_object.noFill) p.noFill();
+      if(_object.noStroke) p.noStroke();
+      p.rectMode(p.CENTER); 
+      p.translate(_object.x, _object.y);
+      p.angleMode(p.DEGREES);
+      p.rotate(_object.angle);
+      p.rect(0, 0, _object.w, _object.h,
+        _object.topLeftRadius, _object.topRightRadius, _object.bottomRightRadius, _object.bottomLeftRadius);
+      p.pop();
+    }
+    else if(_object.name.startsWith('Line')) {
+      p.push();
+      p.strokeWeight(_object.w);
+      p.stroke(_object.color);
+      p.rectMode(p.CENTER); 
+      p.translate(_object.x, _object.y);
+      p.angleMode(p.DEGREES);
+      p.rotate(_object.angle);
+      p.rect(0,0,_object.l,1);
+      p.pop();
+    }
+    else if(_object.name.startsWith('Table')) {
+      p.push();
+      p.imageMode(p.CENTER);
+      p.translate(_object.x, _object.y);
+      p.angleMode(p.DEGREES);
+      p.rotate(_object.angle)
+      p.image(tableimg, 0, 0, 100, 73);
+      // draw chairs arranged in a circle
+      for(let i = 0; i < _object.numPlace; i++) {
+
+        let angle = p.TWO_PI / _object.numPlace * i;
+        let x = p.cos(angle) * 55;
+        let y = p.sin(angle) * 55;
+
+        switch(_object.typeChair) {
+
+          case 'chair':
+          //p5: The push() function saves the current drawing style settings and transformations, while pop() restores these settings
+            p.push();
+            p.imageMode(p.CENTER);
+            p.translate(x, y);
+            p.angleMode(p.RADIANS);
+            p.rotate(angle+p.PI/2);
+            p.image(chairimg,0, 0, 200, 130);
+            p.pop();
+            break;
+
+          case 'sofa':
+            p.push();
+            p.imageMode(p.CENTER);
+            p.translate(x, y);
+            p.angleMode(p.RADIANS);
+            p.rotate(angle+p.PI/2);
+            p.image(sofaimg,0, 0, 200, 130);
+            p.pop();
+            break;
+        }
+      }
+      p.pop();
+    }
+    else if(_object.name.startsWith('Door')) {
+      p.push();
+      p.imageMode(p.CENTER);
+      p.translate(_object.x, _object.y);
+      p.angleMode(p.DEGREES);
+      p.rotate(_object.angle);
+      p.image(doorimg, 0, 0, 200, 75);
+      p.pop();
+    }
+    else if(_object.name.startsWith('Window')) {
+      p.push();
+      p.imageMode(p.CENTER);
+      p.translate(_object.x, _object.y);
+      p.angleMode(p.DEGREES);
+      p.rotate(_object.angle);
+      p.image(windowimg, 0, 0, 200, 150);
+      p.pop();
+    }
+    else if(_object.name.startsWith('TV')) {
+      p.push();
+      p.imageMode(p.CENTER);
+      p.translate(_object.x, _object.y);
+      p.angleMode(p.DEGREES);
+      p.rotate(_object.angle);
+      p.image(tvimg, 0, 0, 120, 75);
+      p.pop();
+    }
+    else if(_object.name.startsWith('Toilet')) {
+      p.push();
+      p.imageMode(p.CENTER);
+      p.translate(_object.x, _object.y);
+      p.angleMode(p.DEGREES);
+      p.rotate(_object.angle);
+      p.image(toiletimg, 0, 0, 55, 70);
+      p.pop();
+    }
+    else if(_object.name.startsWith('sink')) {
+      p.push();
+      p.imageMode(p.CENTER);
+      p.translate(_object.x, _object.y);
+      p.angleMode(p.DEGREES);
+      p.rotate(_object.angle);
+      p.image(sinkimg, 0, 0, 70, 85);
+      p.pop();
+    }
+    else if(_object.name.startsWith('Text')) {
+      p.push();
+      p.noStroke();
+      p.textSize(_object.size);
+      p.fill(_object.color);
+      p.translate(_object.x, _object.y);
+      p.angleMode(p.DEGREES);
+      p.rotate(_object.angle);
+      p.text(_object.inputText, -60, -30, _object.swidth, _object.sheight);
+      p.pop();
+    }
   }
 }
 export default Item;

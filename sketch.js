@@ -8,12 +8,13 @@ import p5 from 'p5';
 import UndoManager from 'undo-manager';
 import QuickSettings from 'quicksettings';
 
-import Item from './Items/item';
+import Item from './Item/item';
 import createPanel from './interactions/createPanel';
 import refresh from './utilities/refresh';
 import createBtnTool from './interactions/createBtnTool';
 import getResizingCorner from './math/getResizingCorner';
 import isRotatingCorner from './math/isRotatingCorner';
+import getSelectedItem from './math/getSelectedItem';
 
 import './styles/quicksettings.css';
 
@@ -157,130 +158,7 @@ p.draw = function () {
 
   //browse all items
   items.forEach(function(_object) {
-    if(_object.visibility){
-      if(_object.name.startsWith('Rectangle')) {
-        p.push();
-        p.strokeWeight(3);
-        p.stroke(_object.strokeColor);
-        p.fill(_object.fillColor);
-        if(_object.noFill) p.noFill();
-        if(_object.noStroke) p.noStroke();
-        p.rectMode(p.CENTER); 
-        p.translate(_object.x, _object.y);
-        p.angleMode(p.DEGREES);
-        p.rotate(_object.angle);
-        p.rect(0, 0, _object.w, _object.h,
-          _object.topLeftRadius, _object.topRightRadius, _object.bottomRightRadius, _object.bottomLeftRadius);
-        p.pop();
-      }
-      else if(_object.name.startsWith('Line')) {
-        p.push();
-        p.strokeWeight(_object.w);
-        p.stroke(_object.color);
-        p.rectMode(p.CENTER); 
-        p.translate(_object.x, _object.y);
-        p.angleMode(p.DEGREES);
-        p.rotate(_object.angle);
-        p.rect(0,0,_object.l,1);
-        p.pop();
-      }
-      else if(_object.name.startsWith('Table')) {
-        p.push();
-        p.imageMode(p.CENTER);
-        p.translate(_object.x, _object.y);
-        p.angleMode(p.DEGREES);
-        p.rotate(_object.angle)
-        p.image(tableimg, 0, 0, 100, 73);
-        // draw chairs arranged in a circle
-        for(let i = 0; i < _object.numPlace; i++) {
-
-          let angle = p.TWO_PI / _object.numPlace * i;
-          let x = p.cos(angle) * 55;
-          let y = p.sin(angle) * 55;
-
-          switch(_object.typeChair) {
-
-            case 'chair':
-            //p5: The push() function saves the current drawing style settings and transformations, while pop() restores these settings
-              p.push();
-              p.imageMode(p.CENTER);
-              p.translate(x, y);
-              p.angleMode(p.RADIANS);
-              p.rotate(angle+p.PI/2);
-              p.image(chairimg,0, 0, 200, 130);
-              p.pop();
-              break;
-
-            case 'sofa':
-              p.push();
-              p.imageMode(p.CENTER);
-              p.translate(x, y);
-              p.angleMode(p.RADIANS);
-              p.rotate(angle+p.PI/2);
-              p.image(sofaimg,0, 0, 200, 130);
-              p.pop();
-              break;
-          }
-        }
-        p.pop();
-      }
-      else if(_object.name.startsWith('Door')) {
-        p.push();
-        p.imageMode(p.CENTER);
-        p.translate(_object.x, _object.y);
-        p.angleMode(p.DEGREES);
-        p.rotate(_object.angle);
-        p.image(doorimg, 0, 0, 200, 75);
-        p.pop();
-      }
-      else if(_object.name.startsWith('Window')) {
-        p.push();
-        p.imageMode(p.CENTER);
-        p.translate(_object.x, _object.y);
-        p.angleMode(p.DEGREES);
-        p.rotate(_object.angle);
-        p.image(windowimg, 0, 0, 200, 150);
-        p.pop();
-      }
-      else if(_object.name.startsWith('TV')) {
-        p.push();
-        p.imageMode(p.CENTER);
-        p.translate(_object.x, _object.y);
-        p.angleMode(p.DEGREES);
-        p.rotate(_object.angle);
-        p.image(tvimg, 0, 0, 120, 75);
-        p.pop();
-      }
-      else if(_object.name.startsWith('Toilet')) {
-        p.push();
-        p.imageMode(p.CENTER);
-        p.translate(_object.x, _object.y);
-        p.angleMode(p.DEGREES);
-        p.rotate(_object.angle);
-        p.image(toiletimg, 0, 0, 55, 70);
-        p.pop();
-      }
-      else if(_object.name.startsWith('sink')) {
-        p.push();
-        p.imageMode(p.CENTER);
-        p.translate(_object.x, _object.y);
-        p.angleMode(p.DEGREES);
-        p.rotate(_object.angle);
-        p.image(sinkimg, 0, 0, 70, 85);
-        p.pop();
-      }
-      else if(_object.name.startsWith('Text')) {
-        p.push();
-        p.noStroke();
-        p.textSize(_object.size);
-        p.fill(_object.color);
-        p.translate(_object.x, _object.y);
-        p.angleMode(p.DEGREES);
-        p.rotate(_object.angle);
-        p.text(_object.inputText, -60, -30, _object.swidth, _object.sheight);
-        p.pop();
-      }
-    }
+    Item.drawItem(_object);
   });
   if(activeItem.visibility || tmpItem.visibility){
     let whichObject;
@@ -399,8 +277,8 @@ p.mousePressed = function () {
       x1 = mouseXR;
       y1 = mouseYR;
     }
-    else if(selectedObject(mouseXR, mouseYR) && clickEvent == 'Move'){
-      activeItem = selectedObject(mouseXR, mouseYR);
+    else if(getSelectedItem(mouseXR, mouseYR) && clickEvent == 'Move'){
+      activeItem = getSelectedItem(mouseXR, mouseYR);
       refresh();
       diffPositionX = mouseXR - panel.getValue('x') + 0.01;
       diffPositionY = mouseYR - panel.getValue('y') + 0.01;
@@ -578,32 +456,9 @@ p.mouseReleased = function () {
     }
   }
 }
-
-function selectedObject(_mouseX, _mouseY){
-  let sObj = [];
-  let xPrime;
-  let yPrime;
-  items.forEach(function(_object) {
-    if(_object.angle){
-      xPrime = (_mouseX - _object.x) * p.cos(_object.angle) + (_mouseY-_object.y) * p.sin(_object.angle) + _object.x;
-      yPrime = (_mouseY- _object.y) * p.cos(_object.angle) - (_mouseX-_object.x) * p.sin(_object.angle) + _object.y;
-    }
-    else{
-      xPrime = _mouseX;
-      yPrime = _mouseY;
-    }
-    if(xPrime < _object.x + _object.swidth / 2 && xPrime > _object.x - _object.swidth / 2
-    && yPrime < _object.y + _object.sheight / 2 && yPrime > _object.y - _object.sheight / 2){
-      sObj.push(_object);
-    }
-  });
-  const maxI =  Math.max(...sObj.map(_object => _object.index));
-  const index = sObj.findIndex(_object => _object.index === maxI);
-  return sObj[index];
-}
-
 }
 
 new p5(sketch);
 
 export { mySketch, items, activeItem, id, panel, layers, clickEvent, buttons, undoManager };
+export {tableimg, chairimg, sofaimg, doorimg, windowimg, sinkimg, toiletimg, tvimg};
