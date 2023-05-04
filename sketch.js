@@ -9,6 +9,9 @@ import UndoManager from 'undo-manager';
 import QuickSettings from 'quicksettings';
 
 import Item from './Item/item';
+import drawStrokeItem from './Item/drawStrokeItem';
+import drawResizingCorner from './Item/drawResizingCorner';
+import drawRotatingCorner from './Item/drawRotatingCorner';
 import createPanel from './interactions/createPanel';
 import refresh from './utilities/refresh';
 import createBtnTool from './interactions/createBtnTool';
@@ -108,7 +111,7 @@ p.setup = function () {
   slider = p.createSlider(0, 250, 100, 5);
   slider.position(1, canvasHeight + canvasY - 20);
   slider.style('width', '94px');
-  slider.input(p.redraw);
+  slider.input(p.draw);
 
   btnUndo = p.createButton('⟲');
   btnUndo.position(10, 20);
@@ -145,8 +148,12 @@ p.draw = function () {
 
   zoom = slider.value();
   zoomR = 100 / zoom;
+
+  p.push();
   p.stroke('#2e7bb6');
   p.text(zoom + '%', 5, canvasHeight - 6);
+  p.pop();
+
   p.push();
   p.scale(zoom / 100);
   
@@ -157,77 +164,16 @@ p.draw = function () {
   else btnRedo.show();
 
   //browse all items
-  items.forEach(function(_object) {
-    Item.drawItem(_object);
+  items.forEach(function(_item) {
+    if(_item.visibility){
+      Item.drawItem(_item);
+    }
   });
-  if(activeItem.visibility || tmpItem.visibility){
-    let whichObject;
-    if(tmpItem.visibility)
-      whichObject = tmpItem;
-    else
-      whichObject = activeItem;
-    p.push();
-    p.rectMode(p.CENTER);
-    p.translate(whichObject.x, whichObject.y);
-    p.stroke('#2e7bf6');
-    p.noFill();
-    p.strokeWeight(1);
-    p.drawingContext.setLineDash([5, 5]);
-    p.angleMode(p.DEGREES);
-    p.rotate(whichObject.angle);
-    p.rect(0, 0, whichObject.swidth, whichObject.sheight,
-      whichObject.topLeftRadius, whichObject.topRightRadius, whichObject.bottomRightRadius, whichObject.bottomLeftRadius);
-    p.stroke('#999999');
-    p.drawingContext.setLineDash([]);
-    p.fill('#000000');
-    p.textSize(20);
-    p.textStyle(p.BOLD);
-    p.textAlign(p.CENTER, p.CENTER);
-    if(whichObject.name.startsWith('Rectangle') || whichObject.name.startsWith('Line')){
-      p.text('⬌', whichObject.swidth / 2, 1);
-      p.text('⬌', -whichObject.swidth / 2 + 1, 1);
-      if(whichObject.name.startsWith('Rectangle')){
-        p.text('⬍', 0, -whichObject.sheight / 2 + 4);
-        p.text('⬍', 0, whichObject.sheight /2);
-      }
-    }
-    p.translate(whichObject.swidth / 2, - whichObject.sheight /2);
-    p.noStroke();
-    if(!whichObject.name.startsWith('Line')){
-      p.rotate(-90);
-      p.text('⤾', 2, 7);
-      p.rotate(-90);
-      p.text('⤿', -3, 6)
-      p.translate(0, - whichObject.sheight);
-      p.rotate(180);
-      p.text('⤾', 2, 7);
-      p.rotate(-90);
-      p.text('⤿', -3, 6);
-      p.translate(0, - whichObject.swidth);
-      p.rotate(180);
-      p.text('⤾', 2, 7);
-      p.rotate(-90);
-      p.text('⤿', -3, 6);
-      p.translate(0, - whichObject.sheight);
-      p.rotate(180);
-      p.text('⤾', 2, 7);
-      p.rotate(-90);
-      p.text('⤿', -3, 6);
-    }
-    else{
-      p.translate(7, 3);
-      p.rotate(-45);
-      p.text('⤾', 2, 7);
-      p.rotate(-90);
-      p.text('⤿', -3, 6);
-      p.rotate(-45);
-      p.translate(whichObject.swidth + 14, 0);
-      p.rotate(-45);
-      p.text('⤾', 2, 7);
-      p.rotate(-90);
-      p.text('⤿', -3, 6);
-    }
-    p.pop();
+  if(activeItem.visibility || tmpItem.visibility) {
+    const whichItem = tmpItem.visibility ? tmpItem : activeItem;
+    drawStrokeItem(whichItem);
+    drawResizingCorner(whichItem);
+    drawRotatingCorner(whichItem);
   }
   if(activeItem.name != 'Rectangle drawing' && activeItem.name != 'Line drawing'){
     btnUp.mousePressed(function() { Item.moveUpItem(activeItem.name); refresh(); });
@@ -361,7 +307,7 @@ p.mouseDragged = function () {
         undefined, undefined, undefined, '#000000', undefined, undefined, undefined, undefined,
         p.sqrt((x1-x2)*(x1-x2)+(y1-y2)*(y1-y2)) + 5, 7]));
       }
-      p.redraw();
+      p.draw();
     }
     else if(diffPositionX && diffPositionY && clickEvent == 'Move') {
       p.cursor(p.MOVE);
