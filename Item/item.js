@@ -30,51 +30,51 @@ class Item {
     this.sheight = array[23];
   }
 
-  static addItem(_object) {
-    Object.keys(_object).forEach(key => {
-      if (_object[key] === undefined) {
-        delete _object[key];
+  static addItem(_item) {
+    Object.keys(_item).forEach(key => {
+      if (_item[key] === undefined) {
+        delete _item[key];
       }
     });
-    if(_object.name && !_object.name.endsWith('drawing')) {
+    if(_item.name && !_item.name.endsWith('drawing')) {
       id ++;
       undoManager.add({
         undo: function() {
-          Item.removeItem(_object);
+          Item.removeItem(_item);
         },
         redo: function() {
-          Item.addItem(_object);
+          Item.addItem(_item);
         }
       });
     }
-    items.splice(_object.index, 0, _object);
-    activeItem = _object;
+    items.splice(_item.index, 0, _item);
+    activeItem = _item;
   }
 
-  static removeItem(_object) {
-    const index = items.indexOf(_object);
+  static removeItem(_item) {
+    const index = items.indexOf(_item);
     if (index > -1) {
       items.splice(index, 1);
     }
-    if(activeItem === _object) {
+    if(activeItem === _item) {
       if(items.length == 0) activeItem = {};
       else if(index == 0) activeItem = items[index];
       else activeItem = items[index-1];
     }
-    if(_object.name && !_object.name.endsWith('drawing')) {
+    if(_item.name && !_item.name.endsWith('drawing')) {
       undoManager.add({
         undo: function() {
-          Item.addItem(_object);
+          Item.addItem(_item);
         },
         redo: function() {
-          Item.removeItem(_object);
+          Item.removeItem(_item);
         }
       });
     }
   }
 
   static moveUpItem(_name) {
-    const index = items.findIndex(_object => _object.name === _name);
+    const index = items.findIndex(_item => _item.name === _name);
     activeItem = items[index];
     const len = items.length;
     if(index < len - 1) {
@@ -92,7 +92,7 @@ class Item {
   }
   
   static moveDownItem(_name) {
-    const index = items.findIndex(_object => _object.name === _name);
+    const index = items.findIndex(_item => _item.name === _name);
     activeItem = items[index];
     if(index > 0) {
       [items[index].index, items[index - 1].index] = [items[index - 1].index, items[index].index];
@@ -158,48 +158,48 @@ class Item {
     });
   }
 
-  static drawItem(_object){
-    if(_object.name.startsWith('Rectangle')) {
+  static drawItem(_item){
+    if(_item.name.startsWith('Rectangle')) {
       p.push();
       p.strokeWeight(3);
-      p.stroke(_object.strokeColor);
-      p.fill(_object.fillColor);
-      if(_object.noFill) p.noFill();
-      if(_object.noStroke) p.noStroke();
+      p.stroke(_item.strokeColor);
+      p.fill(_item.fillColor);
+      if(_item.noFill) p.noFill();
+      if(_item.noStroke) p.noStroke();
       p.rectMode(p.CENTER); 
-      p.translate(_object.x, _object.y);
+      p.translate(_item.x, _item.y);
       p.angleMode(p.DEGREES);
-      p.rotate(_object.angle);
-      p.rect(0, 0, _object.w, _object.h,
-        _object.topLeftRadius, _object.topRightRadius, _object.bottomRightRadius, _object.bottomLeftRadius);
+      p.rotate(_item.angle);
+      p.rect(0, 0, _item.w, _item.h,
+        _item.topLeftRadius, _item.topRightRadius, _item.bottomRightRadius, _item.bottomLeftRadius);
       p.pop();
     }
-    else if(_object.name.startsWith('Line')) {
+    else if(_item.name.startsWith('Line')) {
       p.push();
-      p.strokeWeight(_object.w);
-      p.stroke(_object.color);
+      p.strokeWeight(_item.w);
+      p.stroke(_item.color);
       p.rectMode(p.CENTER); 
-      p.translate(_object.x, _object.y);
+      p.translate(_item.x, _item.y);
       p.angleMode(p.DEGREES);
-      p.rotate(_object.angle);
-      p.rect(0,0,_object.l,1);
+      p.rotate(_item.angle);
+      p.rect(0,0,_item.l,1);
       p.pop();
     }
-    else if(_object.name.startsWith('Table')) {
+    else if(_item.name.startsWith('Table')) {
       p.push();
       p.imageMode(p.CENTER);
-      p.translate(_object.x, _object.y);
+      p.translate(_item.x, _item.y);
       p.angleMode(p.DEGREES);
-      p.rotate(_object.angle)
+      p.rotate(_item.angle)
       p.image(tableimg, 0, 0, 100, 73);
       // draw chairs arranged in a circle
-      for(let i = 0; i < _object.numPlace; i++) {
+      for(let i = 0; i < _item.numPlace; i++) {
 
-        let angle = p.TWO_PI / _object.numPlace * i;
+        let angle = p.TWO_PI / _item.numPlace * i;
         let x = p.cos(angle) * 55;
         let y = p.sin(angle) * 55;
 
-        switch(_object.typeChair) {
+        switch(_item.typeChair) {
 
           case 'chair':
           //p5: The push() function saves the current drawing style settings and transformations, while pop() restores these settings
@@ -225,60 +225,60 @@ class Item {
       }
       p.pop();
     }
-    else if(_object.name.startsWith('Door')) {
+    else if(_item.name.startsWith('Door')) {
       p.push();
       p.imageMode(p.CENTER);
-      p.translate(_object.x, _object.y);
+      p.translate(_item.x, _item.y);
       p.angleMode(p.DEGREES);
-      p.rotate(_object.angle);
+      p.rotate(_item.angle);
       p.image(doorimg, 0, 0, 200, 75);
       p.pop();
     }
-    else if(_object.name.startsWith('Window')) {
+    else if(_item.name.startsWith('Window')) {
       p.push();
       p.imageMode(p.CENTER);
-      p.translate(_object.x, _object.y);
+      p.translate(_item.x, _item.y);
       p.angleMode(p.DEGREES);
-      p.rotate(_object.angle);
+      p.rotate(_item.angle);
       p.image(windowimg, 0, 0, 200, 150);
       p.pop();
     }
-    else if(_object.name.startsWith('TV')) {
+    else if(_item.name.startsWith('TV')) {
       p.push();
       p.imageMode(p.CENTER);
-      p.translate(_object.x, _object.y);
+      p.translate(_item.x, _item.y);
       p.angleMode(p.DEGREES);
-      p.rotate(_object.angle);
+      p.rotate(_item.angle);
       p.image(tvimg, 0, 0, 120, 75);
       p.pop();
     }
-    else if(_object.name.startsWith('Toilet')) {
+    else if(_item.name.startsWith('Toilet')) {
       p.push();
       p.imageMode(p.CENTER);
-      p.translate(_object.x, _object.y);
+      p.translate(_item.x, _item.y);
       p.angleMode(p.DEGREES);
-      p.rotate(_object.angle);
+      p.rotate(_item.angle);
       p.image(toiletimg, 0, 0, 55, 70);
       p.pop();
     }
-    else if(_object.name.startsWith('sink')) {
+    else if(_item.name.startsWith('sink')) {
       p.push();
       p.imageMode(p.CENTER);
-      p.translate(_object.x, _object.y);
+      p.translate(_item.x, _item.y);
       p.angleMode(p.DEGREES);
-      p.rotate(_object.angle);
+      p.rotate(_item.angle);
       p.image(sinkimg, 0, 0, 70, 85);
       p.pop();
     }
-    else if(_object.name.startsWith('Text')) {
+    else if(_item.name.startsWith('Text')) {
       p.push();
       p.noStroke();
-      p.textSize(_object.size);
-      p.fill(_object.color);
-      p.translate(_object.x, _object.y);
+      p.textSize(_item.size);
+      p.fill(_item.color);
+      p.translate(_item.x, _item.y);
       p.angleMode(p.DEGREES);
-      p.rotate(_object.angle);
-      p.text(_object.inputText, -60, -30, _object.swidth, _object.sheight);
+      p.rotate(_item.angle);
+      p.text(_item.inputText, -60, -30, _item.swidth, _item.sheight);
       p.pop();
     }
   }

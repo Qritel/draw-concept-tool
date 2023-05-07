@@ -14,14 +14,14 @@ export default function refreshLayers() {
   layers.setCollapsible(false);
   layers.setGlobalChangeHandler(refresh);
 
-  items.slice().reverse().forEach(function(_object) {
-    layers.addButton(_object.name, function() {
-      activeItem = _object;
+  items.slice().reverse().forEach(function(_item) {
+    layers.addButton(_item.name, function() {
+      activeItem = _item;
     });
-    if(activeItem == _object) {
-      layers.overrideStyle(_object.name, 'font-weight', 'mySketch.BOLD');
-      layers.overrideStyle(_object.name, 'background-color', '#2e7bb6');
-      layers.overrideStyle(_object.name, 'color', '#ffffff');
+    if(activeItem == _item) {
+      layers.overrideStyle(_item.name, 'font-weight', 'mySketch.BOLD');
+      layers.overrideStyle(_item.name, 'background-color', '#2e7bb6');
+      layers.overrideStyle(_item.name, 'color', '#ffffff');
     }
   });
 }
