@@ -3,6 +3,7 @@ import { mouseIsDragged, corner, x1, y1 } from "../sketch";
 import getResizingCorner from '../math/getResizingCorner';
 import isRotatingCorner from '../math/isRotatingCorner';
 import getSelectedItem from '../math/getSelectedItem';
+import createPanel from "./createPanel";
 import refresh from "../utilities/refresh";
 
 export default function handleMousePressed() {
@@ -15,6 +16,7 @@ export default function handleMousePressed() {
         diffPositionX = mouseXR;
         diffPositionY = mouseYR;
         tmpItem = { ...activeItem }; //make a copy of 'activeItem', and store it in the new variable 'tmpItem'.
+        createPanel(tmpItem);
         activeItem.visibility = false;
         items.splice(activeItem.index, 0, tmpItem); //insert 'tmpItem' into the 'items' array at the position 'activeItem.index'.
     }
@@ -27,6 +29,7 @@ export default function handleMousePressed() {
         diffPositionY = (mouseYR - activeItem.y) * p.cos(activeItem.angle)
                     - (mouseXR - activeItem.x) * p.sin(activeItem.angle) + activeItem.y - panel.getValue('y');
         tmpItem = { ...activeItem };
+        createPanel(tmpItem);
         activeItem.visibility = false;
         items.splice(activeItem.index, 0, tmpItem);
     }
@@ -40,6 +43,7 @@ export default function handleMousePressed() {
         diffPositionX = mouseXR - panel.getValue('x') + 0.01;
         diffPositionY = mouseYR - panel.getValue('y') + 0.01;
         tmpItem = { ...activeItem };
+        createPanel(tmpItem);
         activeItem.visibility = false;
         items.splice(activeItem.index, 0, tmpItem);
     }

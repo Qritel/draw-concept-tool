@@ -45,32 +45,27 @@ export default function handleMouseReleased() {
             undefined, undefined, undefined, undefined, '#000000', undefined, undefined, undefined, undefined,
             p.sqrt((x1-x2)*(x1-x2)+(y1-y2)*(y1-y2)) + 5, 7]));
         }
-        refresh();
         x1 = 0, y1 = 0, x2 = 0, y2 = 0;
     }
     else if(clickEvent == 'Table') {
         Item.addItem(new Item([true, items.length, 'Table ' + id, mouseXR, mouseYR, undefined, undefined, undefined,
         0, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, 2, 'chair', undefined,
         undefined, 75, 75]));
-        refresh();
     }
     else if(['Door', 'Toilet', 'sink'].includes(clickEvent)){
         Item.addItem(new Item([true, items.length, clickEvent + ' ' + id, mouseXR, mouseYR, undefined, undefined, undefined,
         0, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined,
         undefined, 75, 75]));
-        refresh();
     }
     else if(['Window', 'TV'].includes(clickEvent)){
         Item.addItem(new Item([true, items.length, clickEvent + ' ' + id, mouseXR, mouseYR, undefined, undefined, undefined,
         0, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined,
         undefined, 155, 25]));
-        refresh();
     }
     else if(clickEvent == 'Text') {
         Item.addItem(new Item([true, items.length, 'Text ' + id, mouseXR, mouseYR, undefined, undefined, undefined,
         0, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, '#000000', undefined, undefined,
         'Your text', 14, 125, 65]));
-        refresh();
     }
     else if(diffPositionX && diffPositionY && items.length && clickEvent == 'Move') {
         items.splice(activeItem.index, 1);
@@ -80,9 +75,10 @@ export default function handleMouseReleased() {
         {
             Item.dragItem(tmpItem.x - activeItem.x, tmpItem.y - activeItem.y, index);
         }
-        tmpItem = {};
-        diffPositionX = 0;
-        diffPositionY = 0;
-        p.cursor(p.ARROW);
     }
+    tmpItem = {};
+    diffPositionX = 0;
+    diffPositionY = 0;
+    p.cursor(p.ARROW);
+    refresh();
 }

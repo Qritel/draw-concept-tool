@@ -9,7 +9,6 @@ export default function handleMouseDragged() {
         let mouseYR = p.mouseY* zoomR;
         if(clickEvent == 'Rotate'){
             p.angleMode(p.DEGREES);
-            createPanel(tmpItem);
             panel.setValue('angle', activeItem.angle + p.atan2(mouseYR - activeItem.y, mouseXR - activeItem.x) - 
             p.atan2(diffPositionY - activeItem.y, diffPositionX - activeItem.x));
         }
@@ -18,7 +17,6 @@ export default function handleMouseDragged() {
                         + (mouseYR - activeItem.y) * p.sin(activeItem.angle) + activeItem.x);
             let dragY = diffPositionY + activeItem.y - ((mouseYR - activeItem.y) * p.cos(activeItem.angle) 
                         - (mouseXR - activeItem.x) * p.sin(activeItem.angle) + activeItem.y);
-            createPanel(tmpItem);
             if((corner == 'T' && activeItem.h + dragY > 0 || corner == 'B'  && activeItem.h - dragY > 0) 
                 && activeItem.name.startsWith('Rectangle')){
                 panel.setValue('y',Number(activeItem.y - dragY / 2 * p.cos(activeItem.angle)).toFixed(2));
@@ -78,7 +76,6 @@ export default function handleMouseDragged() {
         }
         else if(diffPositionX && diffPositionY && clickEvent == 'Move') {
             p.cursor(p.MOVE);
-            createPanel(tmpItem);
             panel.setValue('x',Number(p.mouseX * zoomR - diffPositionX).toFixed(2));
             panel.setValue('y',Number(p.mouseY* zoomR - diffPositionY).toFixed(2));
         }
