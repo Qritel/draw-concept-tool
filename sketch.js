@@ -140,6 +140,17 @@ p.setup = function () {
   p.noLoop();
 }
 
+p.windowResized = function () {
+  canvasWidth = p.windowWidth - 191 - canvasX;
+  canvasHeight = p.windowHeight - 2 - canvasY;
+  p.resizeCanvas(canvasWidth, canvasHeight);
+  slider.position(1, canvasHeight + canvasY - 20);
+  btnUp.position(canvasWidth, 5);
+  btnDown.position(canvasWidth + 30, 5);
+  btnDelete.position(canvasWidth + 60, 5);
+  refresh();
+}
+
 //p5 function: continuously executes the lines of code contained inside its block until the program is stopped or p.noLoop() is called(as our case)
 //draw() will be executed one time, when an item is added or its properties is changed.
 p.draw = function () {
