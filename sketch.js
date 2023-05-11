@@ -19,6 +19,8 @@ import './styles/quicksettings.css';
 import handleMousePressed from './interactions/handleMousePressed';
 import handleMouseDragged from './interactions/handleMouseDragged';
 import handleMouseReleased from './interactions/handleMouseReleased';
+import saveData from './utilities/saveData';
+import loadData from './utilities/loadData';
 
 let x1 = 0, y1 = 0, x2 = 0, y2 = 0;
 let clickEvent = '';
@@ -47,6 +49,7 @@ let btnRedo;
 let btnUp;
 let btnDown;
 let btnDelete;
+let btnSave;
 
 //An array will contain all the items on the map -canvas-
 let items = [];
@@ -81,8 +84,8 @@ p.preload = function () {
 //p5 function: called once when the program starts
 p.setup = function () {
 
+  loadData();
   QuickSettings.useExtStyleSheet();
-
   refresh();
 
   //p5: Creates a canvas element in the document, sets the dimensions of it, and its position
@@ -127,6 +130,9 @@ p.setup = function () {
     refresh();
   });
 
+  btnSave = p.createButton('save');
+  btnSave.position(100, 5);
+  btnSave.mousePressed(saveData);
   btnUp = p.createButton('🡡');
   btnUp.position(canvasWidth, 5);
   btnUp.mousePressed(function() { Item.moveUpItem(activeItem.name); refresh(); });
@@ -190,11 +196,13 @@ p.draw = function () {
     drawRotatingCorner(whichItem);
   }
   if(items.length){
+    btnSave.show();
     btnUp.show();
     btnDown.show();
     btnDelete.show();
   }
   else{
+    btnSave.hide();
     btnUp.hide();
     btnDown.hide();
     btnDelete.hide();

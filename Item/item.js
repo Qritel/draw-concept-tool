@@ -30,6 +30,10 @@ class Item {
     this.sheight = array[23];
   }
 
+  static loadItems(_savedData) {
+    items = _savedData;
+  }
+
   static addItem(_item) {
     Object.keys(_item).forEach(key => {
       if (_item[key] === undefined) {
