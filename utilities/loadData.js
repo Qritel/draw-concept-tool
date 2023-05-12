@@ -2,16 +2,16 @@ import Item from "../Item/item";
 import { activeItem, clickEvent } from "../sketch";
 
 export default function loadData() {
-    // Retrieve the saved data from local storage
-    var savedDataString = localStorage.getItem('savedData');
+    // Retrieve the saved items from local storage
+    let savedItemsString = localStorage.getItem('savedItems');
 
-    // Check if there is any saved data
-    if (savedDataString) {
+    // Check if there is any saved items
+    if (savedItemsString) {
         // Convert the JSON string back to an object
-        var savedData = JSON.parse(savedDataString);
+        let savedItems = JSON.parse(savedItemsString);
 
-        Item.loadItems(savedData);
-        activeItem = savedData[savedData.length-1];
+        Item.loadItems(savedItems);
+        activeItem = savedItems[savedItems.length-1];
         clickEvent = 'Move';
     }
 }

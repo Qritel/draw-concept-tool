@@ -75,10 +75,10 @@ export default function handleMouseReleased() {
         {
             Item.dragItem(tmpItem.x - activeItem.x, tmpItem.y - activeItem.y, index);
         }
+        p.cursor(p.ARROW);
     }
     tmpItem = {};
     diffPositionX = 0;
     diffPositionY = 0;
-    p.cursor(p.ARROW);
     refresh();
 }

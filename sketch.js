@@ -21,6 +21,8 @@ import handleMouseDragged from './interactions/handleMouseDragged';
 import handleMouseReleased from './interactions/handleMouseReleased';
 import saveData from './utilities/saveData';
 import loadData from './utilities/loadData';
+import downloadDataAsJson from './utilities/downloadDataAsJson';
+import handleJsonFile from './utilities/handleJsonFile';
 
 let x1 = 0, y1 = 0, x2 = 0, y2 = 0;
 let clickEvent = '';
@@ -50,6 +52,9 @@ let btnUp;
 let btnDown;
 let btnDelete;
 let btnSave;
+let btnDownload;
+let btnUpload;
+let fileInput;
 
 //An array will contain all the items on the map -canvas-
 let items = [];
@@ -98,6 +103,7 @@ p.setup = function () {
   canv.mousePressed(handleMousePressed);
   canv.mouseMoved(handleMouseDragged);
   canv.mouseReleased(handleMouseReleased);
+  canv.drop(handleJsonFile);
 
   createBtnTool('⇱', 0, 60, 'Move');
   createBtnTool('⬛', 0, 100, 'Draw_Rect');
@@ -130,9 +136,21 @@ p.setup = function () {
     refresh();
   });
 
-  btnSave = p.createButton('save');
-  btnSave.position(100, 5);
+  btnSave = p.createButton('✔️');
+  btnSave.position(canvasX, 5);
   btnSave.mousePressed(saveData);
+  btnDownload = p.createButton('📥');
+  btnDownload.position(canvasX + 35, 5);
+  btnDownload.mousePressed(downloadDataAsJson);
+
+  // Create the file input
+  fileInput = p.createFileInput(handleJsonFile);
+  fileInput.hide(); // Hide the file input
+  btnUpload = p.createButton('📤');
+  btnUpload.position(canvasX + 70, 5);
+  // Trigger click on the file input 
+  btnUpload.mousePressed(function() { fileInput.elt.click(); });
+
   btnUp = p.createButton('🡡');
   btnUp.position(canvasWidth, 5);
   btnUp.mousePressed(function() { Item.moveUpItem(activeItem.name); refresh(); });
@@ -197,12 +215,14 @@ p.draw = function () {
   }
   if(items.length){
     btnSave.show();
+    btnDownload.show();
     btnUp.show();
     btnDown.show();
     btnDelete.show();
   }
   else{
     btnSave.hide();
+    btnDownload.hide();
     btnUp.hide();
     btnDown.hide();
     btnDelete.hide();
