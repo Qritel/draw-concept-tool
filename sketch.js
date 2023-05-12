@@ -55,6 +55,7 @@ let btnSave;
 let btnDownload;
 let btnUpload;
 let fileInput;
+let btnClear;
 
 //An array will contain all the items on the map -canvas-
 let items = [];
@@ -139,6 +140,7 @@ p.setup = function () {
   btnSave = p.createButton('✔️');
   btnSave.position(canvasX, 5);
   btnSave.mousePressed(saveData);
+
   btnDownload = p.createButton('📥');
   btnDownload.position(canvasX + 35, 5);
   btnDownload.mousePressed(downloadDataAsJson);
@@ -150,6 +152,10 @@ p.setup = function () {
   btnUpload.position(canvasX + 70, 5);
   // Trigger click on the file input 
   btnUpload.mousePressed(function() { fileInput.elt.click(); });
+
+  btnClear = p.createButton('Clear');
+  btnClear.position(canvasX + 105, 5);
+  btnClear.mousePressed(function() { p.clearStorage(); items = []; activeItem = {}; undoManager = new UndoManager(); refresh(); });
 
   btnUp = p.createButton('🡡');
   btnUp.position(canvasWidth, 5);
@@ -219,6 +225,7 @@ p.draw = function () {
     btnUp.show();
     btnDown.show();
     btnDelete.show();
+    btnClear.show();
   }
   else{
     btnSave.hide();
@@ -226,6 +233,7 @@ p.draw = function () {
     btnUp.hide();
     btnDown.hide();
     btnDelete.hide();
+    btnClear.hide();
   }
   p.pop();
 }
