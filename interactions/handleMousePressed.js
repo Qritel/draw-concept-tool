@@ -37,8 +37,9 @@ export default function handleMousePressed() {
         x1 = mouseXR;
         y1 = mouseYR;
     }
-    else if(getSelectedItem(mouseXR, mouseYR) && clickEvent == 'Move'){
+    else if(getSelectedItem(mouseXR, mouseYR) && clickEvent == 'Move') {
         activeItem = getSelectedItem(mouseXR, mouseYR);
+        activeItem.selected = true;
         refresh();
         diffPositionX = mouseXR - panel.getValue('x') + 0.01;
         diffPositionY = mouseYR - panel.getValue('y') + 0.01;
@@ -46,5 +47,9 @@ export default function handleMousePressed() {
         createPanel(tmpItem);
         activeItem.visibility = false;
         items.splice(activeItem.index, 0, tmpItem);
+    }
+    else if(!getSelectedItem(mouseXR, mouseYR)) {
+        activeItem.selected = false;
+        p.draw();
     }
 }

@@ -34,13 +34,13 @@ export default function handleMouseReleased() {
     else if(x1 && y1 && x2 && y2 && (clickEvent == 'Draw_Rect' || clickEvent == 'Draw_Line')) {
         if(clickEvent == 'Draw_Rect') {
             items.pop();
-            Item.addItem(new Item([true, items.length, 'Rectangle ' + id, x1+(x2-x1)/2, y1+(y2-y1)/2, p.abs (x2-x1), p.abs (y2-y1), undefined,
+            Item.addItem(new Item([true, true, items.length, 'Rectangle ' + id, x1+(x2-x1)/2, y1+(y2-y1)/2, p.abs (x2-x1), p.abs (y2-y1), undefined,
             0, 0, 0, 0, 0, '#000000', false, '#ffffff', false, undefined, undefined, undefined, undefined, undefined, p.abs (x2-x1),
             p.abs (y2-y1)]));
         }
         else if(clickEvent == 'Draw_Line') {
             items.pop();
-            Item.addItem(new Item([true, items.length, 'Line ' + id, x1+(x2-x1)/2, y1+(y2-y1)/2, 2, undefined,
+            Item.addItem(new Item([true, true, items.length, 'Line ' + id, x1+(x2-x1)/2, y1+(y2-y1)/2, 2, undefined,
             p.sqrt((x1-x2)*(x1-x2)+(y1-y2)*(y1-y2)), p.atan((y2-y1)/(x2-x1)), undefined, undefined, undefined,undefined,
             undefined, undefined, undefined, undefined, '#000000', undefined, undefined, undefined, undefined,
             p.sqrt((x1-x2)*(x1-x2)+(y1-y2)*(y1-y2)), 7]));
@@ -48,22 +48,22 @@ export default function handleMouseReleased() {
         x1 = 0, y1 = 0, x2 = 0, y2 = 0;
     }
     else if(clickEvent == 'Table') {
-        Item.addItem(new Item([true, items.length, 'Table ' + id, mouseXR, mouseYR, undefined, undefined, undefined,
+        Item.addItem(new Item([true, true, items.length, 'Table ' + id, mouseXR, mouseYR, undefined, undefined, undefined,
         0, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, 2, 'chair', undefined,
         undefined, 75, 75]));
     }
     else if(['Door', 'Toilet', 'sink'].includes(clickEvent)){
-        Item.addItem(new Item([true, items.length, clickEvent + ' ' + id, mouseXR, mouseYR, undefined, undefined, undefined,
+        Item.addItem(new Item([true, true, items.length, clickEvent + ' ' + id, mouseXR, mouseYR, undefined, undefined, undefined,
         0, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined,
         undefined, 75, 75]));
     }
     else if(['Window', 'TV'].includes(clickEvent)){
-        Item.addItem(new Item([true, items.length, clickEvent + ' ' + id, mouseXR, mouseYR, undefined, undefined, undefined,
+        Item.addItem(new Item([true, true, items.length, clickEvent + ' ' + id, mouseXR, mouseYR, undefined, undefined, undefined,
         0, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined,
         undefined, 155, 25]));
     }
     else if(clickEvent == 'Text') {
-        Item.addItem(new Item([true, items.length, 'Text ' + id, mouseXR, mouseYR, undefined, undefined, undefined,
+        Item.addItem(new Item([true, true, items.length, 'Text ' + id, mouseXR, mouseYR, undefined, undefined, undefined,
         0, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, '#000000', undefined, undefined,
         'Your text', 14, 125, 65]));
     }

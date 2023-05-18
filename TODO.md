@@ -8,7 +8,6 @@ Project Description
 
 - [ ] Implement right mouse click shows the drawing function  
 - [ ] Add different types of table styles  
-- [ ] Import image (8.15: Drag and Drop a File - p5.js Tutorial)  
 - [ ] Keyboard shortcuts (DEL, Ctrl +, Ctrl -, Ctrl Z, ....)  
 - [ ] Add a tooltip to different elements  
 - [ ] add button : Rectangle select  
@@ -16,11 +15,11 @@ Project Description
 ### In Progress
 
 - [ ] improve user interface design  
-- [ ] ⭐Code refactoring⭐  
-- [ ] Implement Export/Import from JSON  
 
 ### Done ✓
 
+- [x] ⭐Code refactoring⭐  
+- [x] Implement Export/Import from JSON  
 - [x] Implement resize and rotate corners  
 - [x] improve UX of move feature : objects can be selected only with mouse.  
 - [x] add button : Move tool  

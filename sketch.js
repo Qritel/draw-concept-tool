@@ -213,7 +213,7 @@ p.draw = function () {
       Item.drawItem(_item);
     }
   });
-  if(activeItem.visibility && !mouseIsDragged) {
+  if(activeItem.selected && !mouseIsDragged) {
     drawStrokeItem(activeItem);
     drawResizingCorner(activeItem);
     drawRotatingCorner(activeItem);
