@@ -61,15 +61,15 @@ export default function handleMouseDragged() {
             if(clickEvent == 'Draw_Rect') {
                 if(items.length && items[items.length - 1].name === 'Rectangle drawing') items.pop();
                 Item.addItem(new Item([true, items.length, 'Rectangle drawing', x1+(x2-x1)/2, y1+(y2-y1)/2, p.abs (x2-x1), p.abs (y2-y1), undefined,
-                0, 0, 0, 0, 0, '#000000', false, '#ffffff', false, undefined, undefined, undefined, undefined, undefined, p.abs (x2-x1) + 5,
-                p.abs (y2-y1) + 5]));
+                0, 0, 0, 0, 0, '#000000', false, '#ffffff', false, undefined, undefined, undefined, undefined, undefined, p.abs (x2-x1),
+                p.abs (y2-y1)]));
             }
             if(clickEvent == 'Draw_Line') {
                 if(items.length && items[items.length - 1].name === 'Line drawing') items.pop();
                 Item.addItem(new Item([true, items.length, 'Line drawing', x1+(x2-x1)/2, y1+(y2-y1)/2, 2, undefined,
                 Number(p.sqrt((x1-x2)*(x1-x2)+(y1-y2)*(y1-y2))).toFixed(2), p.atan((y2-y1)/(x2-x1)), undefined, undefined, undefined,undefined, undefined,
                 undefined, undefined, undefined, '#000000', undefined, undefined, undefined, undefined,
-                p.sqrt((x1-x2)*(x1-x2)+(y1-y2)*(y1-y2)) + 5, 7]));
+                p.sqrt((x1-x2)*(x1-x2)+(y1-y2)*(y1-y2)), 7]));
             }
             p.draw();
         }

@@ -2,7 +2,7 @@ import { mySketch as p } from "../sketch";
 
 export default function drawRotatingCorner(_item) {
     p.push();
-    p.fill('#000000');
+    p.fill('#2e7bf6');
     p.rectMode(p.CENTER);
     p.translate(_item.x, _item.y);
     p.angleMode(p.DEGREES);

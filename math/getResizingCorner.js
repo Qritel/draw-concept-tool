@@ -9,20 +9,20 @@ export default function getResizingCorner(_activeItem, _mouseX, _mouseY) {
     let yPrime = (_mouseY- _activeItem.y) * mySketch.cos(_activeItem.angle) - (_mouseX-_activeItem.x) * mySketch.sin(_activeItem.angle) + _activeItem.y;
   
     if(_activeItem.name.startsWith('Rectangle') || _activeItem.name.startsWith('Line')){
-      if(xPrime < _activeItem.x + 5 && xPrime > _activeItem.x - 5 && yPrime < _activeItem.y - _activeItem.sheight / 2 + 10
+      if(xPrime < _activeItem.x + 10 && xPrime > _activeItem.x - 10 && yPrime < _activeItem.y - _activeItem.sheight / 2 + 10
         && yPrime > _activeItem.y - _activeItem.sheight / 2 - 10){
         corner = 'T'; // top corner.
       }
-      else if(xPrime < _activeItem.x + 5 && xPrime > _activeItem.x - 5 && yPrime < _activeItem.y + _activeItem.sheight / 2 + 10
+      else if(xPrime < _activeItem.x + 10 && xPrime > _activeItem.x - 10 && yPrime < _activeItem.y + _activeItem.sheight / 2 + 10
         && yPrime > _activeItem.y + _activeItem.sheight / 2 - 10){
         corner = 'B'; // bottom corner.
       }
       else if(xPrime < _activeItem.x - _activeItem.swidth / 2 + 10 && xPrime > _activeItem.x - _activeItem.swidth / 2 - 10 
-        && yPrime < _activeItem.y + 5 && yPrime > _activeItem.y - 5){
+        && yPrime < _activeItem.y + 10 && yPrime > _activeItem.y - 10){
         corner = 'L'; // left corner.
       }
       else if(xPrime < _activeItem.x + _activeItem.swidth / 2 + 10 && xPrime > _activeItem.x + _activeItem.swidth / 2 - 10 
-        && yPrime < _activeItem.y + 5 && yPrime > _activeItem.y - 5){
+        && yPrime < _activeItem.y + 10 && yPrime > _activeItem.y - 10){
         corner = 'R'; //right corner.
       }
     }
