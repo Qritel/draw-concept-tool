@@ -213,11 +213,10 @@ p.draw = function () {
       Item.drawItem(_item);
     }
   });
-  if(activeItem.visibility || tmpItem.visibility) {
-    const whichItem = tmpItem.visibility ? tmpItem : activeItem;
-    drawStrokeItem(whichItem);
-    drawResizingCorner(whichItem);
-    drawRotatingCorner(whichItem);
+  if(activeItem.visibility && !mouseIsDragged) {
+    drawStrokeItem(activeItem);
+    drawResizingCorner(activeItem);
+    drawRotatingCorner(activeItem);
   }
   if(items.length){
     btnSave.show();

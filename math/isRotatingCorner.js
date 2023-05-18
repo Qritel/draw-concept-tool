@@ -15,6 +15,7 @@ export default function isRotatingCorner(_activeItem, _mouseX, _mouseY){
         && yPrime < _activeItem.y + 5 && yPrime > _activeItem.y - 5))){
       return true;
     }
+
     // If the active item is not a line annd the mouse is over one of the four corners, return true.
     else if((xPrime < _activeItem.x + _activeItem.swidth / 2 + 10 && xPrime > _activeItem.x + _activeItem.swidth / 2
               && yPrime < _activeItem.y - _activeItem.sheight / 2 && yPrime > _activeItem.y - _activeItem.sheight / 2 - 10)
@@ -23,7 +24,7 @@ export default function isRotatingCorner(_activeItem, _mouseX, _mouseY){
           || (xPrime < _activeItem.x - _activeItem.swidth / 2 && xPrime > _activeItem.x - _activeItem.swidth / 2 - 10
               && yPrime < _activeItem.y + _activeItem.sheight / 2 + 10 && yPrime > _activeItem.y + _activeItem.sheight / 2)
           || (xPrime < _activeItem.x - _activeItem.swidth / 2 && xPrime > _activeItem.x - _activeItem.swidth / 2 - 10
-              && yPrime < _activeItem.y + _activeItem.sheight / 2 && yPrime > _activeItem.y - _activeItem.sheight / 2 - 10)){
+              && yPrime < _activeItem.y - _activeItem.sheight / 2 && yPrime > _activeItem.y - _activeItem.sheight / 2 - 10)){
       return true;
     }
     return false;
