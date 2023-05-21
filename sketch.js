@@ -23,6 +23,7 @@ import saveData from './utilities/saveData';
 import loadData from './utilities/loadData';
 import downloadDataAsJson from './utilities/downloadDataAsJson';
 import handleJsonFile from './utilities/handleJsonFile';
+import drawRuler from './utilities/drawRuler';
 
 let x1 = 0, y1 = 0, x2 = 0, y2 = 0;
 let clickEvent = '';
@@ -187,7 +188,7 @@ p.draw = function () {
   //set the color for the background of the canvas
   p.background('#ffffff')
   p.noFill();
-  p.stroke('#d8d8d8');
+  p.stroke('#808080');
   p.rect(0, 0, canvasWidth - 1, canvasHeight - 1);
 
   zoom = slider.value();
@@ -200,6 +201,9 @@ p.draw = function () {
 
   p.push();
   p.scale(zoom / 100);
+
+  // Ruler
+  drawRuler();
   
   if(!undoManager.hasUndo()) btnUndo.hide();
   else btnUndo.show();

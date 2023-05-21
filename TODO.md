@@ -8,12 +8,12 @@ Project Description
 
 - [ ] Implement right mouse click shows the drawing function  
 - [ ] Add different types of table styles  
-- [ ] Keyboard shortcuts (DEL, Ctrl +, Ctrl -, Ctrl Z, ....)  
-- [ ] Add a tooltip to different elements  
 - [ ] add button : Rectangle select  
 
 ### In Progress
 
+- [ ] Keyboard shortcuts (DEL, Ctrl +, Ctrl -, Ctrl Z, ....)  
+- [ ] Add a tooltip to different elements  
 - [ ] improve user interface design  
 
 ### Done ✓

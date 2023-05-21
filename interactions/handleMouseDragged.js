@@ -30,28 +30,28 @@ export default function handleMouseDragged() {
                 }
             }
             else if(corner == 'L' && activeItem.w + dragX > 0 || corner == 'R' && activeItem.w - dragX > 0
-                    || (corner == 'L' || corner == 'R') && activeItem.name.startsWith('Line')){
+                || (corner == 'L' || corner == 'R') && activeItem.name.startsWith('Line')){
                 panel.setValue('y',Number(activeItem.y - dragX / 2 * p.sin(activeItem.angle)).toFixed(2));
                 panel.setValue('x',Number(activeItem.x - dragX / 2 * p.cos(activeItem.angle)).toFixed(2));
                 if(corner == 'L'){
-                if(activeItem.name.startsWith('Rectangle')){
-                    panel.setValue('w',Number(activeItem.w + dragX).toFixed(2));
-                    tmpItem.swidth = activeItem.swidth + dragX;
-                }
-                else if(activeItem.name.startsWith('Line')){
-                    panel.setValue('l',Number(activeItem.l + dragX).toFixed(2));
-                    tmpItem.swidth = activeItem.swidth + dragX;
-                }
+                    if(activeItem.name.startsWith('Rectangle')){
+                        panel.setValue('w',Number(activeItem.w + dragX).toFixed(2));
+                        tmpItem.swidth = activeItem.swidth + dragX;
+                    }
+                    else if(activeItem.name.startsWith('Line')){
+                        panel.setValue('l',Number(activeItem.l + dragX).toFixed(2));
+                        tmpItem.swidth = activeItem.swidth + dragX;
+                    }
                 }
                 else{
-                if(activeItem.name.startsWith('Rectangle')){
-                    panel.setValue('w',Number(activeItem.w - dragX).toFixed(2));
-                    tmpItem.swidth = activeItem.swidth - dragX;
-                }
-                else if(activeItem.name.startsWith('Line')){
-                    panel.setValue('l',Number(activeItem.l - dragX).toFixed(2));
-                    tmpItem.swidth = activeItem.swidth - dragX;
-                }
+                    if(activeItem.name.startsWith('Rectangle')){
+                        panel.setValue('w',Number(activeItem.w - dragX).toFixed(2));
+                        tmpItem.swidth = activeItem.swidth - dragX;
+                    }
+                    else if(activeItem.name.startsWith('Line')){
+                        panel.setValue('l',Number(activeItem.l - dragX).toFixed(2));
+                        tmpItem.swidth = activeItem.swidth - dragX;
+                    }
                 }
             }
         }

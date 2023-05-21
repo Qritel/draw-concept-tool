@@ -2,6 +2,7 @@ import { mySketch as p } from "../sketch";
 
 export default function drawResizingCorner(_item) {
     p.push();
+    p.noStroke();
     p.fill('#2e7bf6');
     p.rectMode(p.CENTER);
     p.translate(_item.x, _item.y);
