@@ -1,6 +1,6 @@
 import QuickSettings from 'quicksettings';
-import refresh from './refresh';
-import { mySketch, layers, items, activeItem } from "../sketch";
+import refresh from '../utilities/refresh';
+import { mySketch as p, layers, items, activeItem } from "../sketch";
 
 export default function refreshLayers() {
 
@@ -8,8 +8,8 @@ export default function refreshLayers() {
     layers.destroy();
   }
 
-  layers = QuickSettings.create(mySketch.windowWidth - 190, 0, 'Layers');
-  layers.setSize(188, mySketch.windowHeight - mySketch.windowHeight * 0.4 - 2);
+  layers = QuickSettings.create(p.windowWidth - 190, 0, 'Layers');
+  layers.setSize(188, p.windowHeight - p.windowHeight * 0.4 - 2);
   layers.setDraggable(false);
   layers.setCollapsible(false);
   layers.setGlobalChangeHandler(refresh);
@@ -19,7 +19,7 @@ export default function refreshLayers() {
       activeItem = _item;
     });
     if(activeItem == _item) {
-      layers.overrideStyle(_item.name, 'font-weight', 'mySketch.BOLD');
+      layers.overrideStyle(_item.name, 'font-weight', 'BOLD');
       layers.overrideStyle(_item.name, 'background-color', '#2e7bb6');
       layers.overrideStyle(_item.name, 'color', '#ffffff');
     }

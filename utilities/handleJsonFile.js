@@ -1,6 +1,7 @@
 import Item from "../Item/item";
-import { mySketch as p ,activeItem, clickEvent } from "../sketch";
+import { activeItem, clickEvent, undoManager } from "../sketch";
 import refresh from "./refresh";
+import UndoManager from 'undo-manager';
 
 export default function handleJsonFile(file) {
     
@@ -12,7 +13,7 @@ export default function handleJsonFile(file) {
 
         Item.loadItems(uploadedItems);
         activeItem = uploadedItems[uploadedItems.length-1];
-        clickEvent = 'Move';
+        undoManager = new UndoManager();
         refresh();
     }
 }

@@ -26,6 +26,8 @@ import handleJsonFile from './utilities/handleJsonFile';
 import drawRuler from './utilities/drawRuler';
 
 let x1 = 0, y1 = 0, x2 = 0, y2 = 0;
+let diffPositionX;
+let diffPositionY;
 let clickEvent = '';
 let tmpClickEvent = '';
 let corner ='';
@@ -141,32 +143,39 @@ p.setup = function () {
   btnSave = p.createButton('✔️');
   btnSave.position(canvasX, 5);
   btnSave.mousePressed(saveData);
+  btnSave.class('topButton');
 
-  btnDownload = p.createButton('📥');
+  btnDownload = p.createButton('Download json');
   btnDownload.position(canvasX + 35, 5);
   btnDownload.mousePressed(downloadDataAsJson);
+  btnDownload.class('topButton');
 
   // Create the file input
   fileInput = p.createFileInput(handleJsonFile);
   fileInput.hide(); // Hide the file input
-  btnUpload = p.createButton('📤');
-  btnUpload.position(canvasX + 70, 5);
+  btnUpload = p.createButton('Upload json');
+  btnUpload.position(canvasX + 140, 5);
   // Trigger click on the file input 
   btnUpload.mousePressed(function() { fileInput.elt.click(); });
+  btnUpload.class('topButton');
 
   btnClear = p.createButton('Clear');
-  btnClear.position(canvasX + 105, 5);
+  btnClear.position(canvasX + 227, 5);
   btnClear.mousePressed(function() { p.clearStorage(); items = []; activeItem = {}; undoManager = new UndoManager(); refresh(); });
+  btnClear.class('topButton');
 
   btnUp = p.createButton('🡡');
   btnUp.position(canvasWidth, 5);
   btnUp.mousePressed(function() { Item.moveUpItem(activeItem.name); refresh(); });
+  btnUp.class('topButton');
   btnDown = p.createButton('🡣');
   btnDown.position(canvasWidth + 30, 5);
   btnDown.mousePressed(function() { Item.moveDownItem(activeItem.name); refresh(); });
+  btnDown.class('topButton');
   btnDelete = p.createButton('🗑️');
   btnDelete.position(canvasWidth + 60, 5);
   btnDelete.mousePressed(function() { Item.removeItem(activeItem); refresh(); });
+  btnDelete.class('topButton');
 
   p.noLoop();
 }
@@ -189,7 +198,7 @@ p.draw = function () {
   p.background('#ffffff')
   p.noFill();
   p.stroke('#808080');
-  p.rect(0, 0, canvasWidth - 1, canvasHeight - 1);
+  p.rect(0, 0, canvasWidth, canvasHeight);
 
   zoom = slider.value();
   zoomR = 100 / zoom;
@@ -223,20 +232,22 @@ p.draw = function () {
     drawRotatingCorner(activeItem);
   }
   if(items.length){
-    btnSave.show();
-    btnDownload.show();
-    btnUp.show();
-    btnDown.show();
-    btnDelete.show();
-    btnClear.show();
+    // Re-enable
+    btnSave.removeAttribute('disabled');
+    btnDownload.removeAttribute('disabled');
+    btnUp.removeAttribute('disabled');
+    btnDown.removeAttribute('disabled');
+    btnDelete.removeAttribute('disabled');
+    btnClear.removeAttribute('disabled');
   }
   else{
-    btnSave.hide();
-    btnDownload.hide();
-    btnUp.hide();
-    btnDown.hide();
-    btnDelete.hide();
-    btnClear.hide();
+    // Disable
+    btnSave.attribute('disabled', '');
+    btnDownload.attribute('disabled', '');
+    btnUp.attribute('disabled', '');
+    btnDown.attribute('disabled', '');
+    btnDelete.attribute('disabled', '');
+    btnClear.attribute('disabled', '');
   }
   p.pop();
 }
@@ -249,5 +260,5 @@ p.mouseReleased= function(){
 new p5(sketch);
 
 export { mySketch, zoomR, items, activeItem, tmpItem, id, panel, layers, clickEvent, tmpClickEvent, buttons, undoManager };
-export { mouseIsDragged, corner, x1, y1, x2, y2 };
+export { mouseIsDragged, corner, x1, y1, x2, y2, diffPositionX, diffPositionY };
 export { tableimg, chairimg, sofaimg, doorimg, windowimg, sinkimg, toiletimg, tvimg };

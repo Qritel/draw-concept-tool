@@ -10,22 +10,11 @@
     padding-top: 20px;
 }
 
-.topnav {
-    height: 35px;
-    width: 100%;
-    position: fixed;
-    z-index: 0;
-    top: 0;
-    left: 0;
-    background-color: #efefef;
-    overflow-x: hidden;
-}
-
 .button {
     background-color: #efefef;
     color: #000000;
     text-decoration: none;
-    width: 101px;
+    width: 100px;
     border: 1px solid #d6d6d6;
     padding: 12px 10px;
 }
@@ -34,7 +23,7 @@
     background-color: #393939;
     color: #efefef;
     text-decoration: none;
-    width: 101px;
+    width: 100px;
     border: 1px solid #d6d6d6;
     padding: 12px 10px;
 }
@@ -43,7 +32,7 @@
     background-color: #666666;
     color: #efefef;
     text-decoration: none;
-    width: 101px;
+    width: 100px;
     border: 1px solid #d6d6d6;
     padding: 12px 10px;
 }
@@ -52,38 +41,8 @@
     background-color: #2e7bb6;
     color: #efefef;
     text-decoration: none;
-    width: 101px;
+    width: 100px;
     border: 1px solid #d6d6d6;
     padding: 12px 10px;
     font-weight: bold;
-}
-
-.button_zoom {
-    background-color: #ffffff;
-    color: #555555;
-    text-decoration: none;
-    width: 15px;
-    height: 15px;
-    border: 1px solid #d6d6d6;
-    padding: 0px 0px;
-}
-
-.button_zoom:hover {
-    background-color: #393939;
-    color: #ffffff;
-    text-decoration: none;
-    width: 15px;
-    height: 15px;
-    border: 1px solid #d6d6d6;
-    padding: 0px 0px;
-}
-
-.button_zoom:active {
-    background-color: #666666;
-    color: #ffffff;
-    text-decoration: none;
-    width: 15px;
-    height: 15px;
-    border: 1px solid #d6d6d6;
-    padding: 0px 0px;
 }
