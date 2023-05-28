@@ -1,7 +1,7 @@
 import { zoomR, mySketch as p } from "../sketch";
 let tickLengthMajor = 10;
 let tickLengthMinor = 5;
-let tickDistance = 10;
+let tickDistance = 5;
 let majorTickFrequency = 5;
 
 export default function drawRuler() {

@@ -24,6 +24,7 @@ import loadData from './utilities/loadData';
 import downloadDataAsJson from './utilities/downloadDataAsJson';
 import handleJsonFile from './utilities/handleJsonFile';
 import drawRuler from './utilities/drawRuler';
+import handleKeyPressed from './interactions/handleKeyPressed';
 
 let x1 = 0, y1 = 0, x2 = 0, y2 = 0;
 let diffPositionX;
@@ -177,6 +178,8 @@ p.setup = function () {
   btnDelete.mousePressed(function() { Item.removeItem(activeItem); refresh(); });
   btnDelete.class('topButton');
 
+  // stops the automatic execution of the draw() and update the canvas only when needed
+  // resulting in improved performance and reduced CPU usage.
   p.noLoop();
 }
 
@@ -191,7 +194,6 @@ p.windowResized = function () {
   refresh();
 }
 
-//p5 function: continuously executes the lines of code contained inside its block until the program is stopped or p.noLoop() is called(as our case)
 //draw() will be executed one time, when an item is added or its properties is changed.
 p.draw = function () {
   //set the color for the background of the canvas
@@ -249,16 +251,41 @@ p.draw = function () {
     btnDelete.attribute('disabled', '');
     btnClear.attribute('disabled', '');
   }
+
+  if (p.keyIsDown(p.UP_ARROW)) {
+    panel.setValue('y', panel.getValue('y') - 0.5);
+  }
+  else if (p.keyIsDown(p.DOWN_ARROW)) {
+    panel.setValue('y', panel.getValue('y') + 0.5);
+  }
+  else if (p.keyIsDown(p.LEFT_ARROW)) {
+    panel.setValue('x', panel.getValue('x') - 0.5);
+  }
+  else if (p.keyIsDown(p.RIGHT_ARROW)) {
+    panel.setValue('x', panel.getValue('x') + 0.5);
+  }
+
   p.pop();
 }
 
-p.mouseReleased= function(){
+p.mouseReleased = function() {
   mouseIsDragged = false;
 }
+
+p.keyPressed = function() {
+  handleKeyPressed();
+  // prevent any default behavior
+  return false;
+}
+
+p.keyReleased = function() {
+  p.noLoop();
+}
+
 }
 
 new p5(sketch);
 
-export { mySketch, zoomR, items, activeItem, tmpItem, id, panel, layers, clickEvent, tmpClickEvent, buttons, undoManager };
+export { mySketch, slider, zoomR, items, activeItem, tmpItem, id, panel, layers, clickEvent, tmpClickEvent, buttons, undoManager };
 export { mouseIsDragged, corner, x1, y1, x2, y2, diffPositionX, diffPositionY };
 export { tableimg, chairimg, sofaimg, doorimg, windowimg, sinkimg, toiletimg, tvimg };

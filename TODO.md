@@ -12,12 +12,12 @@ Project Description
 
 ### In Progress
 
-- [ ] Keyboard shortcuts (DEL, Ctrl +, Ctrl -, Ctrl Z, ....)  
 - [ ] Add a tooltip to different elements  
 - [ ] improve user interface design  
 
 ### Done ✓
 
+- [x] Keyboard shortcuts (DEL, Ctrl +, Ctrl -, Ctrl Z, ....)  
 - [x] ⭐Code refactoring⭐  
 - [x] Implement Export/Import from JSON  
 - [x] Implement resize and rotate corners  
