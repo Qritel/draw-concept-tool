@@ -1,7 +1,7 @@
 import { mySketch as p, activeItem, undoManager, slider } from "../sketch";
 import Item from '../Item/item';
-import refresh from "../utilities/refresh";
-import downloadDataAsJson from "../utilities/downloadDataAsJson";
+import refresh from "../utils/refresh";
+import downloadDataAsJson from "../Data/downloadDataAsJson";
 
 export default function handleKeyPressed() {
     if (p.keyIsDown(p.CONTROL) && (p.key == 'z' || p.key == 'Z')) {

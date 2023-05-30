@@ -10,7 +10,7 @@ const server = http.createServer((req, res) => {
 
   let filePath = '.' + req.url;
   if (filePath === './') {
-    filePath = './index.html';
+    filePath = './src/index.html';
   }
 
   const extname = path.extname(filePath);

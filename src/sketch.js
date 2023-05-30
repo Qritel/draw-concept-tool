@@ -1,7 +1,8 @@
 /*
-This code uses 2 libraries :
+This code uses 3 libraries :
   QuickSettings : http://bit101.github.io/quicksettings/doc/module-QuickSettings.html
   P5 : https://p5js.org/reference/
+  UndoManager : https://github.com/ArthurClemens/Javascript-Undo-Manager
 */
 
 import p5 from 'p5';
@@ -12,18 +13,18 @@ import Item from './Item/item';
 import drawStrokeItem from './Item/drawStrokeItem';
 import drawResizingCorner from './Item/drawResizingCorner';
 import drawRotatingCorner from './Item/drawRotatingCorner';
-import refresh from './utilities/refresh';
+import refresh from './utils/refresh';
 import createBtnTool from './interactions/createBtnTool';
 
-import './styles/quicksettings.css';
+import '../styles/quicksettings.css';
 import handleMousePressed from './interactions/handleMousePressed';
 import handleMouseDragged from './interactions/handleMouseDragged';
 import handleMouseReleased from './interactions/handleMouseReleased';
-import saveData from './utilities/saveData';
-import loadData from './utilities/loadData';
-import downloadDataAsJson from './utilities/downloadDataAsJson';
-import handleJsonFile from './utilities/handleJsonFile';
-import drawRuler from './utilities/drawRuler';
+import saveData from './Data/saveData';
+import loadData from './Data/loadData';
+import downloadDataAsJson from './Data/downloadDataAsJson';
+import handleJsonFile from './Data/handleJsonFile';
+import drawRuler from './utils/drawRuler';
 import handleKeyPressed from './interactions/handleKeyPressed';
 
 let x1 = 0, y1 = 0, x2 = 0, y2 = 0;
@@ -125,10 +126,12 @@ p.setup = function () {
   slider = p.createSlider(0, 250, 100, 5);
   slider.position(1, canvasHeight + canvasY - 20);
   slider.style('width', '94px');
+  slider.attribute('title', 'zoom');
   slider.input(p.draw);
 
   btnUndo = p.createButton('⟲');
   btnUndo.position(10, 20);
+  btnUndo.attribute('title', 'Undo');
   btnUndo.mousePressed(function() {
     undoManager.undo();
     refresh();
@@ -136,6 +139,7 @@ p.setup = function () {
 
   btnRedo = p.createButton('⟳');
   btnRedo.position(61, 20);
+  btnRedo.attribute('title', 'Redo');
   btnRedo.mousePressed(function() {
     undoManager.redo();
     refresh();
@@ -169,14 +173,17 @@ p.setup = function () {
   btnUp.position(canvasWidth, 5);
   btnUp.mousePressed(function() { Item.moveUpItem(activeItem.name); refresh(); });
   btnUp.class('topButton');
+  btnUp.attribute('title', 'Bring Forward');
   btnDown = p.createButton('🡣');
   btnDown.position(canvasWidth + 30, 5);
   btnDown.mousePressed(function() { Item.moveDownItem(activeItem.name); refresh(); });
   btnDown.class('topButton');
+  btnDown.attribute('title', 'Send Backward');
   btnDelete = p.createButton('🗑️');
   btnDelete.position(canvasWidth + 60, 5);
   btnDelete.mousePressed(function() { Item.removeItem(activeItem); refresh(); });
   btnDelete.class('topButton');
+  btnDelete.attribute('title', 'Delete');
 
   // stops the automatic execution of the draw() and update the canvas only when needed
   // resulting in improved performance and reduced CPU usage.

@@ -1,7 +1,7 @@
 import { activeItem, tmpItem, items, id, diffPositionX, diffPositionY, clickEvent, tmpClickEvent, zoomR, mySketch as p } from "../sketch";
 import { mouseIsDragged, x1, y1, x2, y2 } from "../sketch";
 import Item from "../Item/item";
-import refresh from "../utilities/refresh";
+import refresh from "../utils/refresh";
 
 export default function handleMouseReleased() {
     mouseIsDragged = false;

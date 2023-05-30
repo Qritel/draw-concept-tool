@@ -1,7 +1,7 @@
 const path = require('path');
 
 module.exports = {
-  entry: './sketch.js',
+  entry: './src/sketch.js',
   output: {
     filename: 'bundle.js',
     path: path.resolve(__dirname, 'dist')

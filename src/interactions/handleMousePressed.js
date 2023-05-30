@@ -4,7 +4,7 @@ import getResizingCorner from '../math/getResizingCorner';
 import isRotatingCorner from '../math/isRotatingCorner';
 import getSelectedItem from '../math/getSelectedItem';
 import createPanel from "./createPanel";
-import refresh from "../utilities/refresh";
+import refresh from "../utils/refresh";
 
 export default function handleMousePressed() {
     mouseIsDragged = true;
