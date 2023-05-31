@@ -1,6 +1,6 @@
 import QuickSettings from 'quicksettings';
 import refresh from '../utils/refresh';
-import { mySketch as p, layers, items, activeItem } from "../sketch";
+import { mySketch as p, layers, items, activeItem } from "../app";
 
 export default function refreshLayers() {
 

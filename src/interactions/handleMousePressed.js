@@ -1,5 +1,5 @@
-import { activeItem, tmpItem, items, diffPositionX, diffPositionY, clickEvent, tmpClickEvent, panel, zoomR, mySketch as p } from "../sketch";
-import { mouseIsDragged, corner, x1, y1 } from "../sketch";
+import { activeItem, tmpItem, items, diffPositionX, diffPositionY, clickEvent, tmpClickEvent, panel, zoomR, mySketch as p } from "../app";
+import { mouseIsDragged, corner, x1, y1 } from "../app";
 import getResizingCorner from '../math/getResizingCorner';
 import isRotatingCorner from '../math/isRotatingCorner';
 import getSelectedItem from '../math/getSelectedItem';

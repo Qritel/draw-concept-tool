@@ -26,6 +26,7 @@ import downloadDataAsJson from './Data/downloadDataAsJson';
 import handleJsonFile from './Data/handleJsonFile';
 import drawRuler from './utils/drawRuler';
 import handleKeyPressed from './interactions/handleKeyPressed';
+import drawBackground from './utils/drawBackground';
 
 let x1 = 0, y1 = 0, x2 = 0, y2 = 0;
 let diffPositionX;
@@ -123,7 +124,7 @@ p.setup = function () {
   createBtnTool('Text', 0, 420, 'Text');
 
   //zoom slider
-  slider = p.createSlider(0, 250, 100, 5);
+  slider = p.createSlider(5, 250, 100, 5);
   slider.position(1, canvasHeight + canvasY - 20);
   slider.style('width', '94px');
   slider.attribute('title', 'zoom');
@@ -203,15 +204,11 @@ p.windowResized = function () {
 
 //draw() will be executed one time, when an item is added or its properties is changed.
 p.draw = function () {
-  //set the color for the background of the canvas
-  p.background('#ffffff')
-  p.noFill();
-  p.stroke('#808080');
-  p.rect(0, 0, canvasWidth, canvasHeight);
-
   zoom = slider.value();
   zoomR = 100 / zoom;
 
+  drawBackground();
+  
   p.push();
   p.stroke('#2e7bb6');
   p.text(zoom + '%', 5, canvasHeight - 6);
@@ -220,7 +217,6 @@ p.draw = function () {
   p.push();
   p.scale(zoom / 100);
 
-  // Ruler
   drawRuler();
   
   if(!undoManager.hasUndo()) btnUndo.hide();
@@ -296,3 +292,4 @@ new p5(sketch);
 export { mySketch, slider, zoomR, items, activeItem, tmpItem, id, panel, layers, clickEvent, tmpClickEvent, buttons, undoManager };
 export { mouseIsDragged, corner, x1, y1, x2, y2, diffPositionX, diffPositionY };
 export { tableimg, chairimg, sofaimg, doorimg, windowimg, sinkimg, toiletimg, tvimg };
+export {canvasWidth, canvasHeight};

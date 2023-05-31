@@ -1,9 +1,9 @@
-import { mySketch as p } from "../sketch";
+import { mySketch as p, zoomR } from "../app";
 
 // this function highlight and indicate the active item by drawing a stroke outline around it.
 // and lines to represent its position in the canvas.
 export default function drawStrokeItem(_item) {
-    let d = p.dist(0,0,p.width,p.height);
+    let d = p.dist(0,0,p.width * zoomR,p.height * zoomR);
     p.push();
     p.stroke('#2e7bf6');
     p.rectMode(p.CENTER);

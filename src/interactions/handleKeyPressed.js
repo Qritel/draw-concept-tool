@@ -1,4 +1,4 @@
-import { mySketch as p, activeItem, undoManager, slider } from "../sketch";
+import { mySketch as p, activeItem, undoManager, slider } from "../app";
 import Item from '../Item/item';
 import refresh from "../utils/refresh";
 import downloadDataAsJson from "../Data/downloadDataAsJson";

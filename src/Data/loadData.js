@@ -1,5 +1,5 @@
 import Item from "../Item/item";
-import { activeItem, clickEvent } from "../sketch";
+import { activeItem, clickEvent } from "../app";
 
 export default function loadData() {
     // Retrieve the saved items from local storage

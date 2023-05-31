@@ -1,4 +1,4 @@
-import { mySketch, clickEvent, buttons } from "../sketch";
+import { mySketch, clickEvent, buttons } from "../app";
 
 export default function createBtnTool(_name, _x, _y, _clickEvent){
   buttons.push({pointer : mySketch.createButton(_name), clickEvent : _clickEvent});

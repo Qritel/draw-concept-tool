@@ -7,16 +7,16 @@ Project Description
 ### Todo
 
 - [ ] Implement right mouse click shows the drawing function  
-- [ ] Add different types of table styles  
 - [ ] add button : Rectangle select  
 
 ### In Progress
 
-- [ ] Add a tooltip to different elements  
-- [ ] improve user interface design  
+- [ ] 'Add Items' button => prevent create separate buttons  
 
 ### Done ✓
 
+- [x] improve user interface design  
+- [x] Add a tooltip to different elements  
 - [x] Keyboard shortcuts (DEL, Ctrl +, Ctrl -, Ctrl Z, ....)  
 - [x] ⭐Code refactoring⭐  
 - [x] Implement Export/Import from JSON  

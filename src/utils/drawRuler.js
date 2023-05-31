@@ -1,10 +1,12 @@
-import { zoomR, mySketch as p } from "../sketch";
+import { zoomR, mySketch as p } from "../app";
 let tickLengthMajor = 10;
 let tickLengthMinor = 5;
 let tickDistance = 5;
 let majorTickFrequency = 5;
 
 export default function drawRuler() {
+    p.push();
+    p.stroke('#808080');
     // Draw ticks on the top edge
     for (let x = 0; x < p.width * zoomR; x += tickDistance) {
         if (x % (tickDistance * majorTickFrequency) === 0) {
@@ -48,4 +50,5 @@ export default function drawRuler() {
             p.line(0, y, tickLengthMinor, y);
         }
     }
+    p.pop();
 }

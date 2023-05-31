@@ -1,4 +1,4 @@
-import { mySketch, items } from "../sketch";
+import { mySketch, items } from "../app";
 
 //This function determines which corner of '_activeItem', the mouse is currently hovering over.
 export default function getResizingCorner(_activeItem, _mouseX, _mouseY) {

@@ -1,5 +1,5 @@
 import QuickSettings from 'quicksettings';
-import { mySketch, panel } from '../sketch';
+import { mySketch, panel } from '../app';
 
 export default function createPanel(_item) {
 

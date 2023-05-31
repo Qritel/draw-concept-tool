@@ -1,4 +1,4 @@
-import { items, mySketch as p } from "../sketch";
+import { items, mySketch as p } from "../app";
 
 export default function getSelectedItem(_mouseX, _mouseY){
     let sItem = [];

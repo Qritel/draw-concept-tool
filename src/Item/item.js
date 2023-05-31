@@ -1,6 +1,6 @@
-import { items, activeItem, id, mySketch as p } from "../sketch";
-import { tableimg, chairimg, sofaimg, doorimg, windowimg, sinkimg, toiletimg, tvimg} from "../sketch";
-import { undoManager } from "../sketch";
+import { items, activeItem, id, mySketch as p } from "../app";
+import { tableimg, chairimg, sofaimg, doorimg, windowimg, sinkimg, toiletimg, tvimg} from "../app";
+import { undoManager } from "../app";
 
 class Item {
   constructor(array) {

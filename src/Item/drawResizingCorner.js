@@ -1,4 +1,4 @@
-import { mySketch as p } from "../sketch";
+import { mySketch as p } from "../app";
 
 export default function drawResizingCorner(_item) {
     p.push();

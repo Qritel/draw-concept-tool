@@ -1,5 +1,5 @@
 import Item from "../Item/item";
-import { activeItem, clickEvent, undoManager } from "../sketch";
+import { activeItem, clickEvent, undoManager } from "../app";
 import refresh from "../utils/refresh";
 import UndoManager from 'undo-manager';
 

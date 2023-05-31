@@ -1,4 +1,4 @@
-import { mySketch, items } from "../sketch";
+import { mySketch, items } from "../app";
 
 // This function determines if the mouse is over a rotating corner of '_activeItem'.
 export default function isRotatingCorner(_activeItem, _mouseX, _mouseY){

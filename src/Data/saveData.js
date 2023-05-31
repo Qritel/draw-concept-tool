@@ -1,4 +1,4 @@
-import { items } from "../sketch";
+import { items } from "../app";
 
 
 export default function saveData() {

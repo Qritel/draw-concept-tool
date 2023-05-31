@@ -1,5 +1,5 @@
-import { activeItem, tmpItem, items, diffPositionX, diffPositionY, clickEvent, panel, zoomR, mySketch as p } from "../sketch";
-import { mouseIsDragged, corner, x1, y1, x2, y2 } from "../sketch";
+import { activeItem, tmpItem, items, diffPositionX, diffPositionY, clickEvent, panel, zoomR, mySketch as p } from "../app";
+import { mouseIsDragged, corner, x1, y1, x2, y2 } from "../app";
 import Item from "../Item/item";
 
 export default function handleMouseDragged() {
