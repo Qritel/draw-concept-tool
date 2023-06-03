@@ -112,7 +112,7 @@ p.setup = function () {
   canv.mouseReleased(handleMouseReleased);
   canv.drop(handleJsonFile);
 
-  createBtnTool('⇱', 0, 60, 'Move');
+  createBtnTool('⇱', 0, 60, 'Select');
   createBtnTool('⬛', 0, 100, 'Draw_Rect');
   createBtnTool('▬▬', 0, 140, 'Draw_Line');
   createBtnTool('Table', 0, 180, 'Table');
@@ -231,10 +231,15 @@ p.draw = function () {
       Item.drawItem(_item);
     }
   });
-  if(activeItem.selected && !mouseIsDragged) {
-    drawStrokeItem(activeItem);
-    drawResizingCorner(activeItem);
-    drawRotatingCorner(activeItem);
+  if(activeItem.selected && (!mouseIsDragged || activeItem.name.startsWith('Text'))) {
+    let whichObject;
+    if(tmpItem.visibility)
+      whichObject = tmpItem;
+    else
+      whichObject = activeItem;
+    drawStrokeItem(whichObject);
+    drawResizingCorner(whichObject);
+    drawRotatingCorner(whichObject);
   }
   if(items.length){
     // Re-enable
@@ -276,9 +281,7 @@ p.mouseReleased = function() {
 }
 
 p.keyPressed = function() {
-  handleKeyPressed();
-  // prevent any default behavior
-  return false;
+  return handleKeyPressed();
 }
 
 p.keyReleased = function() {
@@ -292,4 +295,4 @@ new p5(sketch);
 export { mySketch, slider, zoomR, items, activeItem, tmpItem, id, panel, layers, clickEvent, tmpClickEvent, buttons, undoManager };
 export { mouseIsDragged, corner, x1, y1, x2, y2, diffPositionX, diffPositionY };
 export { tableimg, chairimg, sofaimg, doorimg, windowimg, sinkimg, toiletimg, tvimg };
-export {canvasWidth, canvasHeight};
+export { canvasWidth, canvasHeight };

@@ -17,6 +17,7 @@ export default function refreshLayers() {
   items.slice().reverse().forEach(function(_item) {
     layers.addButton(_item.name, function() {
       activeItem = _item;
+      activeItem.selected = true;
     });
     if(activeItem == _item) {
       layers.overrideStyle(_item.name, 'font-weight', 'BOLD');

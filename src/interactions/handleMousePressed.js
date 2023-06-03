@@ -37,7 +37,7 @@ export default function handleMousePressed() {
         x1 = mouseXR;
         y1 = mouseYR;
     }
-    else if(getSelectedItem(mouseXR, mouseYR) && clickEvent == 'Move') {
+    else if(getSelectedItem(mouseXR, mouseYR) && clickEvent == 'Select') {
         activeItem = getSelectedItem(mouseXR, mouseYR);
         activeItem.selected = true;
         refresh();

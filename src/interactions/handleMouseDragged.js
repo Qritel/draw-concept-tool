@@ -16,42 +16,46 @@ export default function handleMouseDragged() {
                         + (mouseYR - activeItem.y) * p.sin(activeItem.angle) + activeItem.x);
             let dragY = diffPositionY + activeItem.y - ((mouseYR - activeItem.y) * p.cos(activeItem.angle) 
                         - (mouseXR - activeItem.x) * p.sin(activeItem.angle) + activeItem.y);
-            if((corner == 'T' && activeItem.h + dragY > 0 || corner == 'B'  && activeItem.h - dragY > 0) 
-                && activeItem.name.startsWith('Rectangle')){
+            // For Top and Bottom resize corner.
+            if((corner == 'T' && activeItem.sheight + dragY > 0 || corner == 'B'  && activeItem.sheight - dragY > 0) 
+                && (activeItem.name.startsWith('Rectangle') || activeItem.name.startsWith('Text'))){
                 panel.setValue('y',Number(activeItem.y - dragY / 2 * p.cos(activeItem.angle)).toFixed(2));
                 panel.setValue('x',Number(activeItem.x + dragY / 2 * p.sin(activeItem.angle)).toFixed(2));
                 if(corner == 'T'){
-                panel.setValue('h',Number(activeItem.h + dragY).toFixed(2));
-                tmpItem.sheight = activeItem.sheight + dragY;
+                    if (activeItem.name.startsWith('Rectangle')){
+                        panel.setValue('h',Number(activeItem.h + dragY).toFixed(2));
+                    }
+                    tmpItem.sheight = activeItem.sheight + dragY;
                 }
                 else if(corner == 'B'){
-                panel.setValue('h',Number(activeItem.h - dragY).toFixed(2));
-                tmpItem.sheight = activeItem.sheight - dragY;
+                    if (activeItem.name.startsWith('Rectangle')){
+                        panel.setValue('h',Number(activeItem.h - dragY).toFixed(2));
+                    }
+                    tmpItem.sheight = activeItem.sheight - dragY;
                 }
             }
-            else if(corner == 'L' && activeItem.w + dragX > 0 || corner == 'R' && activeItem.w - dragX > 0
+            // For Left and Right resize corner.
+            else if(corner == 'L' && activeItem.swidth + dragX > 0 || corner == 'R' && activeItem.swidth - dragX > 0
                 || (corner == 'L' || corner == 'R') && activeItem.name.startsWith('Line')){
                 panel.setValue('y',Number(activeItem.y - dragX / 2 * p.sin(activeItem.angle)).toFixed(2));
                 panel.setValue('x',Number(activeItem.x - dragX / 2 * p.cos(activeItem.angle)).toFixed(2));
                 if(corner == 'L'){
                     if(activeItem.name.startsWith('Rectangle')){
                         panel.setValue('w',Number(activeItem.w + dragX).toFixed(2));
-                        tmpItem.swidth = activeItem.swidth + dragX;
                     }
                     else if(activeItem.name.startsWith('Line')){
                         panel.setValue('l',Number(activeItem.l + dragX).toFixed(2));
-                        tmpItem.swidth = activeItem.swidth + dragX;
                     }
+                    tmpItem.swidth = activeItem.swidth + dragX;
                 }
                 else{
                     if(activeItem.name.startsWith('Rectangle')){
                         panel.setValue('w',Number(activeItem.w - dragX).toFixed(2));
-                        tmpItem.swidth = activeItem.swidth - dragX;
                     }
                     else if(activeItem.name.startsWith('Line')){
                         panel.setValue('l',Number(activeItem.l - dragX).toFixed(2));
-                        tmpItem.swidth = activeItem.swidth - dragX;
                     }
+                    tmpItem.swidth = activeItem.swidth - dragX;
                 }
             }
         }
@@ -73,7 +77,7 @@ export default function handleMouseDragged() {
             }
             p.draw();
         }
-        else if(diffPositionX && diffPositionY && clickEvent == 'Move') {
+        else if(diffPositionX && diffPositionY && clickEvent == 'Select') {
             p.cursor(p.MOVE);
             panel.setValue('x',Number(p.mouseX * zoomR - diffPositionX).toFixed(2));
             panel.setValue('y',Number(p.mouseY* zoomR - diffPositionY).toFixed(2));

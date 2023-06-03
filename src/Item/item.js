@@ -283,7 +283,7 @@ class Item {
       p.translate(_item.x, _item.y);
       p.angleMode(p.DEGREES);
       p.rotate(_item.angle);
-      p.text(_item.inputText, -60, -30, _item.swidth, _item.sheight);
+      p.text(_item.inputText, - _item.swidth / 2, - _item.sheight / 2, _item.swidth, _item.sheight);
       p.pop();
     }
   }

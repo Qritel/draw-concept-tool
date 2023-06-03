@@ -1,7 +1,7 @@
-import { mySketch, clickEvent, buttons } from "../app";
+import { mySketch as p, clickEvent, buttons } from "../app";
 
 export default function createBtnTool(_name, _x, _y, _clickEvent){
-  buttons.push({pointer : mySketch.createButton(_name), clickEvent : _clickEvent});
+  buttons.push({pointer : p.createButton(_name), clickEvent : _clickEvent});
   const l = buttons.length
   buttons[l - 1]['pointer'].position(_x, _y);
   buttons[l - 1]['pointer'].class('button');
@@ -13,11 +13,14 @@ export default function createBtnTool(_name, _x, _y, _clickEvent){
     }
     clickEvent = _clickEvent;
     buttons[l - 1]['pointer'].class('button_pressed');
-    if(clickEvent == 'Move') {
-      mySketch.cursor(mySketch.ARROW);
+    if(clickEvent == 'Select') {
+      p.cursor(p.ARROW);
+    }
+    else if(clickEvent == 'Text') {
+      p.cursor(p.TEXT);
     }
     else {
-      mySketch.cursor(mySketch.CROSS);
+      p.cursor(p.CROSS);
     }
   });
 }

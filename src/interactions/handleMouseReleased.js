@@ -1,6 +1,7 @@
 import { activeItem, tmpItem, items, id, diffPositionX, diffPositionY, clickEvent, tmpClickEvent, zoomR, mySketch as p } from "../app";
 import { mouseIsDragged, x1, y1, x2, y2 } from "../app";
 import Item from "../Item/item";
+import getSelectedItem from '../math/getSelectedItem';
 import refresh from "../utils/refresh";
 
 export default function handleMouseReleased() {
@@ -24,10 +25,13 @@ export default function handleMouseReleased() {
         clickEvent = tmpClickEvent;
         if(tmpItem.x != activeItem.x || tmpItem.y != activeItem.y) {
             if(activeItem.name.startsWith('Rectangle'))
-            Item.resizeItem(tmpItem.x - activeItem.x, tmpItem.y - activeItem.y, tmpItem.w - activeItem.w,
-                tmpItem.h - activeItem.h, index);
+                Item.resizeItem(tmpItem.x - activeItem.x, tmpItem.y - activeItem.y, tmpItem.w - activeItem.w,
+                    tmpItem.h - activeItem.h, index);
             else if(activeItem.name.startsWith('Line'))
-            Item.resizeItem(tmpItem.x - activeItem.x, tmpItem.y - activeItem.y, tmpItem.l - activeItem.l, 0, index);
+                Item.resizeItem(tmpItem.x - activeItem.x, tmpItem.y - activeItem.y, tmpItem.l - activeItem.l, 0, index);
+            else if (activeItem.name.startsWith('Text'))
+                Item.resizeItem(tmpItem.x - activeItem.x, tmpItem.y - activeItem.y, tmpItem.swidth - activeItem.swidth,
+                    tmpItem.sheight - activeItem.sheight, index);
         }
         tmpItem = {};
     }
@@ -63,16 +67,23 @@ export default function handleMouseReleased() {
         undefined, 155, 25]));
     }
     else if(clickEvent == 'Text') {
-        Item.addItem(new Item([true, true, items.length, 'Text ' + id, mouseXR, mouseYR, undefined, undefined, undefined,
-        0, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, '#000000', undefined, undefined,
-        'Your text', 14, 125, 65]));
+        let selectedItem = getSelectedItem(mouseXR, mouseYR);
+        if(selectedItem && selectedItem.name.startsWith('Text')) {
+            activeItem = getSelectedItem(mouseXR, mouseYR);
+            activeItem.selected = true;
+            refresh();
+        }
+        else {
+            Item.addItem(new Item([true, true, items.length, 'Text ' + id, mouseXR, mouseYR, undefined, undefined, undefined,
+            0, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, '#000000', undefined, undefined,
+            '', 14, 125, 65]));
+        }
     }
-    else if(diffPositionX && diffPositionY && items.length && clickEvent == 'Move') {
+    else if(diffPositionX && diffPositionY && items.length && clickEvent == 'Select') {
         items.splice(activeItem.index, 1);
         const index = items.indexOf(activeItem);
         activeItem.visibility = true;
-        if(tmpItem.x != activeItem.x)
-        {
+        if(tmpItem.x != activeItem.x) {
             Item.dragItem(tmpItem.x - activeItem.x, tmpItem.y - activeItem.y, index);
         }
         p.cursor(p.ARROW);
