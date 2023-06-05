@@ -172,12 +172,12 @@ p.setup = function () {
 
   btnUp = p.createButton('🡡');
   btnUp.position(canvasWidth, 5);
-  btnUp.mousePressed(function() { Item.moveUpItem(activeItem.name); refresh(); });
+  btnUp.mousePressed(function() { Item.moveUpItem(activeItem); refresh(); });
   btnUp.class('topButton');
   btnUp.attribute('title', 'Bring Forward');
   btnDown = p.createButton('🡣');
   btnDown.position(canvasWidth + 30, 5);
-  btnDown.mousePressed(function() { Item.moveDownItem(activeItem.name); refresh(); });
+  btnDown.mousePressed(function() { Item.moveDownItem(activeItem); refresh(); });
   btnDown.class('topButton');
   btnDown.attribute('title', 'Send Backward');
   btnDelete = p.createButton('🗑️');

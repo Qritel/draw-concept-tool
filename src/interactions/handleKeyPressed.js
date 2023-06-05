@@ -5,7 +5,7 @@ import downloadDataAsJson from "../Data/downloadDataAsJson";
 
 export default function handleKeyPressed() {
     // Check if the QuickSettings panel or any of its controls do not have focus
-    if(document.activeElement.tagName.toLowerCase() == 'body') {
+    if(document.activeElement.tagName.toLowerCase() == 'body' || document.activeElement.tagName.toLowerCase() == 'button' ) {
         if (p.keyIsDown(p.CONTROL) && (p.key == 'z' || p.key == 'Z')) {
             undoManager.undo();
             refresh();

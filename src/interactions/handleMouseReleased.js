@@ -10,28 +10,26 @@ export default function handleMouseReleased() {
     let mouseYR = p.mouseY* zoomR;
     if(clickEvent == 'Rotate') {
         items.splice(activeItem.index, 1);
-        const index = items.indexOf(activeItem);
         activeItem.visibility = true;
         clickEvent = tmpClickEvent;
         if(tmpItem.angle != activeItem.angle) {
-            Item.rotateItem(tmpItem.angle - activeItem.angle, index);
+            Item.rotateItem(tmpItem.angle - activeItem.angle, activeItem);
         }
         tmpItem = {};
     }
     else if(clickEvent == 'Resize') {
         items.splice(activeItem.index, 1);
-        const index = items.indexOf(activeItem);
         activeItem.visibility = true;
         clickEvent = tmpClickEvent;
         if(tmpItem.x != activeItem.x || tmpItem.y != activeItem.y) {
             if(activeItem.name.startsWith('Rectangle'))
                 Item.resizeItem(tmpItem.x - activeItem.x, tmpItem.y - activeItem.y, tmpItem.w - activeItem.w,
-                    tmpItem.h - activeItem.h, index);
+                    tmpItem.h - activeItem.h, activeItem);
             else if(activeItem.name.startsWith('Line'))
-                Item.resizeItem(tmpItem.x - activeItem.x, tmpItem.y - activeItem.y, tmpItem.l - activeItem.l, 0, index);
+                Item.resizeItem(tmpItem.x - activeItem.x, tmpItem.y - activeItem.y, tmpItem.l - activeItem.l, 0, activeItem);
             else if (activeItem.name.startsWith('Text'))
                 Item.resizeItem(tmpItem.x - activeItem.x, tmpItem.y - activeItem.y, tmpItem.swidth - activeItem.swidth,
-                    tmpItem.sheight - activeItem.sheight, index);
+                    tmpItem.sheight - activeItem.sheight, activeItem);
         }
         tmpItem = {};
     }
@@ -81,10 +79,9 @@ export default function handleMouseReleased() {
     }
     else if(diffPositionX && diffPositionY && items.length && clickEvent == 'Select') {
         items.splice(activeItem.index, 1);
-        const index = items.indexOf(activeItem);
         activeItem.visibility = true;
         if(tmpItem.x != activeItem.x) {
-            Item.dragItem(tmpItem.x - activeItem.x, tmpItem.y - activeItem.y, index);
+            Item.dragItem(tmpItem.x - activeItem.x, tmpItem.y - activeItem.y, activeItem);
         }
         p.cursor(p.ARROW);
     }

@@ -78,87 +78,85 @@ class Item {
     }
   }
 
-  static moveUpItem(_name) {
-    const index = items.findIndex(_item => _item.name === _name);
-    activeItem = items[index];
+  static moveUpItem(_item) {
+    const index = items.indexOf(_item);
     const len = items.length;
     if(index < len - 1) {
       [items[index].index, items[index + 1].index] = [items[index + 1].index, items[index].index];
       [items[index], items[index + 1]] = [items[index + 1], items[index]];
       undoManager.add({
         undo: function() {
-          Item.moveDownItem(_name);
+          Item.moveDownItem(_item);
         },
         redo: function() {
-          Item.moveUpItem(_name);
+          Item.moveUpItem(_item);
         }
       });
     }
   }
   
-  static moveDownItem(_name) {
-    const index = items.findIndex(_item => _item.name === _name);
-    activeItem = items[index];
+  static moveDownItem(_item) {
+    const index = items.indexOf(_item);
     if(index > 0) {
       [items[index].index, items[index - 1].index] = [items[index - 1].index, items[index].index];
       [items[index], items[index - 1]] = [items[index - 1], items[index]];
       undoManager.add({
         undo: function() {
-          Item.moveUpItem(_name);
+          Item.moveUpItem(_item);
         },
         redo: function() {
-          Item.moveDownItem(_name);
+          Item.moveDownItem(_item);
         }
       });
     }
   }
 
-  static dragItem(_dx, _dy, _index) {
-    items[_index].x += _dx;
-    items[_index].y += _dy;
-    activeItem = items[_index];
+  static dragItem(_dx, _dy, _item) {
+    const index = items.indexOf(_item);
+    items[index].x += _dx;
+    items[index].y += _dy;
     undoManager.add({
       undo: function() {
-        Item.dragItem(-_dx, -_dy, _index);
+        Item.dragItem(-_dx, -_dy, _item);
       },
       redo: function() {
-        Item.dragItem(_dx, _dy, _index);
+        Item.dragItem(_dx, _dy, _item);
       }
     });
   }
 
-  static resizeItem(_dx, _dy, _dw, _dh, _index){
-    items[_index].x += _dx;
-    items[_index].y += _dy;
-    if(items[_index].name.startsWith('Rectangle')){
-      items[_index].h += _dh;
-      items[_index].w += _dw;
+  static resizeItem(_dx, _dy, _dw, _dh, _item){
+    const index = items.indexOf(_item);
+    items[index].x += _dx;
+    items[index].y += _dy;
+    if(items[index].name.startsWith('Rectangle')){
+      items[index].h += _dh;
+      items[index].w += _dw;
     }
-    else if(items[_index].name.startsWith('Line')){
-      items[_index].l += _dw;
+    else if(items[index].name.startsWith('Line')){
+      items[index].l += _dw;
     }
-    items[_index].swidth += _dw;
-    items[_index].sheight += _dh;
-    activeItem = items[_index];
+    items[index].swidth += _dw;
+    items[index].sheight += _dh;
     undoManager.add({
       undo: function() {
-        Item.resizeItem(-_dx, -_dy, -_dw, -_dh, _index);
+        Item.resizeItem(-_dx, -_dy, -_dw, -_dh, _item);
       },
       redo: function() {
-        Item.resizeItem(_dx, _dy, _dw, _dh, _index);
+        Item.resizeItem(_dx, _dy, _dw, _dh, _item);
       }
     });
   }
   
-  static rotateItem(_da, _index){
-    items[_index].angle += _da;
-    activeItem = items[_index];
+  static rotateItem(_da, _item){
+    const index = items.indexOf(_item);
+    items[index].angle += _da;
     undoManager.add({
       undo: function() {
-        Item.rotateItem(-_da, _index);
+        Item.rotateItem(-_da, _item);
       },
       redo: function() {
-        Item.rotateItem(_da, _index);
+        Item.rotateItem(_da, _item);
       }
     });
   }
