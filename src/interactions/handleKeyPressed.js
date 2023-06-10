@@ -5,7 +5,7 @@ import downloadDataAsJson from "../Data/downloadDataAsJson";
 
 export default function handleKeyPressed() {
     // Check if the QuickSettings panel or any of its controls do not have focus
-    if(document.activeElement.tagName.toLowerCase() == 'body' || document.activeElement.tagName.toLowerCase() == 'button' ) {
+    if (document.activeElement.tagName.toLowerCase() == 'body' || document.activeElement.tagName.toLowerCase() == 'button') {
         if (p.keyIsDown(p.CONTROL) && (p.key == 'z' || p.key == 'Z')) {
             undoManager.undo();
             refresh();
@@ -33,7 +33,7 @@ export default function handleKeyPressed() {
             p.loop();
         }
         //update the 'Text' value.
-        else if(activeItem.selected == true && activeItem.name.startsWith('Text')){
+        else if (activeItem.selected == true && activeItem.name.startsWith('Text')) {
             if (p.keyCode === 13) { // Enter key
                 panel.setValue('inputText', activeItem.inputText + '\n');
             } else if (p.keyCode === 8) { // Backspace key
@@ -41,7 +41,7 @@ export default function handleKeyPressed() {
             } else if (p.keyCode === 32) { // Space key
                 panel.setValue('inputText', activeItem.inputText + ' ');
             }
-            else if(p.keyCode > 32 && p.keyCode < 126) {
+            else if (p.keyCode > 32 && p.keyCode < 126) {
                 panel.setValue('inputText', activeItem.inputText + p.key);
             }
         }

@@ -4,7 +4,7 @@ import refresh from "../utils/refresh";
 import UndoManager from 'undo-manager';
 
 export default function handleJsonFile(file) {
-    
+
     let uploadedItemsString = JSON.stringify(file.data);
 
     if (uploadedItemsString) {
@@ -12,7 +12,7 @@ export default function handleJsonFile(file) {
         let uploadedItems = JSON.parse(uploadedItemsString);
 
         Item.loadItems(uploadedItems);
-        activeItem = uploadedItems[uploadedItems.length-1];
+        activeItem = uploadedItems[uploadedItems.length - 1];
         undoManager = new UndoManager();
         refresh();
     }

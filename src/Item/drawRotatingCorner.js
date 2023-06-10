@@ -10,8 +10,8 @@ export default function drawRotatingCorner(_item) {
     p.textSize(20);
     p.textStyle(p.BOLD);
     p.textAlign(p.CENTER, p.CENTER);
-    p.translate(_item.swidth / 2, - _item.sheight /2);
-    if(_item.name.startsWith('Line')) {
+    p.translate(_item.swidth / 2, - _item.sheight / 2);
+    if (_item.name.startsWith('Line')) {
         p.translate(7, 3);
         p.rotate(-45);
         p.text('⤾', 2, 7);
@@ -23,8 +23,8 @@ export default function drawRotatingCorner(_item) {
         p.text('⤾', 2, 7);
         p.rotate(-90);
         p.text('⤿', -3, 6);
-        }
-    else{
+    }
+    else {
         p.rotate(-90);
         p.text('⤾', 2, 7);
         p.rotate(-90);

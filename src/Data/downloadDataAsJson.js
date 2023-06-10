@@ -1,6 +1,6 @@
-import { mySketch as p ,items } from "../app";
+import { mySketch as p, itemList } from "../app";
 
 export default function downloadDataAsJson() {
-    // Writes the contents of items to DrawData.json file.
-    p.saveJSON(items, 'DrawData.json');
+    // Writes the contents of itemList to DrawData.json file.
+    p.saveJSON(itemList, 'DrawData.json');
 }

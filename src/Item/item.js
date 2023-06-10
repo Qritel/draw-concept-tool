@@ -1,5 +1,5 @@
-import { items, activeItem, id, mySketch as p } from "../app";
-import { tableimg, chairimg, sofaimg, doorimg, windowimg, sinkimg, toiletimg, tvimg} from "../app";
+import { itemList, activeItem, id, mySketch as p } from "../app";
+import { tableimg, chairimg, sofaimg, doorimg, windowimg, sinkimg, toiletimg, tvimg } from "../app";
 import { undoManager } from "../app";
 
 class Item {
@@ -32,7 +32,7 @@ class Item {
   }
 
   static loadItems(_savedData) {
-    items = _savedData;
+    itemList = _savedData;
   }
 
   static addItem(_item) {
@@ -41,37 +41,38 @@ class Item {
         delete _item[key];
       }
     });
-    if(_item.name && !_item.name.endsWith('drawing')) {
-      id ++;
+    if (_item.name && !_item.name.endsWith('drawing')) {
+      id++;
       undoManager.add({
-        undo: function() {
+        undo: function () {
           Item.removeItem(_item);
         },
-        redo: function() {
+        redo: function () {
           Item.addItem(_item);
         }
       });
     }
-    items.splice(_item.index, 0, _item);
+    itemList.splice(_item.index, 0, _item);
+    if (activeItem) activeItem.selected = false;
     activeItem = _item;
   }
 
   static removeItem(_item) {
-    const index = items.indexOf(_item);
+    const index = itemList.indexOf(_item);
     if (index > -1) {
-      items.splice(index, 1);
+      itemList.splice(index, 1);
     }
-    if(activeItem === _item) {
-      if(items.length == 0) activeItem = {};
-      else if(index == 0) activeItem = items[index];
-      else activeItem = items[index-1];
+    if (activeItem === _item) {
+      if (itemList.length == 0) activeItem = {};
+      else if (index == 0) activeItem = itemList[index];
+      else activeItem = itemList[index - 1];
     }
-    if(_item.name && !_item.name.endsWith('drawing')) {
+    if (_item.name && !_item.name.endsWith('drawing')) {
       undoManager.add({
-        undo: function() {
+        undo: function () {
           Item.addItem(_item);
         },
-        redo: function() {
+        redo: function () {
           Item.removeItem(_item);
         }
       });
@@ -79,32 +80,32 @@ class Item {
   }
 
   static moveUpItem(_item) {
-    const index = items.indexOf(_item);
-    const len = items.length;
-    if(index < len - 1) {
-      [items[index].index, items[index + 1].index] = [items[index + 1].index, items[index].index];
-      [items[index], items[index + 1]] = [items[index + 1], items[index]];
+    const index = itemList.indexOf(_item);
+    const len = itemList.length;
+    if (index < len - 1) {
+      [itemList[index].index, itemList[index + 1].index] = [itemList[index + 1].index, itemList[index].index];
+      [itemList[index], itemList[index + 1]] = [itemList[index + 1], itemList[index]];
       undoManager.add({
-        undo: function() {
+        undo: function () {
           Item.moveDownItem(_item);
         },
-        redo: function() {
+        redo: function () {
           Item.moveUpItem(_item);
         }
       });
     }
   }
-  
+
   static moveDownItem(_item) {
-    const index = items.indexOf(_item);
-    if(index > 0) {
-      [items[index].index, items[index - 1].index] = [items[index - 1].index, items[index].index];
-      [items[index], items[index - 1]] = [items[index - 1], items[index]];
+    const index = itemList.indexOf(_item);
+    if (index > 0) {
+      [itemList[index].index, itemList[index - 1].index] = [itemList[index - 1].index, itemList[index].index];
+      [itemList[index], itemList[index - 1]] = [itemList[index - 1], itemList[index]];
       undoManager.add({
-        undo: function() {
+        undo: function () {
           Item.moveUpItem(_item);
         },
-        redo: function() {
+        redo: function () {
           Item.moveDownItem(_item);
         }
       });
@@ -112,64 +113,64 @@ class Item {
   }
 
   static dragItem(_dx, _dy, _item) {
-    const index = items.indexOf(_item);
-    items[index].x += _dx;
-    items[index].y += _dy;
+    const index = itemList.indexOf(_item);
+    itemList[index].x += _dx;
+    itemList[index].y += _dy;
     undoManager.add({
-      undo: function() {
+      undo: function () {
         Item.dragItem(-_dx, -_dy, _item);
       },
-      redo: function() {
+      redo: function () {
         Item.dragItem(_dx, _dy, _item);
       }
     });
   }
 
-  static resizeItem(_dx, _dy, _dw, _dh, _item){
-    const index = items.indexOf(_item);
-    items[index].x += _dx;
-    items[index].y += _dy;
-    if(items[index].name.startsWith('Rectangle')){
-      items[index].h += _dh;
-      items[index].w += _dw;
+  static resizeItem(_dx, _dy, _dw, _dh, _item) {
+    const index = itemList.indexOf(_item);
+    itemList[index].x += _dx;
+    itemList[index].y += _dy;
+    if (itemList[index].name.startsWith('Rectangle')) {
+      itemList[index].h += _dh;
+      itemList[index].w += _dw;
     }
-    else if(items[index].name.startsWith('Line')){
-      items[index].l += _dw;
+    else if (itemList[index].name.startsWith('Line')) {
+      itemList[index].l += _dw;
     }
-    items[index].swidth += _dw;
-    items[index].sheight += _dh;
+    itemList[index].swidth += _dw;
+    itemList[index].sheight += _dh;
     undoManager.add({
-      undo: function() {
+      undo: function () {
         Item.resizeItem(-_dx, -_dy, -_dw, -_dh, _item);
       },
-      redo: function() {
+      redo: function () {
         Item.resizeItem(_dx, _dy, _dw, _dh, _item);
       }
     });
   }
-  
-  static rotateItem(_da, _item){
-    const index = items.indexOf(_item);
-    items[index].angle += _da;
+
+  static rotateItem(_da, _item) {
+    const index = itemList.indexOf(_item);
+    itemList[index].angle += _da;
     undoManager.add({
-      undo: function() {
+      undo: function () {
         Item.rotateItem(-_da, _item);
       },
-      redo: function() {
+      redo: function () {
         Item.rotateItem(_da, _item);
       }
     });
   }
 
-  static drawItem(_item){
-    if(_item.name.startsWith('Rectangle')) {
+  static drawItem(_item) {
+    if (_item.name.startsWith('Rectangle')) {
       p.push();
       p.strokeWeight(3);
       p.stroke(_item.strokeColor);
       p.fill(_item.fillColor);
-      if(_item.noFill) p.noFill();
-      if(_item.noStroke) p.noStroke();
-      p.rectMode(p.CENTER); 
+      if (_item.noFill) p.noFill();
+      if (_item.noStroke) p.noStroke();
+      p.rectMode(p.CENTER);
       p.translate(_item.x, _item.y);
       p.angleMode(p.DEGREES);
       p.rotate(_item.angle);
@@ -177,18 +178,18 @@ class Item {
         _item.topLeftRadius, _item.topRightRadius, _item.bottomRightRadius, _item.bottomLeftRadius);
       p.pop();
     }
-    else if(_item.name.startsWith('Line')) {
+    else if (_item.name.startsWith('Line')) {
       p.push();
       p.strokeWeight(_item.w);
       p.stroke(_item.color);
-      p.rectMode(p.CENTER); 
+      p.rectMode(p.CENTER);
       p.translate(_item.x, _item.y);
       p.angleMode(p.DEGREES);
       p.rotate(_item.angle);
-      p.rect(0,0,_item.l,1);
+      p.rect(0, 0, _item.l, 1);
       p.pop();
     }
-    else if(_item.name.startsWith('Table')) {
+    else if (_item.name.startsWith('Table')) {
       p.push();
       p.imageMode(p.CENTER);
       p.translate(_item.x, _item.y);
@@ -196,22 +197,22 @@ class Item {
       p.rotate(_item.angle)
       p.image(tableimg, 0, 0, 100, 73);
       // draw chairs arranged in a circle
-      for(let i = 0; i < _item.numPlace; i++) {
+      for (let i = 0; i < _item.numPlace; i++) {
 
         let angle = p.TWO_PI / _item.numPlace * i;
         let x = p.cos(angle) * 55;
         let y = p.sin(angle) * 55;
 
-        switch(_item.typeChair) {
+        switch (_item.typeChair) {
 
           case 'chair':
-          //p5: The push() function saves the current drawing style settings and transformations, while pop() restores these settings
+            //p5: The push() function saves the current drawing style settings and transformations, while pop() restores these settings
             p.push();
             p.imageMode(p.CENTER);
             p.translate(x, y);
             p.angleMode(p.RADIANS);
-            p.rotate(angle+p.PI/2);
-            p.image(chairimg,0, 0, 200, 130);
+            p.rotate(angle + p.PI / 2);
+            p.image(chairimg, 0, 0, 200, 130);
             p.pop();
             break;
 
@@ -220,15 +221,15 @@ class Item {
             p.imageMode(p.CENTER);
             p.translate(x, y);
             p.angleMode(p.RADIANS);
-            p.rotate(angle+p.PI/2);
-            p.image(sofaimg,0, 0, 200, 130);
+            p.rotate(angle + p.PI / 2);
+            p.image(sofaimg, 0, 0, 200, 130);
             p.pop();
             break;
         }
       }
       p.pop();
     }
-    else if(_item.name.startsWith('Door')) {
+    else if (_item.name.startsWith('Door')) {
       p.push();
       p.imageMode(p.CENTER);
       p.translate(_item.x, _item.y);
@@ -237,7 +238,7 @@ class Item {
       p.image(doorimg, 0, 0, 200, 75);
       p.pop();
     }
-    else if(_item.name.startsWith('Window')) {
+    else if (_item.name.startsWith('Window')) {
       p.push();
       p.imageMode(p.CENTER);
       p.translate(_item.x, _item.y);
@@ -246,7 +247,7 @@ class Item {
       p.image(windowimg, 0, 0, 200, 150);
       p.pop();
     }
-    else if(_item.name.startsWith('TV')) {
+    else if (_item.name.startsWith('TV')) {
       p.push();
       p.imageMode(p.CENTER);
       p.translate(_item.x, _item.y);
@@ -255,7 +256,7 @@ class Item {
       p.image(tvimg, 0, 0, 120, 75);
       p.pop();
     }
-    else if(_item.name.startsWith('Toilet')) {
+    else if (_item.name.startsWith('Toilet')) {
       p.push();
       p.imageMode(p.CENTER);
       p.translate(_item.x, _item.y);
@@ -264,7 +265,7 @@ class Item {
       p.image(toiletimg, 0, 0, 55, 70);
       p.pop();
     }
-    else if(_item.name.startsWith('sink')) {
+    else if (_item.name.startsWith('sink')) {
       p.push();
       p.imageMode(p.CENTER);
       p.translate(_item.x, _item.y);
@@ -273,7 +274,7 @@ class Item {
       p.image(sinkimg, 0, 0, 70, 85);
       p.pop();
     }
-    else if(_item.name.startsWith('Text')) {
+    else if (_item.name.startsWith('Text')) {
       p.push();
       p.noStroke();
       p.textSize(_item.size);
@@ -287,4 +288,3 @@ class Item {
   }
 }
 export default Item;
-  

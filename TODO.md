@@ -13,7 +13,7 @@ Project Description
 ### In Progress
 
 - [ ] Select multiple (Hold down Ctrl)  
-- [ ] 'Add Items' button => prevent create separate buttons  
+- [ ] 'Add item' button => prevent create separate buttons  
 
 ### Done ✓
 
