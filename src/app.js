@@ -27,7 +27,9 @@ import handleJsonFile from './Data/handleJsonFile';
 import drawRuler from './utils/drawRuler';
 import handleKeyPressed from './interactions/handleKeyPressed';
 import drawBackground from './utils/drawBackground';
+import saveAsImage from './utils/saveAsImage';
 
+let canv;
 let x1 = 0, y1 = 0, x2 = 0, y2 = 0;
 let diffPositionX;
 let diffPositionY;
@@ -58,6 +60,8 @@ let btnUp;
 let btnDown;
 let btnDelete;
 let btnSave;
+let btnSaveImage;
+let SavingImage = false;
 let btnDownload;
 let btnUpload;
 let fileInput;
@@ -105,7 +109,7 @@ const sketch = (p) => {
     canvasY = 35;
     canvasWidth = p.windowWidth - 191 - canvasX;
     canvasHeight = p.windowHeight - 2 - canvasY;
-    let canv = p.createCanvas(canvasWidth, canvasHeight);
+    canv = p.createCanvas(canvasWidth, canvasHeight);
     canv.position(canvasX, canvasY);
     canv.mousePressed(handleMousePressed);
     canv.mouseMoved(handleMouseDragged);
@@ -124,7 +128,7 @@ const sketch = (p) => {
     createBtnTool('Text', 0, 420, 'Text');
 
     //zoom slider
-    slider = p.createSlider(5, 250, 100, 5);
+    slider = p.createSlider(50, 200, 100, 5);
     slider.position(1, canvasHeight + canvasY - 20);
     slider.style('width', '94px');
     slider.attribute('title', 'zoom');
@@ -151,8 +155,13 @@ const sketch = (p) => {
     btnSave.mousePressed(saveData);
     btnSave.class('topButton');
 
+    btnSaveImage = p.createButton('Save as Image');
+    btnSaveImage.position(canvasX + 33, 5);
+    btnSaveImage.mousePressed(saveAsImage);
+    btnSaveImage.class('topButton');
+
     btnDownload = p.createButton('Download json');
-    btnDownload.position(canvasX + 35, 5);
+    btnDownload.position(canvasX + 137, 5);
     btnDownload.mousePressed(downloadDataAsJson);
     btnDownload.class('topButton');
 
@@ -160,13 +169,13 @@ const sketch = (p) => {
     fileInput = p.createFileInput(handleJsonFile);
     fileInput.hide(); // Hide the file input
     btnUpload = p.createButton('Upload json');
-    btnUpload.position(canvasX + 140, 5);
+    btnUpload.position(canvasX + 238, 5);
     // Trigger click on the file input 
     btnUpload.mousePressed(function () { fileInput.elt.click(); });
     btnUpload.class('topButton');
 
     btnClear = p.createButton('Clear');
-    btnClear.position(canvasX + 227, 5);
+    btnClear.position(canvasX + 322, 5);
     btnClear.mousePressed(function () { p.clearStorage(); itemList = []; activeItem = {}; undoManager = new UndoManager(); refresh(); });
     btnClear.class('topButton');
 
@@ -207,17 +216,24 @@ const sketch = (p) => {
     zoom = slider.value();
     zoomR = 100 / zoom;
 
-    drawBackground();
+    if (!SavingImage) {
+      drawBackground();
 
-    p.push();
-    p.stroke('#2e7bb6');
-    p.text(zoom + '%', 5, canvasHeight - 6);
-    p.pop();
+      p.push();
+      p.stroke('#2e7bb6');
+      p.text(zoom + '%', 5, canvasHeight - 6);
+      p.pop();
+
+      drawRuler();
+    }
+    else {
+      p.push();
+      p.background('#ffffff');
+      p.pop();
+    }
 
     p.push();
     p.scale(zoom / 100);
-
-    drawRuler();
 
     if (!undoManager.hasUndo()) btnUndo.hide();
     else btnUndo.show();
@@ -229,7 +245,7 @@ const sketch = (p) => {
     itemList.forEach(function (_item) {
       if (_item.visibility) {
         Item.drawItem(_item);
-        if (_item.selected) {
+        if (_item.selected && !SavingImage) {
           drawStrokeItem(_item);
           drawResizingCorner(_item);
           drawRotatingCorner(_item);
@@ -240,6 +256,7 @@ const sketch = (p) => {
     if (itemList.length) {
       // Re-enable
       btnSave.removeAttribute('disabled');
+      btnSaveImage.removeAttribute('disabled');
       btnDownload.removeAttribute('disabled');
       btnUp.removeAttribute('disabled');
       btnDown.removeAttribute('disabled');
@@ -249,6 +266,7 @@ const sketch = (p) => {
     else {
       // Disable
       btnSave.attribute('disabled', '');
+      btnSaveImage.attribute('disabled', '');
       btnDownload.attribute('disabled', '');
       btnUp.attribute('disabled', '');
       btnDown.attribute('disabled', '');
@@ -290,7 +308,7 @@ const sketch = (p) => {
 
 new p5(sketch);
 
-export { mySketch, slider, zoomR, itemList, activeItem, tmpItem, id, panel, layers, clickEvent, tmpClickEvent, buttons, undoManager, btnSave };
+export { itemList, activeItem, tmpItem, id, panel, layers, clickEvent, tmpClickEvent, buttons, undoManager, btnSave, SavingImage };
 export { mouseIsDragged, corner, x1, y1, x2, y2, diffPositionX, diffPositionY };
 export { tableimg, chairimg, sofaimg, doorimg, windowimg, sinkimg, toiletimg, tvimg };
-export { canvasWidth, canvasHeight };
+export { mySketch, slider, zoomR, canvasWidth, canvasHeight, canv };

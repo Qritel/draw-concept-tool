@@ -67,6 +67,7 @@ export default function handleMouseReleased() {
     else if (clickEvent == 'Text') {
         let selectedItem = getSelectedItem(mouseXR, mouseYR);
         if (selectedItem && selectedItem.name.startsWith('Text')) {
+            if (activeItem) activeItem.selected = false;
             activeItem = getSelectedItem(mouseXR, mouseYR);
             activeItem.selected = true;
             refresh();
