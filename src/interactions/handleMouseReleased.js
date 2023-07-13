@@ -22,7 +22,7 @@ export default function handleMouseReleased() {
         activeItem.visibility = true;
         clickEvent = tmpClickEvent;
         if (tmpItem.x != activeItem.x || tmpItem.y != activeItem.y) {
-            if (activeItem.name.startsWith('Rectangle'))
+            if (activeItem.name.startsWith('Rectangle') || activeItem.name.startsWith('Ellipse'))
                 Item.resizeItem(tmpItem.x - activeItem.x, tmpItem.y - activeItem.y, tmpItem.w - activeItem.w,
                     tmpItem.h - activeItem.h, activeItem);
             else if (activeItem.name.startsWith('Line'))
@@ -33,11 +33,17 @@ export default function handleMouseReleased() {
         }
         tmpItem = {};
     }
-    else if (x1 && y1 && x2 && y2 && (clickEvent == 'Draw_Rect' || clickEvent == 'Draw_Line')) {
+    else if (x1 && y1 && x2 && y2 && (clickEvent == 'Draw_Rect' || clickEvent == 'Draw_Ellipse' || clickEvent == 'Draw_Line')) {
         if (clickEvent == 'Draw_Rect') {
             itemList.pop();
             Item.addItem(new Item([true, true, itemList.length, 'Rectangle ' + id, x1 + (x2 - x1) / 2, y1 + (y2 - y1) / 2, p.abs(x2 - x1), p.abs(y2 - y1), undefined,
                 0, 0, 0, 0, 0, '#000000', false, '#ffffff', false, undefined, undefined, undefined, undefined, undefined, p.abs(x2 - x1),
+                p.abs(y2 - y1)]));
+        }
+        else if (clickEvent == 'Draw_Ellipse') {
+            itemList.pop();
+            Item.addItem(new Item([true, true, itemList.length, 'Ellipse ' + id, x1 + (x2 - x1) / 2, y1 + (y2 - y1) / 2, p.abs(x2 - x1), p.abs(y2 - y1), undefined,
+                0, undefined, undefined, undefined, undefined, '#000000', false, '#ffffff', false, undefined, undefined, undefined, undefined, undefined, p.abs(x2 - x1),
                 p.abs(y2 - y1)]));
         }
         else if (clickEvent == 'Draw_Line') {

@@ -34,7 +34,7 @@ export default function handleMousePressed() {
         activeItem.visibility = false;
         itemList.splice(activeItem.index, 0, tmpItem);
     }
-    else if (clickEvent == 'Draw_Rect' || clickEvent == 'Draw_Line') {
+    else if (clickEvent == 'Draw_Rect' || clickEvent == 'Draw_Ellipse' || clickEvent == 'Draw_Line') {
         x1 = mouseXR;
         y1 = mouseYR;
     }

@@ -123,12 +123,13 @@ const sketch = (p) => {
 
     createBtnTool('⇱', 0, 60, 'Select');
     createBtnTool('⬛', 0, 100, 'Draw_Rect');
-    createBtnTool('▬▬', 0, 140, 'Draw_Line');
-    createBtnTool('Text', 0, 180, 'Text');
-    createBtnTool('Floor Plan symbols ⮟', 0, 220, 'Floor Plan symbols');
+    createBtnTool('⚫', 0, 140, 'Draw_Ellipse');
+    createBtnTool('▬▬', 0, 180, 'Draw_Line');
+    createBtnTool('Text', 0, 220, 'Text');
+    createBtnTool('Floor Plan symbols ⮟', 0, 260, 'Floor Plan symbols');
     symbolsContainer = p.createDiv();
     symbolsContainer.size(100, 135);
-    symbolsContainer.position(0, 280);
+    symbolsContainer.position(0, 320);
     symbolsContainer.class('symbols_container');
     symbolsContainer.hide();
     addBtnSymbol();

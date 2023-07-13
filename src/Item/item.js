@@ -130,7 +130,7 @@ class Item {
     const index = itemList.indexOf(_item);
     itemList[index].x += _dx;
     itemList[index].y += _dy;
-    if (itemList[index].name.startsWith('Rectangle')) {
+    if (itemList[index].name.startsWith('Rectangle') || itemList[index].name.startsWith('Ellipse')) {
       itemList[index].h += _dh;
       itemList[index].w += _dw;
     }
@@ -176,6 +176,20 @@ class Item {
       p.rotate(_item.angle);
       p.rect(0, 0, _item.w, _item.h,
         _item.topLeftRadius, _item.topRightRadius, _item.bottomRightRadius, _item.bottomLeftRadius);
+      p.pop();
+    }
+    if (_item.name.startsWith('Ellipse')) {
+      p.push();
+      p.strokeWeight(3);
+      p.stroke(_item.strokeColor);
+      p.fill(_item.fillColor);
+      if (_item.noFill) p.noFill();
+      if (_item.noStroke) p.noStroke();
+      p.rectMode(p.CENTER);
+      p.translate(_item.x, _item.y);
+      p.angleMode(p.DEGREES);
+      p.rotate(_item.angle);
+      p.ellipse(0, 0, _item.w, _item.h);
       p.pop();
     }
     else if (_item.name.startsWith('Line')) {

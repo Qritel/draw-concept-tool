@@ -18,17 +18,17 @@ export default function handleMouseDragged() {
                 - (mouseXR - activeItem.x) * p.sin(activeItem.angle) + activeItem.y);
             // For Top and Bottom resize corner.
             if ((corner == 'T' && activeItem.sheight + dragY > 0 || corner == 'B' && activeItem.sheight - dragY > 0)
-                && (activeItem.name.startsWith('Rectangle') || activeItem.name.startsWith('Text'))) {
+                && (activeItem.name.startsWith('Rectangle') || activeItem.name.startsWith('Ellipse') || activeItem.name.startsWith('Text'))) {
                 panel.setValue('y', Number(activeItem.y - dragY / 2 * p.cos(activeItem.angle)).toFixed(2));
                 panel.setValue('x', Number(activeItem.x + dragY / 2 * p.sin(activeItem.angle)).toFixed(2));
                 if (corner == 'T') {
-                    if (activeItem.name.startsWith('Rectangle')) {
+                    if (activeItem.name.startsWith('Rectangle') || activeItem.name.startsWith('Ellipse')) {
                         panel.setValue('h', Number(activeItem.h + dragY).toFixed(2));
                     }
                     tmpItem.sheight = activeItem.sheight + dragY;
                 }
                 else if (corner == 'B') {
-                    if (activeItem.name.startsWith('Rectangle')) {
+                    if (activeItem.name.startsWith('Rectangle') || activeItem.name.startsWith('Ellipse')) {
                         panel.setValue('h', Number(activeItem.h - dragY).toFixed(2));
                     }
                     tmpItem.sheight = activeItem.sheight - dragY;
@@ -40,7 +40,7 @@ export default function handleMouseDragged() {
                 panel.setValue('y', Number(activeItem.y - dragX / 2 * p.sin(activeItem.angle)).toFixed(2));
                 panel.setValue('x', Number(activeItem.x - dragX / 2 * p.cos(activeItem.angle)).toFixed(2));
                 if (corner == 'L') {
-                    if (activeItem.name.startsWith('Rectangle')) {
+                    if (activeItem.name.startsWith('Rectangle') || activeItem.name.startsWith('Ellipse')) {
                         panel.setValue('w', Number(activeItem.w + dragX).toFixed(2));
                     }
                     else if (activeItem.name.startsWith('Line')) {
@@ -49,7 +49,7 @@ export default function handleMouseDragged() {
                     tmpItem.swidth = activeItem.swidth + dragX;
                 }
                 else {
-                    if (activeItem.name.startsWith('Rectangle')) {
+                    if (activeItem.name.startsWith('Rectangle') || activeItem.name.startsWith('Ellipse')) {
                         panel.setValue('w', Number(activeItem.w - dragX).toFixed(2));
                     }
                     else if (activeItem.name.startsWith('Line')) {
@@ -59,13 +59,19 @@ export default function handleMouseDragged() {
                 }
             }
         }
-        else if ((clickEvent == 'Draw_Rect' || clickEvent == 'Draw_Line')) {
+        else if ((clickEvent == 'Draw_Rect' || clickEvent == 'Draw_Ellipse' || clickEvent == 'Draw_Line')) {
             x2 = p.mouseX * zoomR;
             y2 = p.mouseY * zoomR;
             if (clickEvent == 'Draw_Rect') {
                 if (itemList.length && itemList[itemList.length - 1].name === 'Rectangle drawing') itemList.pop();
                 Item.addItem(new Item([true, true, itemList.length, 'Rectangle drawing', x1 + (x2 - x1) / 2, y1 + (y2 - y1) / 2, p.abs(x2 - x1), p.abs(y2 - y1), undefined,
                     0, 0, 0, 0, 0, '#000000', false, '#ffffff', false, undefined, undefined, undefined, undefined, undefined, p.abs(x2 - x1),
+                    p.abs(y2 - y1)]));
+            }
+            if (clickEvent == 'Draw_Ellipse') {
+                if (itemList.length && itemList[itemList.length - 1].name === 'Ellipse drawing') itemList.pop();
+                Item.addItem(new Item([true, true, itemList.length, 'Ellipse drawing', x1 + (x2 - x1) / 2, y1 + (y2 - y1) / 2, p.abs(x2 - x1), p.abs(y2 - y1), undefined,
+                    0, undefined, undefined, undefined, undefined, '#000000', false, '#ffffff', false, undefined, undefined, undefined, undefined, undefined, p.abs(x2 - x1),
                     p.abs(y2 - y1)]));
             }
             if (clickEvent == 'Draw_Line') {
