@@ -15,6 +15,7 @@ import drawResizingCorner from './Item/drawResizingCorner';
 import drawRotatingCorner from './Item/drawRotatingCorner';
 import refresh from './utils/refresh';
 import createBtnTool from './interactions/createBtnTool';
+import addBtnSymbol from './interactions/addBtnSymbol';
 
 import '../styles/quicksettings.css';
 import handleMousePressed from './interactions/handleMousePressed';
@@ -35,6 +36,10 @@ let diffPositionX;
 let diffPositionY;
 let clickEvent = 'Select';
 let tmpClickEvent = '';
+let symbolsContainer;
+let symbolsVisible = false;
+let symbols = ['Door', 'Sink', 'Table', 'Toilet', 'TV', 'Window'];
+let selectedSymbol = 'Door';
 let corner = '';
 let id = 1;
 let canvasWidth;
@@ -119,13 +124,14 @@ const sketch = (p) => {
     createBtnTool('⇱', 0, 60, 'Select');
     createBtnTool('⬛', 0, 100, 'Draw_Rect');
     createBtnTool('▬▬', 0, 140, 'Draw_Line');
-    createBtnTool('Table', 0, 180, 'Table');
-    createBtnTool('Door', 0, 220, 'Door');
-    createBtnTool('Window', 0, 260, 'Window');
-    createBtnTool('TV', 0, 300, 'TV');
-    createBtnTool('Toilet', 0, 340, 'Toilet');
-    createBtnTool('sink', 0, 380, 'sink');
-    createBtnTool('Text', 0, 420, 'Text');
+    createBtnTool('Text', 0, 180, 'Text');
+    createBtnTool('Floor Plan symbols ⮟', 0, 220, 'Floor Plan symbols');
+    symbolsContainer = p.createDiv();
+    symbolsContainer.size(100, 135);
+    symbolsContainer.position(0, 280);
+    symbolsContainer.class('symbols_container');
+    symbolsContainer.hide();
+    addBtnSymbol();
 
     //zoom slider
     slider = p.createSlider(50, 200, 100, 5);
@@ -308,7 +314,8 @@ const sketch = (p) => {
 
 new p5(sketch);
 
-export { itemList, activeItem, tmpItem, id, panel, layers, clickEvent, tmpClickEvent, buttons, undoManager, btnSave, SavingImage };
+export { itemList, activeItem, tmpItem, id, panel, layers, undoManager, btnSave, SavingImage };
+export { clickEvent, tmpClickEvent, symbolsContainer, symbolsVisible, symbols, selectedSymbol, buttons }
 export { mouseIsDragged, corner, x1, y1, x2, y2, diffPositionX, diffPositionY };
 export { tableimg, chairimg, sofaimg, doorimg, windowimg, sinkimg, toiletimg, tvimg };
 export { mySketch, slider, zoomR, canvasWidth, canvasHeight, canv };
