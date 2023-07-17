@@ -76,6 +76,7 @@ let btnClear;
 let itemList = [];
 let tmpItem = {};
 let activeItem = {};
+let copiedItem;
 
 //A panel lists the names of the created items
 let layers;
@@ -315,7 +316,7 @@ const sketch = (p) => {
 
 new p5(sketch);
 
-export { itemList, activeItem, tmpItem, id, panel, layers, undoManager, btnSave, SavingImage };
+export { itemList, activeItem, copiedItem, tmpItem, id, panel, layers, undoManager, btnSave, SavingImage };
 export { clickEvent, tmpClickEvent, symbolsContainer, symbolsVisible, symbols, selectedSymbol, buttons }
 export { mouseIsDragged, corner, x1, y1, x2, y2, diffPositionX, diffPositionY };
 export { tableimg, chairimg, sofaimg, doorimg, windowimg, sinkimg, toiletimg, tvimg };

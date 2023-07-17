@@ -1,4 +1,4 @@
-import { mySketch as p, activeItem, panel, undoManager, slider } from "../app";
+import { mySketch as p, activeItem, copiedItem, zoomR, id, panel, undoManager, slider, itemList } from "../app";
 import Item from '../Item/item';
 import refresh from "../utils/refresh";
 import downloadDataAsJson from "../Data/downloadDataAsJson";
@@ -24,6 +24,26 @@ export default function handleKeyPressed() {
         else if (p.keyIsDown(p.CONTROL) && p.key == '-') {
             slider.value(slider.value() - 10);
             p.redraw();
+        }
+        else if (p.keyIsDown(p.CONTROL) && (p.key == 'c' || p.key == 'C')) {
+            copiedItem = { ...activeItem }; //make a copy of 'activeItem', and store it in the new variable.
+        }
+        else if (p.keyIsDown(p.CONTROL) && (p.key == 'v' || p.key == 'V')) {
+            if (copiedItem) {
+                activeItem.selected = false;
+                copiedItem.index = itemList.length;
+                copiedItem.name = copiedItem.name.replace(/\d+$/, id);
+                copiedItem.x = p.mouseX * zoomR;
+                copiedItem.y = p.mouseY * zoomR;
+                Item.addItem({ ...copiedItem });
+                refresh();
+            }
+
+        }
+        else if (p.keyIsDown(p.CONTROL) && (p.key == 'x' || p.key == 'X')) {
+            copiedItem = { ...activeItem };
+            Item.removeItem(activeItem);
+            refresh();
         }
         else if (p.keyIsDown(p.DELETE)) {
             Item.removeItem(activeItem);

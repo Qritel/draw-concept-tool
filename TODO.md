@@ -12,10 +12,10 @@ Project Description
 
 ### In Progress
 
-- [ ] copy/paste feature (Ctrl + c, Ctrl+ v)  
 
 ### Done ✓
 
+- [x] copy/paste feature (Ctrl + c, Ctrl+ v)  
 - [x] 'Add item' button => prevent create separate buttons  
 - [x] improve user interface design  
 - [x] Add a tooltip to different elements  
