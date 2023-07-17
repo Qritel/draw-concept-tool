@@ -61,11 +61,16 @@ class Item {
     const index = itemList.indexOf(_item);
     if (index > -1) {
       itemList.splice(index, 1);
+      // Update indexes of items after the removed item
+      for (let i = index; i < itemList.length; i++) {
+        itemList[i].index--;
+      }
     }
     if (activeItem === _item) {
       if (itemList.length == 0) activeItem = {};
       else if (index == 0) activeItem = itemList[index];
       else activeItem = itemList[index - 1];
+      activeItem.selected = true;
     }
     if (_item.name && !_item.name.endsWith('drawing')) {
       undoManager.add({
@@ -279,7 +284,7 @@ class Item {
       p.image(toiletimg, 0, 0, 55, 70);
       p.pop();
     }
-    else if (_item.name.startsWith('sink')) {
+    else if (_item.name.startsWith('Sink')) {
       p.push();
       p.imageMode(p.CENTER);
       p.translate(_item.x, _item.y);

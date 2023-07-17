@@ -60,7 +60,7 @@ export default function handleMouseReleased() {
             0, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, 2, 'chair', undefined,
             undefined, 75, 75]));
     }
-    else if (['Door', 'Toilet', 'sink'].includes(clickEvent)) {
+    else if (['Door', 'Toilet', 'Sink'].includes(clickEvent)) {
         Item.addItem(new Item([true, true, itemList.length, clickEvent + ' ' + id, mouseXR, mouseYR, undefined, undefined, undefined,
             0, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined,
             undefined, 75, 75]));

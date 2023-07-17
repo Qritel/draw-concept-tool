@@ -128,7 +128,7 @@ const sketch = (p) => {
     createBtnTool('Text', 0, 220, 'Text');
     createBtnTool('Floor Plan symbols ⮟', 0, 260, 'Floor Plan symbols');
     symbolsContainer = p.createDiv();
-    symbolsContainer.size(100, 135);
+    symbolsContainer.size(100, 178);
     symbolsContainer.position(0, 320);
     symbolsContainer.class('symbols_container');
     symbolsContainer.hide();
