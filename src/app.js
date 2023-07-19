@@ -71,6 +71,7 @@ let btnDownload;
 let btnUpload;
 let fileInput;
 let btnClear;
+let btnHelp;
 
 //An array will contain all the itemList on the map -canvas-
 let itemList = [];
@@ -164,12 +165,12 @@ const sketch = (p) => {
     btnSave.class('topButton');
 
     btnSaveImage = p.createButton('Save as Image');
-    btnSaveImage.position(canvasX + 33, 5);
+    btnSaveImage.position(canvasX + 31, 5);
     btnSaveImage.mousePressed(saveAsImage);
     btnSaveImage.class('topButton');
 
     btnDownload = p.createButton('Download json');
-    btnDownload.position(canvasX + 137, 5);
+    btnDownload.position(canvasX + 133, 5);
     btnDownload.mousePressed(downloadDataAsJson);
     btnDownload.class('topButton');
 
@@ -177,15 +178,32 @@ const sketch = (p) => {
     fileInput = p.createFileInput(handleJsonFile);
     fileInput.hide(); // Hide the file input
     btnUpload = p.createButton('Upload json');
-    btnUpload.position(canvasX + 238, 5);
+    btnUpload.position(canvasX + 232, 5);
     // Trigger click on the file input 
     btnUpload.mousePressed(function () { fileInput.elt.click(); });
     btnUpload.class('topButton');
 
     btnClear = p.createButton('Clear');
-    btnClear.position(canvasX + 322, 5);
+    btnClear.position(canvasX + 314, 5);
     btnClear.mousePressed(function () { p.clearStorage(); itemList = []; activeItem = {}; undoManager = new UndoManager(); refresh(); });
     btnClear.class('topButton');
+
+    btnHelp = p.createButton('Help');
+    btnHelp.position(canvasX + 358, 5);
+    btnHelp.mousePressed(function () {
+      alert("🛈 Shortcuts & Tips 🛈\n\n" +
+        "Ctrl + C: Copy\n" +
+        "Ctrl + X: Cut\n" +
+        "Ctrl + V: Paste\n" +
+        "Ctrl + Z: Undo\n" +
+        "Ctrl + Y: Redo\n" +
+        "Ctrl + S: Save\n" +
+        "Ctrl + +: Zoom In\n" +
+        "Ctrl + -: Zoom Out\n" +
+        "DELETE: Delete Item\n\n" +
+        "Explore these shortcuts to enhance your productivity!");
+    });
+    btnHelp.class('topButton');
 
     btnUp = p.createButton('🡡');
     btnUp.position(canvasWidth, 5);
