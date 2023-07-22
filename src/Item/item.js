@@ -26,9 +26,10 @@ class Item {
     this.numPlace = array[19];
     this.typeChair = array[20];
     this.inputText = array[21];
-    this.size = array[22];
-    this.swidth = array[23];
-    this.sheight = array[24];
+    this.textStyle = array[22]
+    this.size = array[23];
+    this.swidth = array[24];
+    this.sheight = array[25];
   }
 
   static loadItems(_savedData) {
@@ -297,6 +298,20 @@ class Item {
       p.push();
       p.noStroke();
       p.textSize(_item.size);
+      switch (_item.textStyle) {
+        case 'normal':
+          p.textStyle(p.NORMAL);
+          break;
+        case 'italic':
+          p.textStyle(p.ITALIC);
+          break;
+        case 'bold':
+          p.textStyle(p.BOLD);
+          break;
+        case 'bold & italic':
+          p.textStyle(p.BOLDITALIC);
+          break;
+      }
       p.fill(_item.color);
       p.translate(_item.x, _item.y);
       p.angleMode(p.DEGREES);

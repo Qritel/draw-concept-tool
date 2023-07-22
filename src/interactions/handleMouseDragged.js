@@ -65,20 +65,20 @@ export default function handleMouseDragged() {
             if (clickEvent == 'Draw_Rect') {
                 if (itemList.length && itemList[itemList.length - 1].name === 'Rectangle drawing') itemList.pop();
                 Item.addItem(new Item([true, true, itemList.length, 'Rectangle drawing', x1 + (x2 - x1) / 2, y1 + (y2 - y1) / 2, p.abs(x2 - x1), p.abs(y2 - y1), undefined,
-                    0, 0, 0, 0, 0, '#000000', false, '#ffffff', false, undefined, undefined, undefined, undefined, undefined, p.abs(x2 - x1),
+                    0, 0, 0, 0, 0, '#000000', false, '#ffffff', false, undefined, undefined, undefined, undefined, undefined, undefined, p.abs(x2 - x1),
                     p.abs(y2 - y1)]));
             }
             if (clickEvent == 'Draw_Ellipse') {
                 if (itemList.length && itemList[itemList.length - 1].name === 'Ellipse drawing') itemList.pop();
                 Item.addItem(new Item([true, true, itemList.length, 'Ellipse drawing', x1 + (x2 - x1) / 2, y1 + (y2 - y1) / 2, p.abs(x2 - x1), p.abs(y2 - y1), undefined,
-                    0, undefined, undefined, undefined, undefined, '#000000', false, '#ffffff', false, undefined, undefined, undefined, undefined, undefined, p.abs(x2 - x1),
-                    p.abs(y2 - y1)]));
+                    0, undefined, undefined, undefined, undefined, '#000000', false, '#ffffff', false, undefined, undefined, undefined, undefined, undefined, undefined,
+                    p.abs(x2 - x1), p.abs(y2 - y1)]));
             }
             if (clickEvent == 'Draw_Line') {
                 if (itemList.length && itemList[itemList.length - 1].name === 'Line drawing') itemList.pop();
                 Item.addItem(new Item([true, true, itemList.length, 'Line drawing', x1 + (x2 - x1) / 2, y1 + (y2 - y1) / 2, 2, undefined,
                     Number(p.sqrt((x1 - x2) * (x1 - x2) + (y1 - y2) * (y1 - y2))).toFixed(2), p.atan((y2 - y1) / (x2 - x1)), undefined, undefined, undefined, undefined, undefined,
-                    undefined, undefined, undefined, '#000000', undefined, undefined, undefined, undefined,
+                    undefined, undefined, undefined, '#000000', undefined, undefined, undefined, undefined, undefined,
                     p.sqrt((x1 - x2) * (x1 - x2) + (y1 - y2) * (y1 - y2)), 7]));
             }
             p.draw();

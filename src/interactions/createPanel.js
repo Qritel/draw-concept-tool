@@ -2,7 +2,7 @@ import QuickSettings from 'quicksettings';
 import { mySketch, panel } from '../app';
 
 export default function createPanel(_item) {
-  
+
   if (!_item) {
     _item = {};
   }
@@ -36,6 +36,7 @@ export default function createPanel(_item) {
   panel.bindDropDown('typeChair', ['chair', 'sofa'], _item);
   panel.bindTextArea('inputText', _item.inputText, _item);
   panel.bindRange('size', 0, 100, _item.size, 1, _item);
+  panel.bindDropDown('textStyle', ['normal', 'italic', 'bold', 'bold & italic'], _item);
 
   for (let control in panel._controls) {
     if (!Object.keys(_item).includes(control)) {
