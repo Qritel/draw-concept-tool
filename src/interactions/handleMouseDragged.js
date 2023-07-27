@@ -25,13 +25,11 @@ export default function handleMouseDragged() {
                     if (activeItem.name.startsWith('Rectangle') || activeItem.name.startsWith('Ellipse')) {
                         panel.setValue('h', Number(activeItem.h + dragY).toFixed(2));
                     }
-                    tmpItem.sheight = activeItem.sheight + dragY;
                 }
                 else if (corner == 'B') {
                     if (activeItem.name.startsWith('Rectangle') || activeItem.name.startsWith('Ellipse')) {
                         panel.setValue('h', Number(activeItem.h - dragY).toFixed(2));
                     }
-                    tmpItem.sheight = activeItem.sheight - dragY;
                 }
             }
             // For Left and Right resize corner.
@@ -46,7 +44,6 @@ export default function handleMouseDragged() {
                     else if (activeItem.name.startsWith('Line')) {
                         panel.setValue('l', Number(activeItem.l + dragX).toFixed(2));
                     }
-                    tmpItem.swidth = activeItem.swidth + dragX;
                 }
                 else {
                     if (activeItem.name.startsWith('Rectangle') || activeItem.name.startsWith('Ellipse')) {
@@ -55,7 +52,6 @@ export default function handleMouseDragged() {
                     else if (activeItem.name.startsWith('Line')) {
                         panel.setValue('l', Number(activeItem.l - dragX).toFixed(2));
                     }
-                    tmpItem.swidth = activeItem.swidth - dragX;
                 }
             }
         }

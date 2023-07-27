@@ -19,9 +19,9 @@ export default function createPanel(_item) {
 
   panel.bindNumber('x', 0, mySketch.windowWidth, Number(_item.x).toFixed(2), 1, _item);
   panel.bindNumber('y', 0, mySketch.windowHeight, Number(_item.y).toFixed(2), 1, _item);
-  panel.bindNumber('w', 0, mySketch.windowWidth, Number(_item.w).toFixed(2), 1, _item);
-  panel.bindNumber('h', 0, mySketch.windowHeight, Number(_item.h).toFixed(2), 1, _item);
-  panel.bindNumber('l', 0, mySketch.windowHeight, Number(_item.l).toFixed(2), 1, _item);
+  panel.addNumber('w', 0, mySketch.windowWidth, Number(_item.w).toFixed(2), 1, function (value) { _item.swidth = value; _item.w = value;});
+  panel.addNumber('h', 0, mySketch.windowHeight, Number(_item.h).toFixed(2), 1, function (value) { _item.sheight = value; _item.h = value; });
+  panel.addNumber('l', 0, mySketch.windowHeight, Number(_item.l).toFixed(2), 1, function (value) { _item.swidth = value; _item.l = value;});
   panel.bindRange('angle', -180, 180, _item.angle, 1, _item);
   panel.bindRange('topLeftRadius', 0, Math.min(_item.w, _item.h) / 2, _item.topLeftRadius, 1, _item);
   panel.bindRange('topRightRadius', 0, Math.min(_item.w, _item.h) / 2, _item.topRightRadius, 1, _item);
