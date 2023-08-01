@@ -12,24 +12,26 @@ class Item {
     this.y = array[5];
     this.w = array[6];
     this.h = array[7];
-    this.l = array[8];
-    this.angle = array[9];
-    this.topLeftRadius = array[10];
-    this.topRightRadius = array[11];
-    this.bottomRightRadius = array[12];
-    this.bottomLeftRadius = array[13];
-    this.strokeColor = array[14];
-    this.noStroke = array[15];
-    this.fillColor = array[16];
-    this.noFill = array[17];
-    this.color = array[18];
-    this.numPlace = array[19];
-    this.typeChair = array[20];
-    this.inputText = array[21];
-    this.textStyle = array[22]
-    this.size = array[23];
-    this.swidth = array[24];
-    this.sheight = array[25];
+    this.strokeWeight = array[8];
+    this.l = array[9];
+    this.angle = array[10];
+    this.topLeftRadius = array[11];
+    this.topRightRadius = array[12];
+    this.bottomRightRadius = array[13];
+    this.bottomLeftRadius = array[14];
+    this.strokeColor = array[15];
+    this.noStroke = array[16];
+    this.fillColor = array[17];
+    this.noFill = array[18];
+    this.color = array[19];
+    this.numPlace = array[20];
+    this.typeChair = array[21];
+    this.inputText = array[22];
+    this.textStyle = array[23]
+    this.size = array[24];
+    this.type = array[25];
+    this.swidth = array[26];
+    this.sheight = array[27];
   }
 
   static loadItems(_savedData) {
@@ -171,7 +173,7 @@ class Item {
   static drawItem(_item) {
     if (_item.name.startsWith('Rectangle')) {
       p.push();
-      p.strokeWeight(3);
+      p.strokeWeight(_item.strokeWeight);
       p.stroke(_item.strokeColor);
       p.fill(_item.fillColor);
       if (_item.noFill) p.noFill();
@@ -186,7 +188,7 @@ class Item {
     }
     if (_item.name.startsWith('Ellipse')) {
       p.push();
-      p.strokeWeight(3);
+      p.strokeWeight(_item.strokeWeight);
       p.stroke(_item.strokeColor);
       p.fill(_item.fillColor);
       if (_item.noFill) p.noFill();
@@ -200,13 +202,26 @@ class Item {
     }
     else if (_item.name.startsWith('Line')) {
       p.push();
-      p.strokeWeight(_item.w);
+      p.strokeWeight(_item.strokeWeight);
       p.stroke(_item.color);
       p.rectMode(p.CENTER);
       p.translate(_item.x, _item.y);
       p.angleMode(p.DEGREES);
       p.rotate(_item.angle);
       p.rect(0, 0, _item.l, 1);
+      p.fill(_item.color);
+      switch (_item.type) {
+        case 'leftwards arrow':
+          p.triangle(-_item.l / 2, -5, -_item.l / 2, 5, -_item.l / 2 - 15, 0);
+          break;
+        case 'rightwards arrow':
+          p.triangle(_item.l / 2, -5, _item.l / 2, 5, _item.l / 2 + 15, 0);
+          break;
+        case 'left right arrow':
+          p.triangle(_item.l / 2, -5, _item.l / 2, 5, _item.l / 2 + 15, 0);
+          p.triangle(-_item.l / 2, -5, -_item.l / 2, 5, -_item.l / 2 - 15, 0);
+          break;
+      }
       p.pop();
     }
     else if (_item.name.startsWith('Table')) {
