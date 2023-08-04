@@ -51,7 +51,7 @@ export default function handleMousePressed() {
         diffPositionY = mouseYR - panel.getValue('y') + 0.01;
         p.cursor(p.MOVE);
     }
-    else if (!selectedItem) {
+    else if (!selectedItem && activeItem) {
         activeItem.selected = false;
         p.draw();
     }

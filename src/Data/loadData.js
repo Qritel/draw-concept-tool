@@ -11,6 +11,7 @@ export default function loadData() {
         let savedItems = JSON.parse(savedItemsString);
 
         Item.loadItems(savedItems);
+        savedItems.forEach(SItem => SItem.selected = false);
         activeItem = savedItems[savedItems.length - 1];
         clickEvent = 'Select';
     }

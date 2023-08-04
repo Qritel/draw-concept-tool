@@ -17,19 +17,14 @@ export default function handleMouseDragged() {
             let dragY = diffPositionY + activeItem.y - ((mouseYR - activeItem.y) * p.cos(activeItem.angle)
                 - (mouseXR - activeItem.x) * p.sin(activeItem.angle) + activeItem.y);
             // For Top and Bottom resize corner.
-            if ((corner == 'T' && activeItem.sheight + dragY > 0 || corner == 'B' && activeItem.sheight - dragY > 0)
-                && (activeItem.name.startsWith('Rectangle') || activeItem.name.startsWith('Ellipse') || activeItem.name.startsWith('Text'))) {
+            if ((corner == 'T' && activeItem.sheight + dragY > 0 || corner == 'B' && activeItem.sheight - dragY > 0)) {
                 panel.setValue('y', Number(activeItem.y - dragY / 2 * p.cos(activeItem.angle)).toFixed(2));
                 panel.setValue('x', Number(activeItem.x + dragY / 2 * p.sin(activeItem.angle)).toFixed(2));
                 if (corner == 'T') {
-                    if (activeItem.name.startsWith('Rectangle') || activeItem.name.startsWith('Ellipse')) {
-                        panel.setValue('h', Number(activeItem.h + dragY).toFixed(2));
-                    }
+                    panel.setValue('h', Number(activeItem.h + dragY).toFixed(2));
                 }
                 else if (corner == 'B') {
-                    if (activeItem.name.startsWith('Rectangle') || activeItem.name.startsWith('Ellipse')) {
-                        panel.setValue('h', Number(activeItem.h - dragY).toFixed(2));
-                    }
+                    panel.setValue('h', Number(activeItem.h - dragY).toFixed(2));
                 }
             }
             // For Left and Right resize corner.
@@ -38,7 +33,7 @@ export default function handleMouseDragged() {
                 panel.setValue('y', Number(activeItem.y - dragX / 2 * p.sin(activeItem.angle)).toFixed(2));
                 panel.setValue('x', Number(activeItem.x - dragX / 2 * p.cos(activeItem.angle)).toFixed(2));
                 if (corner == 'L') {
-                    if (activeItem.name.startsWith('Rectangle') || activeItem.name.startsWith('Ellipse')) {
+                    if (activeItem.name.startsWith('Rectangle') || activeItem.name.startsWith('Ellipse') || activeItem.name.startsWith('Text')) {
                         panel.setValue('w', Number(activeItem.w + dragX).toFixed(2));
                     }
                     else if (activeItem.name.startsWith('Line')) {
@@ -46,7 +41,7 @@ export default function handleMouseDragged() {
                     }
                 }
                 else {
-                    if (activeItem.name.startsWith('Rectangle') || activeItem.name.startsWith('Ellipse')) {
+                    if (activeItem.name.startsWith('Rectangle') || activeItem.name.startsWith('Ellipse') || activeItem.name.startsWith('Text')) {
                         panel.setValue('w', Number(activeItem.w - dragX).toFixed(2));
                     }
                     else if (activeItem.name.startsWith('Line')) {
@@ -62,20 +57,20 @@ export default function handleMouseDragged() {
                 if (itemList.length && itemList[itemList.length - 1].name === 'Rectangle drawing') itemList.pop();
                 Item.addItem(new Item([true, true, itemList.length, 'Rectangle drawing', x1 + (x2 - x1) / 2, y1 + (y2 - y1) / 2, p.abs(x2 - x1), p.abs(y2 - y1), 3, undefined,
                     0, 0, 0, 0, 0, '#000000', false, '#ffffff', false, undefined, undefined, undefined, undefined, undefined, undefined, undefined, p.abs(x2 - x1),
-                    p.abs(y2 - y1)]));
+                    p.abs(y2 - y1), 0]));
             }
             if (clickEvent == 'Draw_Ellipse') {
                 if (itemList.length && itemList[itemList.length - 1].name === 'Ellipse drawing') itemList.pop();
                 Item.addItem(new Item([true, true, itemList.length, 'Ellipse drawing', x1 + (x2 - x1) / 2, y1 + (y2 - y1) / 2, p.abs(x2 - x1), p.abs(y2 - y1), 3, undefined,
                     0, undefined, undefined, undefined, undefined, '#000000', false, '#ffffff', false, undefined, undefined, undefined, undefined, undefined, undefined,
-                    undefined, p.abs(x2 - x1), p.abs(y2 - y1)]));
+                    undefined, p.abs(x2 - x1), p.abs(y2 - y1), 0]));
             }
             if (clickEvent == 'Draw_Line') {
                 if (itemList.length && itemList[itemList.length - 1].name === 'Line drawing') itemList.pop();
                 Item.addItem(new Item([true, true, itemList.length, 'Line drawing', x1 + (x2 - x1) / 2, y1 + (y2 - y1) / 2, undefined, undefined, 2,
                     Number(p.sqrt((x1 - x2) * (x1 - x2) + (y1 - y2) * (y1 - y2))).toFixed(2), p.atan((y2 - y1) / (x2 - x1)), undefined, undefined, undefined, undefined, undefined,
                     undefined, undefined, undefined, '#000000', undefined, undefined, undefined, undefined, undefined, "Line",
-                    p.sqrt((x1 - x2) * (x1 - x2) + (y1 - y2) * (y1 - y2)), 7]));
+                    p.sqrt((x1 - x2) * (x1 - x2) + (y1 - y2) * (y1 - y2)), 7, 0]));
             }
             p.draw();
         }

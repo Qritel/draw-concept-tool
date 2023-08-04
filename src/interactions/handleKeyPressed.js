@@ -53,7 +53,7 @@ export default function handleKeyPressed() {
             p.loop();
         }
         //update the 'Text' value.
-        else if (activeItem.selected == true && activeItem.name.startsWith('Text')) {
+        else if (activeItem && activeItem.selected == true && activeItem.name.startsWith('Text')) {
             if (p.keyCode === 13) { // Enter key
                 panel.setValue('inputText', activeItem.inputText + '\n');
             } else if (p.keyCode === 8) { // Backspace key

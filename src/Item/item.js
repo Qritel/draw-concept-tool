@@ -32,6 +32,7 @@ class Item {
     this.type = array[25];
     this.swidth = array[26];
     this.sheight = array[27];
+    this.dash = array[28];
   }
 
   static loadItems(_savedData) {
@@ -138,7 +139,7 @@ class Item {
     const index = itemList.indexOf(_item);
     itemList[index].x += _dx;
     itemList[index].y += _dy;
-    if (itemList[index].name.startsWith('Rectangle') || itemList[index].name.startsWith('Ellipse')) {
+    if (itemList[index].name.startsWith('Rectangle') || itemList[index].name.startsWith('Ellipse') || itemList[index].name.startsWith('Text')) {
       itemList[index].h += _dh;
       itemList[index].w += _dw;
     }
@@ -178,6 +179,7 @@ class Item {
       p.fill(_item.fillColor);
       if (_item.noFill) p.noFill();
       if (_item.noStroke) p.noStroke();
+      p.drawingContext.setLineDash([_item.dash, _item.dash]);
       p.rectMode(p.CENTER);
       p.translate(_item.x, _item.y);
       p.angleMode(p.DEGREES);
@@ -193,6 +195,7 @@ class Item {
       p.fill(_item.fillColor);
       if (_item.noFill) p.noFill();
       if (_item.noStroke) p.noStroke();
+      p.drawingContext.setLineDash([_item.dash, _item.dash]);
       p.rectMode(p.CENTER);
       p.translate(_item.x, _item.y);
       p.angleMode(p.DEGREES);
@@ -203,13 +206,14 @@ class Item {
     else if (_item.name.startsWith('Line')) {
       p.push();
       p.strokeWeight(_item.strokeWeight);
+      p.drawingContext.setLineDash([_item.dash, _item.dash]);
       p.stroke(_item.color);
-      p.rectMode(p.CENTER);
       p.translate(_item.x, _item.y);
       p.angleMode(p.DEGREES);
       p.rotate(_item.angle);
-      p.rect(0, 0, _item.l, 1);
+      p.line(-_item.l / 2, 0, _item.l / 2, 0);
       p.fill(_item.color);
+      p.drawingContext.setLineDash([]);
       switch (_item.type) {
         case 'leftwards arrow':
           p.triangle(-_item.l / 2, -5, -_item.l / 2, 5, -_item.l / 2 - 15, 0);

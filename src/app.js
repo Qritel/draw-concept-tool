@@ -75,8 +75,8 @@ let btnHelp;
 
 //An array will contain all the itemList on the map -canvas-
 let itemList = [];
-let tmpItem = {};
-let activeItem = {};
+let tmpItem;
+let activeItem;
 let copiedItem;
 
 //A panel lists the names of the created items
@@ -185,7 +185,7 @@ const sketch = (p) => {
 
     btnClear = p.createButton('Clear');
     btnClear.position(canvasX + 314, 5);
-    btnClear.mousePressed(function () { p.clearStorage(); itemList = []; activeItem = {}; undoManager = new UndoManager(); refresh(); });
+    btnClear.mousePressed(function () { p.clearStorage(); itemList = []; activeItem = undefined; undoManager = new UndoManager(); refresh(); });
     btnClear.class('topButton');
 
     btnHelp = p.createButton('Help');

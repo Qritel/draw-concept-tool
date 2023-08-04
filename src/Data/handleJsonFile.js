@@ -12,7 +12,9 @@ export default function handleJsonFile(file) {
         let uploadedItems = JSON.parse(uploadedItemsString);
 
         Item.loadItems(uploadedItems);
+        uploadedItems.forEach(UItem => UItem.selected = false);
         activeItem = uploadedItems[uploadedItems.length - 1];
+        clickEvent = 'Select';
         undoManager = new UndoManager();
         refresh();
     }

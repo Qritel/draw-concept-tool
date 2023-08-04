@@ -2,7 +2,7 @@ import { mySketch, itemList } from "../app";
 
 //This function determines which corner of '_activeItem', the mouse is currently hovering over.
 export default function getResizingCorner(_activeItem, _mouseX, _mouseY) {
-  if (!itemList.length) return false;
+  if (!itemList.length && !_activeItem) return false;
   let corner;
   // This formula uses trigonometry to apply a rotation to the mouse coordinates and then translates them back to the original coordinate system.
   let xPrime = (_mouseX - _activeItem.x) * mySketch.cos(_activeItem.angle) + (_mouseY - _activeItem.y) * mySketch.sin(_activeItem.angle) + _activeItem.x;
