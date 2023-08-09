@@ -9,7 +9,7 @@ export default function getResizingCorner(_activeItem, _mouseX, _mouseY) {
   let yPrime = (_mouseY - _activeItem.y) * mySketch.cos(_activeItem.angle) - (_mouseX - _activeItem.x) * mySketch.sin(_activeItem.angle) + _activeItem.y;
 
   if (_activeItem.name.startsWith('Rectangle') || _activeItem.name.startsWith('Ellipse') || _activeItem.name.startsWith('Line')
-    || _activeItem.name.startsWith('Text')) {
+    || _activeItem.name.startsWith('Text') || _activeItem.name.startsWith('Img')) {
     if (xPrime < _activeItem.x + 10 && xPrime > _activeItem.x - 10 && yPrime < _activeItem.y - _activeItem.sheight / 2 + 10
       && yPrime > _activeItem.y - _activeItem.sheight / 2 - 10) {
       corner = 'T'; // top corner.

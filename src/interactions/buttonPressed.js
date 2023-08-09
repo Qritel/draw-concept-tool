@@ -1,4 +1,4 @@
-import { mySketch as p, clickEvent, buttons, symbols, symbolsVisible, selectedSymbol } from "../app";
+import { mySketch as p, clickEvent, buttons, symbols, symbolsVisible, selectedSymbol, fileInput } from "../app";
 import toggleSymbols from "../utils/toggleSymbols";
 
 
@@ -32,6 +32,10 @@ export default function buttonPressed(_id) {
         if (symbolsVisible) {
             buttonPressed(selectedSymbol);
         }
+    }
+
+    if (_id == 'Img') {
+        fileInput.elt.click();
     }
 
     if (clickEvent == 'Select') {

@@ -22,7 +22,8 @@ export default function handleMouseReleased() {
         activeItem.visibility = true;
         clickEvent = tmpClickEvent;
         if (tmpItem.x != activeItem.x || tmpItem.y != activeItem.y) {
-            if (activeItem.name.startsWith('Rectangle') || activeItem.name.startsWith('Ellipse') || activeItem.name.startsWith('Text'))
+            if (activeItem.name.startsWith('Rectangle') || activeItem.name.startsWith('Ellipse') || activeItem.name.startsWith('Text')
+                || activeItem.name.startsWith('Img'))
                 Item.resizeItem(tmpItem.x - activeItem.x, tmpItem.y - activeItem.y, tmpItem.w - activeItem.w,
                     tmpItem.h - activeItem.h, activeItem);
             else if (activeItem.name.startsWith('Line'))
@@ -35,37 +36,37 @@ export default function handleMouseReleased() {
             itemList.pop();
             Item.addItem(new Item([true, true, itemList.length, 'Rectangle ' + id, x1 + (x2 - x1) / 2, y1 + (y2 - y1) / 2, p.abs(x2 - x1), p.abs(y2 - y1), 3, undefined,
                 0, 0, 0, 0, 0, '#000000', false, '#ffffff', false, undefined, undefined, undefined, undefined, undefined, undefined, undefined, p.abs(x2 - x1),
-                p.abs(y2 - y1), 0]));
+                p.abs(y2 - y1), 0, undefined]));
         }
         else if (clickEvent == 'Draw_Ellipse') {
             itemList.pop();
             Item.addItem(new Item([true, true, itemList.length, 'Ellipse ' + id, x1 + (x2 - x1) / 2, y1 + (y2 - y1) / 2, p.abs(x2 - x1), p.abs(y2 - y1), 3, undefined,
                 0, undefined, undefined, undefined, undefined, '#000000', false, '#ffffff', false, undefined, undefined, undefined, undefined, undefined, undefined,
-                undefined, p.abs(x2 - x1), p.abs(y2 - y1), 0]));
+                undefined, p.abs(x2 - x1), p.abs(y2 - y1), 0, undefined]));
         }
         else if (clickEvent == 'Draw_Line') {
             itemList.pop();
             Item.addItem(new Item([true, true, itemList.length, 'Line ' + id, x1 + (x2 - x1) / 2, y1 + (y2 - y1) / 2, undefined, undefined, 2,
                 p.sqrt((x1 - x2) * (x1 - x2) + (y1 - y2) * (y1 - y2)), p.atan((y2 - y1) / (x2 - x1)), undefined, undefined, undefined, undefined,
                 undefined, undefined, undefined, undefined, '#000000', undefined, undefined, undefined, undefined, undefined, "Line",
-                p.sqrt((x1 - x2) * (x1 - x2) + (y1 - y2) * (y1 - y2)), 7, 0]));
+                p.sqrt((x1 - x2) * (x1 - x2) + (y1 - y2) * (y1 - y2)), 7, 0, undefined]));
         }
         x1 = 0, y1 = 0, x2 = 0, y2 = 0;
     }
     else if (clickEvent == 'Table') {
         Item.addItem(new Item([true, true, itemList.length, 'Table ' + id, mouseXR, mouseYR, undefined, undefined, undefined, undefined,
             0, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, 2, 'chair', undefined,
-            undefined, undefined, undefined, 75, 75, 0]));
+            undefined, undefined, undefined, 75, 75, undefined, undefined]));
     }
     else if (['Door', 'Toilet', 'Sink'].includes(clickEvent)) {
         Item.addItem(new Item([true, true, itemList.length, clickEvent + ' ' + id, mouseXR, mouseYR, undefined, undefined, undefined, undefined,
             0, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined,
-            undefined, undefined, undefined, 75, 75, 0]));
+            undefined, undefined, undefined, 75, 75, undefined, undefined]));
     }
     else if (['Window', 'TV'].includes(clickEvent)) {
         Item.addItem(new Item([true, true, itemList.length, clickEvent + ' ' + id, mouseXR, mouseYR, undefined, undefined, undefined, undefined,
             0, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined,
-            undefined, undefined, undefined, 155, 25, 0]));
+            undefined, undefined, undefined, 155, 25, undefined, undefined]));
     }
     else if (clickEvent == 'Text') {
         let selectedItem = getSelectedItem(mouseXR, mouseYR);
@@ -78,7 +79,7 @@ export default function handleMouseReleased() {
         else {
             Item.addItem(new Item([true, true, itemList.length, 'Text ' + id, mouseXR, mouseYR, 165, 25, undefined, undefined,
                 0, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, '#000000', undefined, undefined,
-                '', 'NORMAL', 18, undefined, 165, 25, 0]));
+                '', 'NORMAL', 18, undefined, 165, 25, undefined, undefined]));
         }
     }
     else if (diffPositionX && diffPositionY && itemList.length && clickEvent == 'Select') {

@@ -1,4 +1,4 @@
-import { itemList, activeItem, id, mySketch as p } from "../app";
+import { itemList, activeItem, id, imageMap, mySketch as p } from "../app";
 import { tableimg, chairimg, sofaimg, doorimg, windowimg, sinkimg, toiletimg, tvimg } from "../app";
 import { undoManager } from "../app";
 
@@ -33,6 +33,7 @@ class Item {
     this.swidth = array[26];
     this.sheight = array[27];
     this.dash = array[28];
+    this.img64 = array[29];
   }
 
   static loadItems(_savedData) {
@@ -139,7 +140,8 @@ class Item {
     const index = itemList.indexOf(_item);
     itemList[index].x += _dx;
     itemList[index].y += _dy;
-    if (itemList[index].name.startsWith('Rectangle') || itemList[index].name.startsWith('Ellipse') || itemList[index].name.startsWith('Text')) {
+    if (itemList[index].name.startsWith('Rectangle') || itemList[index].name.startsWith('Ellipse')
+      || itemList[index].name.startsWith('Text') || itemList[index].name.startsWith('Img')) {
       itemList[index].h += _dh;
       itemList[index].w += _dw;
     }
@@ -336,6 +338,15 @@ class Item {
       p.angleMode(p.DEGREES);
       p.rotate(_item.angle);
       p.text(_item.inputText, - _item.swidth / 2, - _item.sheight / 2, _item.swidth, _item.sheight);
+      p.pop();
+    }
+    else if (_item.name.startsWith('Img')) {
+      p.push();
+      p.imageMode(p.CENTER);
+      p.translate(_item.x, _item.y);
+      p.angleMode(p.DEGREES);
+      p.rotate(_item.angle);
+      p.image(imageMap[_item.img64], 0, 0, _item.w, _item.h);
       p.pop();
     }
   }

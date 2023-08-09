@@ -24,11 +24,11 @@ import handleMouseReleased from './interactions/handleMouseReleased';
 import saveData from './Data/saveData';
 import loadData from './Data/loadData';
 import downloadDataAsJson from './Data/downloadDataAsJson';
-import handleJsonFile from './Data/handleJsonFile';
 import drawRuler from './utils/drawRuler';
 import handleKeyPressed from './interactions/handleKeyPressed';
 import drawBackground from './utils/drawBackground';
 import saveAsImage from './utils/saveAsImage';
+import handleFile from './Data/handleFile';
 
 let canv;
 let x1 = 0, y1 = 0, x2 = 0, y2 = 0;
@@ -36,6 +36,8 @@ let diffPositionX;
 let diffPositionY;
 let clickEvent = 'Select';
 let tmpClickEvent = '';
+let uploadedImage = {};
+let imageMap = {};
 let symbolsContainer;
 let symbolsVisible = false;
 let symbols = ['Door', 'Sink', 'Table', 'Toilet', 'TV', 'Window'];
@@ -102,12 +104,19 @@ const sketch = (p) => {
     sinkimg = p.loadImage('images/sink.png');
     toiletimg = p.loadImage('images/toilet.png');
     tvimg = p.loadImage('images/TV.png');
+    loadData();
+    itemList.forEach(UItem => {
+      if (UItem.name.startsWith('Img')) {
+              p.loadImage(UItem.img64, img => {
+                  imageMap[UItem.img64] = img;
+              });
+          }
+      });
   }
 
   //p5 function: called once when the program starts
   p.setup = function () {
 
-    loadData();
     QuickSettings.useExtStyleSheet();
     refresh();
 
@@ -121,17 +130,21 @@ const sketch = (p) => {
     canv.mousePressed(handleMousePressed);
     canv.mouseMoved(handleMouseDragged);
     canv.mouseReleased(handleMouseReleased);
-    canv.drop(handleJsonFile);
+    canv.drop(handleFile);
+    // Create the file input
+    fileInput = p.createFileInput(handleFile);
+    fileInput.hide(); // Hide the file input
 
     createBtnTool('⇱', 0, 60, 'Select');
     createBtnTool('⬛', 0, 100, 'Draw_Rect');
     createBtnTool('⚫', 0, 140, 'Draw_Ellipse');
     createBtnTool('▬▬', 0, 180, 'Draw_Line');
     createBtnTool('Text', 0, 220, 'Text');
-    createBtnTool('Floor Plan symbols ⮟', 0, 260, 'Floor Plan symbols');
+    createBtnTool('Img', 0, 260, 'Img');
+    createBtnTool('Floor Plan symbols ⮟', 0, 300, 'Floor Plan symbols');
     symbolsContainer = p.createDiv();
     symbolsContainer.size(100, 178);
-    symbolsContainer.position(0, 320);
+    symbolsContainer.position(0, 360);
     symbolsContainer.class('symbols_container');
     symbolsContainer.hide();
     addBtnSymbol();
@@ -174,9 +187,6 @@ const sketch = (p) => {
     btnDownload.mousePressed(downloadDataAsJson);
     btnDownload.class('topButton');
 
-    // Create the file input
-    fileInput = p.createFileInput(handleJsonFile);
-    fileInput.hide(); // Hide the file input
     btnUpload = p.createButton('Upload json');
     btnUpload.position(canvasX + 232, 5);
     // Trigger click on the file input 
@@ -335,7 +345,7 @@ const sketch = (p) => {
 new p5(sketch);
 
 export { itemList, activeItem, copiedItem, tmpItem, id, panel, layers, undoManager, btnSave, SavingImage };
-export { clickEvent, tmpClickEvent, symbolsContainer, symbolsVisible, symbols, selectedSymbol, buttons }
+export { clickEvent, tmpClickEvent, symbolsContainer, symbolsVisible, symbols, selectedSymbol, buttons, fileInput, uploadedImage, imageMap }
 export { mouseIsDragged, corner, x1, y1, x2, y2, diffPositionX, diffPositionY };
 export { tableimg, chairimg, sofaimg, doorimg, windowimg, sinkimg, toiletimg, tvimg };
 export { mySketch, slider, zoomR, canvasWidth, canvasHeight, canv };
