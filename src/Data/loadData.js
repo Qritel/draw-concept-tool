@@ -1,5 +1,5 @@
 import Item from "../Item/item";
-import { activeItem, clickEvent } from "../app";
+import { activeItem, id, clickEvent } from "../app";
 
 export default function loadData() {
     // Retrieve the saved itemList from local storage
@@ -11,7 +11,11 @@ export default function loadData() {
         let savedItems = JSON.parse(savedItemsString);
 
         Item.loadItems(savedItems);
-        savedItems.forEach(SItem => SItem.selected = false);
+        savedItems.forEach(SItem => {
+            SItem.selected = false;
+            id = Math.max(id,SItem.name.split(' ')[1]);
+        });
+        id++;
         activeItem = savedItems[savedItems.length - 1];
         clickEvent = 'Select';
     }

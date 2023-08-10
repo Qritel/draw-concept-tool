@@ -22,18 +22,19 @@ class Item {
     this.strokeColor = array[15];
     this.noStroke = array[16];
     this.fillColor = array[17];
-    this.noFill = array[18];
-    this.color = array[19];
-    this.numPlace = array[20];
-    this.typeChair = array[21];
-    this.inputText = array[22];
-    this.textStyle = array[23]
-    this.size = array[24];
-    this.type = array[25];
-    this.swidth = array[26];
-    this.sheight = array[27];
-    this.dash = array[28];
-    this.img64 = array[29];
+    this.fillTransparency = array[18];
+    this.noFill = array[19];
+    this.color = array[20];
+    this.numPlace = array[21];
+    this.typeChair = array[22];
+    this.inputText = array[23];
+    this.textStyle = array[24];
+    this.size = array[25];
+    this.type = array[26];
+    this.swidth = array[27];
+    this.sheight = array[28];
+    this.dash = array[29];
+    this.img64 = array[30];
   }
 
   static loadItems(_savedData) {
@@ -72,10 +73,10 @@ class Item {
       }
     }
     if (activeItem === _item) {
-      if (itemList.length == 0) activeItem = {};
+      if (itemList.length == 0) activeItem = null;
       else if (index == 0) activeItem = itemList[index];
       else activeItem = itemList[index - 1];
-      activeItem.selected = true;
+      if(activeItem) activeItem.selected = true;
     }
     if (_item.name && !_item.name.endsWith('drawing')) {
       undoManager.add({
@@ -178,7 +179,9 @@ class Item {
       p.push();
       p.strokeWeight(_item.strokeWeight);
       p.stroke(_item.strokeColor);
-      p.fill(_item.fillColor);
+      let color = p.color(_item.fillColor);
+      color.setAlpha(_item.fillTransparency)
+      p.fill(color);
       if (_item.noFill) p.noFill();
       if (_item.noStroke) p.noStroke();
       p.drawingContext.setLineDash([_item.dash, _item.dash]);
@@ -194,7 +197,9 @@ class Item {
       p.push();
       p.strokeWeight(_item.strokeWeight);
       p.stroke(_item.strokeColor);
-      p.fill(_item.fillColor);
+      let color = p.color(_item.fillColor);
+      color.setAlpha(_item.fillTransparency)
+      p.fill(color);
       if (_item.noFill) p.noFill();
       if (_item.noStroke) p.noStroke();
       p.drawingContext.setLineDash([_item.dash, _item.dash]);

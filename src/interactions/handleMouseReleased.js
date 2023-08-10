@@ -35,19 +35,19 @@ export default function handleMouseReleased() {
         if (clickEvent == 'Draw_Rect') {
             itemList.pop();
             Item.addItem(new Item([true, true, itemList.length, 'Rectangle ' + id, x1 + (x2 - x1) / 2, y1 + (y2 - y1) / 2, p.abs(x2 - x1), p.abs(y2 - y1), 3, undefined,
-                0, 0, 0, 0, 0, '#000000', false, '#ffffff', false, undefined, undefined, undefined, undefined, undefined, undefined, undefined, p.abs(x2 - x1),
+                0, 0, 0, 0, 0, '#000000', false, '#ffffff', 255, false, undefined, undefined, undefined, undefined, undefined, undefined, undefined, p.abs(x2 - x1),
                 p.abs(y2 - y1), 0, undefined]));
         }
         else if (clickEvent == 'Draw_Ellipse') {
             itemList.pop();
             Item.addItem(new Item([true, true, itemList.length, 'Ellipse ' + id, x1 + (x2 - x1) / 2, y1 + (y2 - y1) / 2, p.abs(x2 - x1), p.abs(y2 - y1), 3, undefined,
-                0, undefined, undefined, undefined, undefined, '#000000', false, '#ffffff', false, undefined, undefined, undefined, undefined, undefined, undefined,
+                0, undefined, undefined, undefined, undefined, '#000000', false, '#ffffff', 255, false, undefined, undefined, undefined, undefined, undefined, undefined,
                 undefined, p.abs(x2 - x1), p.abs(y2 - y1), 0, undefined]));
         }
         else if (clickEvent == 'Draw_Line') {
             itemList.pop();
             Item.addItem(new Item([true, true, itemList.length, 'Line ' + id, x1 + (x2 - x1) / 2, y1 + (y2 - y1) / 2, undefined, undefined, 2,
-                p.sqrt((x1 - x2) * (x1 - x2) + (y1 - y2) * (y1 - y2)), p.atan((y2 - y1) / (x2 - x1)), undefined, undefined, undefined, undefined,
+                p.sqrt((x1 - x2) * (x1 - x2) + (y1 - y2) * (y1 - y2)), p.atan((y2 - y1) / (x2 - x1)), undefined, undefined, undefined, undefined, undefined,
                 undefined, undefined, undefined, undefined, '#000000', undefined, undefined, undefined, undefined, undefined, "Line",
                 p.sqrt((x1 - x2) * (x1 - x2) + (y1 - y2) * (y1 - y2)), 7, 0, undefined]));
         }
@@ -55,17 +55,17 @@ export default function handleMouseReleased() {
     }
     else if (clickEvent == 'Table') {
         Item.addItem(new Item([true, true, itemList.length, 'Table ' + id, mouseXR, mouseYR, undefined, undefined, undefined, undefined,
-            0, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, 2, 'chair', undefined,
+            0, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, 2, 'chair', undefined,
             undefined, undefined, undefined, 75, 75, undefined, undefined]));
     }
     else if (['Door', 'Toilet', 'Sink'].includes(clickEvent)) {
         Item.addItem(new Item([true, true, itemList.length, clickEvent + ' ' + id, mouseXR, mouseYR, undefined, undefined, undefined, undefined,
-            0, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined,
+            0, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined,
             undefined, undefined, undefined, 75, 75, undefined, undefined]));
     }
     else if (['Window', 'TV'].includes(clickEvent)) {
         Item.addItem(new Item([true, true, itemList.length, clickEvent + ' ' + id, mouseXR, mouseYR, undefined, undefined, undefined, undefined,
-            0, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined,
+            0, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined,
             undefined, undefined, undefined, 155, 25, undefined, undefined]));
     }
     else if (clickEvent == 'Text') {
@@ -78,7 +78,7 @@ export default function handleMouseReleased() {
         }
         else {
             Item.addItem(new Item([true, true, itemList.length, 'Text ' + id, mouseXR, mouseYR, 165, 25, undefined, undefined,
-                0, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, '#000000', undefined, undefined,
+                0, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, '#000000', undefined, undefined,
                 '', 'NORMAL', 18, undefined, 165, 25, undefined, undefined]));
         }
     }

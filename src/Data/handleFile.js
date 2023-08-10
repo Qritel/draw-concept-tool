@@ -27,10 +27,25 @@ export default function handleFile(file) {
             });
         });
         loadImagePromise.then(() => {
+            const MAX_RATIO = Math.max(uploadedImage.width / canvasWidth, uploadedImage.height / canvasHeight);
+
+            let imgWidth, imgHeight;
+
+            if (MAX_RATIO > 1 && uploadedImage.width > canvasWidth) {
+                imgWidth = canvasWidth;
+                imgHeight = uploadedImage.height * (canvasWidth / uploadedImage.width);
+            } else if (MAX_RATIO > 1 && uploadedImage.height > canvasHeight) {
+                imgWidth = uploadedImage.width * (canvasHeight / uploadedImage.height);
+                imgHeight = canvasHeight;
+            } else {
+                imgWidth = uploadedImage.width;
+                imgHeight = uploadedImage.height;
+            }
+
             Item.addItem(new Item([true, true, itemList.length, 'Img ' + id, canvasWidth / 2, canvasHeight / 2,
-                uploadedImage.width, uploadedImage.height, undefined, undefined, 0, undefined, undefined, undefined, undefined,
+                imgWidth, imgHeight, undefined, undefined, 0, undefined, undefined, undefined, undefined,
                 undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined,
-                uploadedImage.width, uploadedImage.height, undefined, uploadedImage.src]));
+                undefined, imgWidth, imgHeight, undefined, uploadedImage.src]));
             buttonPressed('Select');
             refresh();
         });
