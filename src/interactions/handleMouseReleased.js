@@ -77,9 +77,9 @@ export default function handleMouseReleased() {
             refresh();
         }
         else {
-            Item.addItem(new Item([true, true, itemList.length, 'Text ' + id, mouseXR, mouseYR, 165, 25, undefined, undefined,
+            Item.addItem(new Item([true, true, itemList.length, 'Text ' + id, mouseXR + 82, mouseYR, 165, 35, undefined, undefined,
                 0, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, '#000000', undefined, undefined,
-                '', 'NORMAL', 18, undefined, 165, 25, undefined, undefined]));
+                '', 'NORMAL', 18, undefined, 165, 40, undefined, undefined]));
         }
     }
     else if (diffPositionX && diffPositionY && itemList.length && clickEvent == 'Select') {

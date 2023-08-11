@@ -11,12 +11,32 @@ export default function getResizingCorner(_activeItem, _mouseX, _mouseY) {
   if (_activeItem.name.startsWith('Rectangle') || _activeItem.name.startsWith('Ellipse') || _activeItem.name.startsWith('Line')
     || _activeItem.name.startsWith('Text') || _activeItem.name.startsWith('Img')) {
     if (xPrime < _activeItem.x + 10 && xPrime > _activeItem.x - 10 && yPrime < _activeItem.y - _activeItem.sheight / 2 + 10
-      && yPrime > _activeItem.y - _activeItem.sheight / 2 - 10) {
+      && yPrime > _activeItem.y - _activeItem.sheight / 2 - 10 && !_activeItem.name.startsWith('Line')) {
       corner = 'T'; // top corner.
     }
+    else if (xPrime < _activeItem.x - _activeItem.swidth / 2 + 10 && xPrime > _activeItem.x - _activeItem.swidth / 2 - 10
+      && yPrime < _activeItem.y - _activeItem.sheight / 2 + 10 && yPrime > _activeItem.y - _activeItem.sheight / 2 - 10
+      && !_activeItem.name.startsWith('Line')) {
+      corner = 'TL'; // top left corner.
+    }
+    else if (xPrime < _activeItem.x + _activeItem.swidth / 2 + 10 && xPrime > _activeItem.x + _activeItem.swidth / 2 - 10
+      && yPrime < _activeItem.y - _activeItem.sheight / 2 + 10 && yPrime > _activeItem.y - _activeItem.sheight / 2 - 10
+      && !_activeItem.name.startsWith('Line')) {
+      corner = 'TR'; // top right corner.
+    }
     else if (xPrime < _activeItem.x + 10 && xPrime > _activeItem.x - 10 && yPrime < _activeItem.y + _activeItem.sheight / 2 + 10
-      && yPrime > _activeItem.y + _activeItem.sheight / 2 - 10) {
+      && yPrime > _activeItem.y + _activeItem.sheight / 2 - 10 && !_activeItem.name.startsWith('Line')) {
       corner = 'B'; // bottom corner.
+    }
+    else if (xPrime < _activeItem.x - _activeItem.swidth / 2 + 10 && xPrime > _activeItem.x - _activeItem.swidth / 2 - 10
+      && yPrime < _activeItem.y + _activeItem.sheight / 2 + 10 && yPrime > _activeItem.y + _activeItem.sheight / 2 - 10
+      && !_activeItem.name.startsWith('Line')) {
+      corner = 'BL'; // bottom left corner.
+    }
+    else if (xPrime < _activeItem.x + _activeItem.swidth / 2 + 10 && xPrime > _activeItem.x + _activeItem.swidth / 2 - 10
+      && yPrime < _activeItem.y + _activeItem.sheight / 2 + 10 && yPrime > _activeItem.y + _activeItem.sheight / 2 - 10
+      && !_activeItem.name.startsWith('Line')) {
+      corner = 'BR'; // bottom right corner.
     }
     else if (xPrime < _activeItem.x - _activeItem.swidth / 2 + 10 && xPrime > _activeItem.x - _activeItem.swidth / 2 - 10
       && yPrime < _activeItem.y + 10 && yPrime > _activeItem.y - 10) {

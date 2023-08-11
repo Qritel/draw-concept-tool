@@ -17,7 +17,7 @@ export default function handleMouseDragged() {
             let dragY = diffPositionY + activeItem.y - ((mouseYR - activeItem.y) * p.cos(activeItem.angle)
                 - (mouseXR - activeItem.x) * p.sin(activeItem.angle) + activeItem.y);
             // For Top and Bottom resize corner.
-            if ((corner == 'T' && activeItem.sheight + dragY > 0 || corner == 'B' && activeItem.sheight - dragY > 0)) {
+            if (corner == 'T' && activeItem.sheight + dragY > 0 || corner == 'B' && activeItem.sheight - dragY > 0) {
                 panel.setValue('y', Number(activeItem.y - dragY / 2 * p.cos(activeItem.angle)).toFixed(2));
                 panel.setValue('x', Number(activeItem.x + dragY / 2 * p.sin(activeItem.angle)).toFixed(2));
                 if (corner == 'T') {
@@ -28,8 +28,7 @@ export default function handleMouseDragged() {
                 }
             }
             // For Left and Right resize corner.
-            else if (corner == 'L' && activeItem.swidth + dragX > 0 || corner == 'R' && activeItem.swidth - dragX > 0
-                || (corner == 'L' || corner == 'R') && activeItem.name.startsWith('Line')) {
+            else if (corner == 'L' && activeItem.swidth + dragX > 0 || corner == 'R' && activeItem.swidth - dragX > 0) {
                 panel.setValue('y', Number(activeItem.y - dragX / 2 * p.sin(activeItem.angle)).toFixed(2));
                 panel.setValue('x', Number(activeItem.x - dragX / 2 * p.cos(activeItem.angle)).toFixed(2));
                 if (corner == 'L') {
@@ -50,6 +49,34 @@ export default function handleMouseDragged() {
                         panel.setValue('l', Number(activeItem.l - dragX).toFixed(2));
                     }
                 }
+            }
+            // For Top Right (TR) resize corner.
+            if (corner == 'TR' && activeItem.h - dragX > 0 && activeItem.w - dragX > 0) {
+                panel.setValue('y', Number(activeItem.y - dragX / 2 * p.sin(activeItem.angle) + dragX / 2 * p.cos(activeItem.angle)).toFixed(2));
+                panel.setValue('x', Number(activeItem.x - dragX / 2 * p.cos(activeItem.angle) - dragX / 2 * p.sin(activeItem.angle)).toFixed(2));
+                panel.setValue('h', Number(activeItem.h - dragX).toFixed(2));
+                panel.setValue('w', Number(activeItem.w - dragX).toFixed(2));
+            }
+            // For Bottom Right (BR) resize corner.
+            else if (corner == 'BR' && activeItem.h - dragX > 0 && activeItem.w - dragX > 0) {
+                panel.setValue('y', Number(activeItem.y - dragX / 2 * p.cos(activeItem.angle) - dragX / 2 * p.sin(activeItem.angle)).toFixed(2));
+                panel.setValue('x', Number(activeItem.x + dragX / 2 * p.sin(activeItem.angle) - dragX / 2 * p.cos(activeItem.angle)).toFixed(2));
+                panel.setValue('h', Number(activeItem.h - dragX).toFixed(2));
+                panel.setValue('w', Number(activeItem.w - dragX).toFixed(2));
+            }
+            // For Top Left (TL) resize corner.
+            else if (corner == 'TL' && activeItem.h + dragX > 0 && activeItem.w + dragX > 0) {
+                panel.setValue('y', Number(activeItem.y - dragX / 2 * p.cos(activeItem.angle) - dragX / 2 * p.sin(activeItem.angle)).toFixed(2));
+                panel.setValue('x', Number(activeItem.x + dragX / 2 * p.sin(activeItem.angle) - dragX / 2 * p.cos(activeItem.angle)).toFixed(2));
+                panel.setValue('h', Number(activeItem.h + dragX).toFixed(2));
+                panel.setValue('w', Number(activeItem.w + dragX).toFixed(2));
+            }
+            // For Bottom Left (BL) resize corner.
+            else if (corner == 'BL' && activeItem.h + dragX > 0 && activeItem.w + dragX > 0) {
+                panel.setValue('y', Number(activeItem.y - dragX / 2 * p.sin(activeItem.angle) + dragX / 2 * p.cos(activeItem.angle)).toFixed(2));
+                panel.setValue('x', Number(activeItem.x - dragX / 2 * p.cos(activeItem.angle) - dragX / 2 * p.sin(activeItem.angle)).toFixed(2));
+                panel.setValue('h', Number(activeItem.h + dragX).toFixed(2));
+                panel.setValue('w', Number(activeItem.w + dragX).toFixed(2));
             }
         }
         else if ((clickEvent == 'Draw_Rect' || clickEvent == 'Draw_Ellipse' || clickEvent == 'Draw_Line')) {
