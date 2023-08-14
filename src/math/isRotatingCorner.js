@@ -2,7 +2,8 @@ import { mySketch, itemList } from "../app";
 
 // This function determines if the mouse is over a rotating corner of '_activeItem'.
 export default function isRotatingCorner(_activeItem, _mouseX, _mouseY) {
-  if (!itemList.length && !_activeItem) return false;
+  if (!itemList.length || !_activeItem || _activeItem.selected) return false;
+
   // This formula uses trigonometry to apply a rotation to the mouse coordinates and then translates them back to the original coordinate system.
   let xPrime = (_mouseX - _activeItem.x) * mySketch.cos(_activeItem.angle) + (_mouseY - _activeItem.y) * mySketch.sin(_activeItem.angle) + _activeItem.x;
   let yPrime = (_mouseY - _activeItem.y) * mySketch.cos(_activeItem.angle) - (_mouseX - _activeItem.x) * mySketch.sin(_activeItem.angle) + _activeItem.y;

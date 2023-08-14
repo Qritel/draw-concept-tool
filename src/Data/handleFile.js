@@ -20,6 +20,7 @@ export default function handleFile(file) {
 
         // Read the content of the selected file and trigger the callback
         reader.readAsDataURL(file.file);
+
         let loadImagePromise = new Promise(resolve => {
             p.loadImage(file.data, img => {
                 imageMap[uploadedImage.src] = img;

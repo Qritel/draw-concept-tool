@@ -80,6 +80,7 @@ let itemList = [];
 let tmpItem;
 let activeItem;
 let copiedItem;
+let selectedItems = [];
 
 //A panel lists the names of the created items
 let layers;
@@ -107,11 +108,11 @@ const sketch = (p) => {
     loadData();
     itemList.forEach(UItem => {
       if (UItem.name.startsWith('Img')) {
-              p.loadImage(UItem.img64, img => {
-                  imageMap[UItem.img64] = img;
-              });
-          }
-      });
+        p.loadImage(UItem.img64, img => {
+          imageMap[UItem.img64] = img;
+        });
+      }
+    });
   }
 
   //p5 function: called once when the program starts
@@ -195,7 +196,9 @@ const sketch = (p) => {
 
     btnClear = p.createButton('Clear');
     btnClear.position(canvasX + 314, 5);
-    btnClear.mousePressed(function () { p.clearStorage(); itemList = []; activeItem = undefined; undoManager = new UndoManager(); refresh(); });
+    btnClear.mousePressed(function () {
+      p.clearStorage(); itemList = []; activeItem = null; undoManager = new UndoManager(); id = 1; selectedItems = []; refresh();
+    });
     btnClear.class('topButton');
 
     btnHelp = p.createButton('Help');
@@ -227,7 +230,15 @@ const sketch = (p) => {
     btnDown.attribute('title', 'Send Backward');
     btnDelete = p.createButton('🗑️');
     btnDelete.position(canvasWidth + 60, 5);
-    btnDelete.mousePressed(function () { Item.removeItem(activeItem); refresh(); });
+    btnDelete.mousePressed(function () {
+      if (selectedItems.length > 0) {
+        Item.removeItems(selectedItems);
+      }
+      else if (activeItem) {
+        Item.removeItem(activeItem);
+      }
+      refresh();
+    });
     btnDelete.class('topButton');
     btnDelete.attribute('title', 'Delete');
 
@@ -277,14 +288,17 @@ const sketch = (p) => {
     if (!undoManager.hasRedo()) btnRedo.hide();
     else btnRedo.show();
 
+    let SelectedItemsCount = p.max(selectedItems.length, (activeItem && activeItem.selected) ? 1 : 0);
     //browse all itemList
     itemList.forEach(function (_item) {
       if (_item.visibility) {
         Item.drawItem(_item);
         if (_item.selected && !SavingImage) {
           drawStrokeItem(_item);
-          drawResizingCorner(_item);
-          drawRotatingCorner(_item);
+          if (SelectedItemsCount == 1) {
+            drawResizingCorner(_item);
+            drawRotatingCorner(_item);
+          }
         }
       }
     });
@@ -294,9 +308,6 @@ const sketch = (p) => {
       btnSave.removeAttribute('disabled');
       btnSaveImage.removeAttribute('disabled');
       btnDownload.removeAttribute('disabled');
-      btnUp.removeAttribute('disabled');
-      btnDown.removeAttribute('disabled');
-      btnDelete.removeAttribute('disabled');
       btnClear.removeAttribute('disabled');
     }
     else {
@@ -304,10 +315,17 @@ const sketch = (p) => {
       btnSave.attribute('disabled', '');
       btnSaveImage.attribute('disabled', '');
       btnDownload.attribute('disabled', '');
+      btnClear.attribute('disabled', '');
+    }
+    if (activeItem) {
+      btnUp.removeAttribute('disabled');
+      btnDown.removeAttribute('disabled');
+      btnDelete.removeAttribute('disabled');
+    }
+    else {
       btnUp.attribute('disabled', '');
       btnDown.attribute('disabled', '');
       btnDelete.attribute('disabled', '');
-      btnClear.attribute('disabled', '');
     }
 
     if (document.activeElement.tagName.toLowerCase() == 'body' || document.activeElement.tagName.toLowerCase() == 'button') {
@@ -344,7 +362,7 @@ const sketch = (p) => {
 
 new p5(sketch);
 
-export { itemList, activeItem, copiedItem, tmpItem, id, panel, layers, undoManager, btnSave, SavingImage };
+export { itemList, activeItem, copiedItem, tmpItem, selectedItems, id, panel, layers, undoManager, btnSave, SavingImage };
 export { clickEvent, tmpClickEvent, symbolsContainer, symbolsVisible, symbols, selectedSymbol, buttons, fileInput, uploadedImage, imageMap }
 export { mouseIsDragged, corner, x1, y1, x2, y2, diffPositionX, diffPositionY };
 export { tableimg, chairimg, sofaimg, doorimg, windowimg, sinkimg, toiletimg, tvimg };

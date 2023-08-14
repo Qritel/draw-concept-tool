@@ -1,4 +1,4 @@
-import { itemList, activeItem, id, imageMap, mySketch as p } from "../app";
+import { itemList, activeItem, selectedItems, id, imageMap, mySketch as p } from "../app";
 import { tableimg, chairimg, sofaimg, doorimg, windowimg, sinkimg, toiletimg, tvimg } from "../app";
 import { undoManager } from "../app";
 
@@ -47,7 +47,7 @@ class Item {
         delete _item[key];
       }
     });
-    if (_item.name && !_item.name.endsWith('drawing')) {
+    if (_item.name && !_item.name.endsWith('drawing') && _item.name != 'Rectangle Select') {
       id++;
       undoManager.add({
         undo: function () {
@@ -59,8 +59,16 @@ class Item {
       });
     }
     itemList.splice(_item.index, 0, _item);
+    // deselect all
     if (activeItem) activeItem.selected = false;
-    activeItem = _item;
+    if (selectedItems.length > 0) {
+      selectedItems.forEach(_item => _item.selected = false);
+      selectedItems = [];
+    }
+    if (!['Rectangle drawing', 'Ellipse drawing', 'Line drawing', 'Rectangle Select'].includes(_item.name)) {
+      activeItem = _item;
+      activeItem.selected = true;
+    }
   }
 
   static removeItem(_item) {
@@ -76,9 +84,9 @@ class Item {
       if (itemList.length == 0) activeItem = null;
       else if (index == 0) activeItem = itemList[index];
       else activeItem = itemList[index - 1];
-      if(activeItem) activeItem.selected = true;
+      if (activeItem) activeItem.selected = true;
     }
-    if (_item.name && !_item.name.endsWith('drawing')) {
+    if (_item.name && !_item.name.endsWith('drawing') && _item.name != 'Rectangle Select') {
       undoManager.add({
         undo: function () {
           Item.addItem(_item);
@@ -87,6 +95,57 @@ class Item {
           Item.removeItem(_item);
         }
       });
+    }
+  }
+
+  static addItems(_items) {
+    undoManager.add({
+      undo: function () {
+        Item.removeItems(_items);
+      },
+      redo: function () {
+        Item.addItems(_items);
+      }
+    });
+    _items.forEach(_item => {
+      _item.selected = false;
+      itemList.splice(_item.index, 0, _item);
+      id++;
+    });
+    // deselect all
+    if (activeItem) activeItem.selected = false;
+    if (selectedItems.length > 0) {
+      selectedItems.forEach(_item => _item.selected = false);
+      selectedItems = [];
+    }
+    activeItem = _items[0];
+    activeItem.selected = true;
+  }
+
+  static removeItems(_items) {
+    undoManager.add({
+      undo: function () {
+        Item.addItems(_items);
+      },
+      redo: function () {
+        Item.removeItems(_items);
+      }
+    });
+    _items.forEach(_item => {
+      const index = itemList.indexOf(_item);
+      if (index > -1) {
+        itemList.splice(index, 1);
+        // Update indexes of items after the removed item
+        for (let i = index; i < itemList.length; i++) {
+          if (!_items.includes(itemList[i]))
+            itemList[i].index--;
+        }
+      }
+    });
+    if (_items.includes(activeItem)) {
+      if (itemList.length == 0) activeItem = null;
+      else activeItem = itemList[0];
+      if (activeItem) activeItem.selected = true;
     }
   }
 
@@ -133,6 +192,22 @@ class Item {
       },
       redo: function () {
         Item.dragItem(_dx, _dy, _item);
+      }
+    });
+  }
+
+  static dragItems(_dx, _dy, _items) {
+    _items.forEach(_item => {
+      const index = itemList.indexOf(_item);
+      itemList[index].x += _dx;
+      itemList[index].y += _dy;
+    });
+    undoManager.add({
+      undo: function () {
+        Item.dragItems(-_dx, -_dy, _items);
+      },
+      redo: function () {
+        Item.dragItems(_dx, _dy, _items);
       }
     });
   }

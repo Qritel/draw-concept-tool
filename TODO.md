@@ -7,7 +7,6 @@ Project Description
 ### Todo
 
 - [ ] Implement right mouse click shows the drawing function  
-- [ ] add button : Rectangle select  
 - [ ] Select multiple (Hold down Ctrl)  
 
 ### In Progress
@@ -15,6 +14,7 @@ Project Description
 
 ### Done ✓
 
+- [x] Rectangle select  
 - [x] copy/paste feature (Ctrl + c, Ctrl+ v)  
 - [x] 'Add item' button => prevent create separate buttons  
 - [x] improve user interface design  

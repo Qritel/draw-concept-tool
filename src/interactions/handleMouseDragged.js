@@ -1,4 +1,4 @@
-import { activeItem, tmpItem, itemList, diffPositionX, diffPositionY, clickEvent, panel, zoomR, mySketch as p } from "../app";
+import { activeItem, tmpItem, itemList, selectedItems, diffPositionX, diffPositionY, clickEvent, panel, zoomR, mySketch as p } from "../app";
 import { mouseIsDragged, corner, x1, y1, x2, y2 } from "../app";
 import Item from "../Item/item";
 
@@ -79,7 +79,8 @@ export default function handleMouseDragged() {
                 panel.setValue('w', Number(activeItem.w + dragX).toFixed(2));
             }
         }
-        else if ((clickEvent == 'Draw_Rect' || clickEvent == 'Draw_Ellipse' || clickEvent == 'Draw_Line')) {
+        else if (x1 && y1 && (clickEvent == 'Draw_Rect' || clickEvent == 'Draw_Ellipse' || clickEvent == 'Draw_Line'
+            || clickEvent == 'Select')) {
             x2 = p.mouseX * zoomR;
             y2 = p.mouseY * zoomR;
             if (clickEvent == 'Draw_Rect') {
@@ -88,24 +89,40 @@ export default function handleMouseDragged() {
                     0, 0, 0, 0, 0, '#000000', false, '#ffffff', 255, false, undefined, undefined, undefined, undefined, undefined, undefined, undefined, p.abs(x2 - x1),
                     p.abs(y2 - y1), 0, undefined]));
             }
-            if (clickEvent == 'Draw_Ellipse') {
+            else if (clickEvent == 'Draw_Ellipse') {
                 if (itemList.length && itemList[itemList.length - 1].name === 'Ellipse drawing') itemList.pop();
                 Item.addItem(new Item([true, true, itemList.length, 'Ellipse drawing', x1 + (x2 - x1) / 2, y1 + (y2 - y1) / 2, p.abs(x2 - x1), p.abs(y2 - y1), 3, undefined,
                     0, undefined, undefined, undefined, undefined, '#000000', false, '#ffffff', 255, false, undefined, undefined, undefined, undefined, undefined, undefined,
                     undefined, p.abs(x2 - x1), p.abs(y2 - y1), 0, undefined]));
             }
-            if (clickEvent == 'Draw_Line') {
+            else if (clickEvent == 'Draw_Line') {
                 if (itemList.length && itemList[itemList.length - 1].name === 'Line drawing') itemList.pop();
                 Item.addItem(new Item([true, true, itemList.length, 'Line drawing', x1 + (x2 - x1) / 2, y1 + (y2 - y1) / 2, undefined, undefined, 2,
                     Number(p.sqrt((x1 - x2) * (x1 - x2) + (y1 - y2) * (y1 - y2))).toFixed(2), p.atan((y2 - y1) / (x2 - x1)), undefined, undefined, undefined, undefined, undefined,
                     undefined, undefined, undefined, undefined, '#000000', undefined, undefined, undefined, undefined, undefined, "Line",
                     p.sqrt((x1 - x2) * (x1 - x2) + (y1 - y2) * (y1 - y2)), 7, 0, undefined]));
             }
+            else if (clickEvent == 'Select') {
+                if (itemList.length && itemList[itemList.length - 1].name === 'Rectangle Select') itemList.pop();
+                Item.addItem(new Item([true, false, itemList.length, 'Rectangle Select', x1 + (x2 - x1) / 2, y1 + (y2 - y1) / 2, p.abs(x2 - x1), p.abs(y2 - y1), 1, undefined,
+                    0, 0, 0, 0, 0, '#000000', false, '#ffffff', 255, true, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined,
+                    undefined, 5, undefined]));
+            }
             p.draw();
         }
         else if (diffPositionX && diffPositionY && clickEvent == 'Select') {
-            panel.setValue('x', Number(p.mouseX * zoomR - diffPositionX).toFixed(2));
-            panel.setValue('y', Number(p.mouseY * zoomR - diffPositionY).toFixed(2));
+            if (selectedItems.length > 0) {
+                for (let i = 1; i < selectedItems.length; i++) {
+                    selectedItems[i].x = tmpItem[i].x + selectedItems[0].x - tmpItem[0].x;
+                    selectedItems[i].y = tmpItem[i].y + selectedItems[0].y - tmpItem[0].y;
+                }
+                panel.setValue('x', Number(p.mouseX * zoomR - diffPositionX).toFixed(2));
+                panel.setValue('y', Number(p.mouseY * zoomR - diffPositionY).toFixed(2));
+            }
+            else {
+                panel.setValue('x', Number(p.mouseX * zoomR - diffPositionX).toFixed(2));
+                panel.setValue('y', Number(p.mouseY * zoomR - diffPositionY).toFixed(2));
+            }
         }
     }
 }

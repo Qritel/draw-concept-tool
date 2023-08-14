@@ -1,4 +1,4 @@
-import { activeItem, tmpItem, itemList, diffPositionX, diffPositionY, clickEvent, tmpClickEvent, panel, zoomR, mySketch as p } from "../app";
+import { activeItem, tmpItem, selectedItems, itemList, diffPositionX, diffPositionY, clickEvent, tmpClickEvent, panel, zoomR, mySketch as p } from "../app";
 import { mouseIsDragged, corner, x1, y1 } from "../app";
 import getResizingCorner from '../math/getResizingCorner';
 import isRotatingCorner from '../math/isRotatingCorner';
@@ -11,7 +11,8 @@ export default function handleMousePressed() {
     let mouseXR = p.mouseX * zoomR;
     let mouseYR = p.mouseY * zoomR;
     let selectedItem = getSelectedItem(mouseXR, mouseYR);
-    if (isRotatingCorner(activeItem, mouseXR, mouseYR)) {
+    let SelectedItemsCount = p.max(selectedItems.length, (activeItem && activeItem.selected) ? 1 : 0);
+    if (SelectedItemsCount == 1 && isRotatingCorner(activeItem, mouseXR, mouseYR)) {
         tmpClickEvent = clickEvent;
         clickEvent = 'Rotate';
         diffPositionX = mouseXR;
@@ -21,7 +22,7 @@ export default function handleMousePressed() {
         activeItem.visibility = false;
         itemList.splice(activeItem.index, 0, tmpItem); //insert 'tmpItem' into the 'itemList' array at the position 'activeItem.index'.
     }
-    else if (getResizingCorner(activeItem, mouseXR, mouseYR)) {
+    else if (SelectedItemsCount == 1 && getResizingCorner(activeItem, mouseXR, mouseYR)) {
         corner = getResizingCorner(activeItem, mouseXR, mouseYR);
         tmpClickEvent = clickEvent;
         clickEvent = 'Resize';
@@ -39,20 +40,36 @@ export default function handleMousePressed() {
         y1 = mouseYR;
     }
     else if (selectedItem && clickEvent == 'Select') {
-        if (activeItem) activeItem.selected = false;
-        activeItem = selectedItem;
-        activeItem.selected = true;
-        refreshLayers();
-        tmpItem = { ...activeItem };
-        createPanel(tmpItem);
-        activeItem.visibility = false;
-        itemList.splice(activeItem.index, 0, tmpItem);
+        if (selectedItems.length > 0 && selectedItems.includes(selectedItem)) {
+            tmpItem = selectedItems.map(_item => ({ ..._item }));
+            createPanel(selectedItems[0]);
+        }
+        else {
+            if (activeItem) activeItem.selected = false;
+            if (selectedItems.length > 0) {
+                selectedItems.forEach(_item => _item.selected = false);
+                selectedItems = [];
+            }
+            activeItem = selectedItem;
+            activeItem.selected = true;
+            refreshLayers();
+            tmpItem = { ...activeItem };
+            createPanel(tmpItem);
+            activeItem.visibility = false;
+            itemList.splice(activeItem.index, 0, tmpItem);
+        }
         diffPositionX = mouseXR - panel.getValue('x') + 0.01;
         diffPositionY = mouseYR - panel.getValue('y') + 0.01;
         p.cursor(p.MOVE);
     }
-    else if (!selectedItem && activeItem) {
-        activeItem.selected = false;
+    else if (!selectedItem) {
+        x1 = mouseXR;
+        y1 = mouseYR;
+        if (activeItem) activeItem.selected = false;
+        if (selectedItems.length > 0) {
+            selectedItems.forEach(_item => _item.selected = false);
+            selectedItems = [];
+        }
         p.draw();
     }
 }

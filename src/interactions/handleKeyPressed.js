@@ -1,4 +1,4 @@
-import { mySketch as p, activeItem, copiedItem, zoomR, id, panel, undoManager, slider, itemList } from "../app";
+import { mySketch as p, activeItem, copiedItem, zoomR, id, panel, undoManager, slider, itemList, selectedItems } from "../app";
 import Item from '../Item/item';
 import refresh from "../utils/refresh";
 import downloadDataAsJson from "../Data/downloadDataAsJson";
@@ -26,11 +26,25 @@ export default function handleKeyPressed() {
             p.redraw();
         }
         else if (p.keyIsDown(p.CONTROL) && (p.key == 'c' || p.key == 'C')) {
-            copiedItem = { ...activeItem }; //make a copy of 'activeItem', and store it in the new variable.
+            if (selectedItems.length > 0) {
+                copiedItem = selectedItems.map(_item => ({ ..._item }));
+            }
+            else if (activeItem) copiedItem = { ...activeItem }; //make a copy of 'activeItem', and store it in the new variable.
         }
         else if (p.keyIsDown(p.CONTROL) && (p.key == 'v' || p.key == 'V')) {
-            if (copiedItem) {
-                activeItem.selected = false;
+            if (copiedItem && copiedItem.length) {
+                let dragX = p.mouseX * zoomR - copiedItem[0].x;
+                let dragY = p.mouseY * zoomR - copiedItem[0].y;
+                for (let i = 0; i < copiedItem.length; i++) {
+                    copiedItem[i].index = itemList.length + i;
+                    copiedItem[i].name = copiedItem[i].name.replace(/\d+$/, id + i);
+                    copiedItem[i].x += dragX;
+                    copiedItem[i].y += dragY;
+                }
+                Item.addItems(copiedItem.map(_item => ({ ..._item })));
+                refresh();
+            }
+            else if (copiedItem) {
                 copiedItem.index = itemList.length;
                 copiedItem.name = copiedItem.name.replace(/\d+$/, id);
                 copiedItem.x = p.mouseX * zoomR;
@@ -38,15 +52,25 @@ export default function handleKeyPressed() {
                 Item.addItem({ ...copiedItem });
                 refresh();
             }
-
         }
         else if (p.keyIsDown(p.CONTROL) && (p.key == 'x' || p.key == 'X')) {
-            copiedItem = { ...activeItem };
-            Item.removeItem(activeItem);
+            if (selectedItems.length > 0) {
+                copiedItem = selectedItems.map(_item => ({ ..._item }));
+                Item.removeItems(selectedItems);
+            }
+            else if (activeItem) {
+                copiedItem = { ...activeItem };
+                Item.removeItem(activeItem);
+            }
             refresh();
         }
         else if (p.keyIsDown(p.DELETE)) {
-            Item.removeItem(activeItem);
+            if (selectedItems.length > 0) {
+                Item.removeItems(selectedItems);
+            }
+            else if (activeItem) {
+                Item.removeItem(activeItem);
+            }
             refresh();
         }
         else if (p.keyIsDown(p.UP_ARROW) || p.keyIsDown(p.DOWN_ARROW) || p.keyIsDown(p.LEFT_ARROW) || p.keyIsDown(p.RIGHT_ARROW)) {
