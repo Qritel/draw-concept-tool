@@ -4,8 +4,6 @@ import Item from "../Item/item";
 import getItemsInSelectionRect from "../math/getItemsInSelectionRect";
 import getSelectedItem from '../math/getSelectedItem';
 import refresh from "../utils/refresh";
-import createPanel from "./createPanel";
-import refreshLayers from "./refreshLayers";
 
 export default function handleMouseReleased() {
     mouseIsDragged = false;
@@ -39,13 +37,13 @@ export default function handleMouseReleased() {
         if (clickEvent == 'Draw_Rect') {
             itemList.pop();
             Item.addItem(new Item([true, true, itemList.length, 'Rectangle ' + id, x1 + (x2 - x1) / 2, y1 + (y2 - y1) / 2, p.abs(x2 - x1), p.abs(y2 - y1), 3, undefined,
-                0, 0, 0, 0, 0, '#000000', false, '#ffffff', 255, false, undefined, undefined, undefined, undefined, undefined, undefined, undefined, p.abs(x2 - x1),
+                0, 0, 0, 0, 0, '#000000', false, '#ffffff', 100, false, undefined, undefined, undefined, undefined, undefined, undefined, undefined, p.abs(x2 - x1),
                 p.abs(y2 - y1), 0, undefined]));
         }
         else if (clickEvent == 'Draw_Ellipse') {
             itemList.pop();
             Item.addItem(new Item([true, true, itemList.length, 'Ellipse ' + id, x1 + (x2 - x1) / 2, y1 + (y2 - y1) / 2, p.abs(x2 - x1), p.abs(y2 - y1), 3, undefined,
-                0, undefined, undefined, undefined, undefined, '#000000', false, '#ffffff', 255, false, undefined, undefined, undefined, undefined, undefined, undefined,
+                0, undefined, undefined, undefined, undefined, '#000000', false, '#ffffff', 100, false, undefined, undefined, undefined, undefined, undefined, undefined,
                 undefined, p.abs(x2 - x1), p.abs(y2 - y1), 0, undefined]));
         }
         else if (clickEvent == 'Draw_Line') {

@@ -86,13 +86,13 @@ export default function handleMouseDragged() {
             if (clickEvent == 'Draw_Rect') {
                 if (itemList.length && itemList[itemList.length - 1].name === 'Rectangle drawing') itemList.pop();
                 Item.addItem(new Item([true, true, itemList.length, 'Rectangle drawing', x1 + (x2 - x1) / 2, y1 + (y2 - y1) / 2, p.abs(x2 - x1), p.abs(y2 - y1), 3, undefined,
-                    0, 0, 0, 0, 0, '#000000', false, '#ffffff', 255, false, undefined, undefined, undefined, undefined, undefined, undefined, undefined, p.abs(x2 - x1),
+                    0, 0, 0, 0, 0, '#000000', false, '#ffffff', 100, false, undefined, undefined, undefined, undefined, undefined, undefined, undefined, p.abs(x2 - x1),
                     p.abs(y2 - y1), 0, undefined]));
             }
             else if (clickEvent == 'Draw_Ellipse') {
                 if (itemList.length && itemList[itemList.length - 1].name === 'Ellipse drawing') itemList.pop();
                 Item.addItem(new Item([true, true, itemList.length, 'Ellipse drawing', x1 + (x2 - x1) / 2, y1 + (y2 - y1) / 2, p.abs(x2 - x1), p.abs(y2 - y1), 3, undefined,
-                    0, undefined, undefined, undefined, undefined, '#000000', false, '#ffffff', 255, false, undefined, undefined, undefined, undefined, undefined, undefined,
+                    0, undefined, undefined, undefined, undefined, '#000000', false, '#ffffff', 100, false, undefined, undefined, undefined, undefined, undefined, undefined,
                     undefined, p.abs(x2 - x1), p.abs(y2 - y1), 0, undefined]));
             }
             else if (clickEvent == 'Draw_Line') {
