@@ -35,7 +35,9 @@ export default function buttonPressed(_id) {
     }
 
     if (_id == 'Img') {
+        fileInput.attribute('accept', 'image/*');
         fileInput.elt.click();
+        buttonPressed('Select');
     }
 
     if (clickEvent == 'Select') {

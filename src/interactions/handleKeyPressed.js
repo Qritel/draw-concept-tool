@@ -1,4 +1,4 @@
-import { mySketch as p, activeItem, copiedItem, zoomR, id, panel, undoManager, slider, itemList, selectedItems } from "../app";
+import { mySketch as p, activeItem, copiedItem, zoomR, id, panel, undoManager, slider, itemList, selectedItems, ctrlKeyIsDown } from "../app";
 import Item from '../Item/item';
 import refresh from "../utils/refresh";
 import downloadDataAsJson from "../Data/downloadDataAsJson";
@@ -6,6 +6,9 @@ import downloadDataAsJson from "../Data/downloadDataAsJson";
 export default function handleKeyPressed() {
     // Check if the QuickSettings panel or any of its controls do not have focus
     if (document.activeElement.tagName.toLowerCase() == 'body' || document.activeElement.tagName.toLowerCase() == 'button') {
+        if (p.keyIsDown(p.CONTROL)) {
+            ctrlKeyIsDown = true;
+        }
         if (p.keyIsDown(p.CONTROL) && (p.key == 'z' || p.key == 'Z')) {
             undoManager.undo();
             refresh();
@@ -57,6 +60,7 @@ export default function handleKeyPressed() {
             if (selectedItems.length > 0) {
                 copiedItem = selectedItems.map(_item => ({ ..._item }));
                 Item.removeItems(selectedItems);
+                selectedItems = [];
             }
             else if (activeItem) {
                 copiedItem = { ...activeItem };
@@ -67,6 +71,7 @@ export default function handleKeyPressed() {
         else if (p.keyIsDown(p.DELETE)) {
             if (selectedItems.length > 0) {
                 Item.removeItems(selectedItems);
+                selectedItems = [];
             }
             else if (activeItem) {
                 Item.removeItem(activeItem);

@@ -59,7 +59,7 @@ export default function handleMouseReleased() {
             itemList.pop();
             selectedItems = getItemsInSelectionRect(x1, y1, x2, y2);
             if (activeItem) activeItem.selected = false;
-            activeItem = selectedItems[0];
+            if (selectedItems.length > 0) activeItem = selectedItems[0];
             if (selectedItems.length == 1) {
                 activeItem.selected = true;
                 selectedItems = [];

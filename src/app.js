@@ -74,6 +74,7 @@ let btnUpload;
 let fileInput;
 let btnClear;
 let btnHelp;
+let ctrlKeyIsDown = false;
 
 //An array will contain all the itemList on the map -canvas-
 let itemList = [];
@@ -191,7 +192,7 @@ const sketch = (p) => {
     btnUpload = p.createButton('Upload json');
     btnUpload.position(canvasX + 232, 5);
     // Trigger click on the file input 
-    btnUpload.mousePressed(function () { fileInput.elt.click(); });
+    btnUpload.mousePressed(function () { fileInput.attribute('accept', '.json'); fileInput.elt.click(); });
     btnUpload.class('topButton');
 
     btnClear = p.createButton('Clear');
@@ -213,7 +214,8 @@ const sketch = (p) => {
         "Ctrl + S: Save\n" +
         "Ctrl + +: Zoom In\n" +
         "Ctrl + -: Zoom Out\n" +
-        "DELETE: Delete Item\n\n" +
+        "DELETE: Delete Item\n" +
+        "Hold Ctrl + Click: Select Multiple Items\n\n" +
         "Explore these shortcuts to enhance your productivity!");
     });
     btnHelp.class('topButton');
@@ -233,6 +235,7 @@ const sketch = (p) => {
     btnDelete.mousePressed(function () {
       if (selectedItems.length > 0) {
         Item.removeItems(selectedItems);
+        selectedItems = [];
       }
       else if (activeItem) {
         Item.removeItem(activeItem);
@@ -355,6 +358,9 @@ const sketch = (p) => {
   }
 
   p.keyReleased = function () {
+    if (p.key === 'Control') {
+      ctrlKeyIsDown = false;
+    }
     p.noLoop();
   }
 
@@ -362,7 +368,7 @@ const sketch = (p) => {
 
 new p5(sketch);
 
-export { itemList, activeItem, copiedItem, tmpItem, selectedItems, id, panel, layers, undoManager, btnSave, SavingImage };
+export { itemList, activeItem, copiedItem, tmpItem, selectedItems, id, panel, layers, undoManager, btnSave, SavingImage, ctrlKeyIsDown };
 export { clickEvent, tmpClickEvent, symbolsContainer, symbolsVisible, symbols, selectedSymbol, buttons, fileInput, uploadedImage, imageMap }
 export { mouseIsDragged, corner, x1, y1, x2, y2, diffPositionX, diffPositionY };
 export { tableimg, chairimg, sofaimg, doorimg, windowimg, sinkimg, toiletimg, tvimg };

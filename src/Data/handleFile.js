@@ -1,5 +1,5 @@
 import Item from "../Item/item";
-import { activeItem, itemList, clickEvent, undoManager, id, uploadedImage, imageMap, canvasHeight, canvasWidth, mySketch as p } from "../app";
+import { activeItem, itemList, clickEvent, undoManager, id, fileInput, uploadedImage, imageMap, canvasHeight, canvasWidth, mySketch as p } from "../app";
 import refresh from "../utils/refresh";
 import UndoManager from 'undo-manager';
 import buttonPressed from "../interactions/buttonPressed";
@@ -47,14 +47,10 @@ export default function handleFile(file) {
                 imgWidth, imgHeight, undefined, undefined, 0, undefined, undefined, undefined, undefined,
                 undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined,
                 undefined, imgWidth, imgHeight, undefined, uploadedImage.src]));
-            buttonPressed('Select');
             refresh();
         });
     }
-    else if (clickEvent == 'Img') {
-        buttonPressed('Select');
-    }
-    else if (file.file.type === 'application/json' && clickEvent != 'Img') {
+    else if (file.file.type === 'application/json') {
         let uploadedItemsString = JSON.stringify(file.data);
 
         if (uploadedItemsString) {
@@ -86,4 +82,6 @@ export default function handleFile(file) {
             });
         }
     }
+    // Allowing the change event to fire even if the same file is selected again
+    fileInput.elt.value = null;
 }

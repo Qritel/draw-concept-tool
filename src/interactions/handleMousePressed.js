@@ -1,5 +1,5 @@
-import { activeItem, tmpItem, selectedItems, itemList, diffPositionX, diffPositionY, clickEvent, tmpClickEvent, panel, zoomR, mySketch as p } from "../app";
-import { mouseIsDragged, corner, x1, y1 } from "../app";
+import { activeItem, tmpItem, selectedItems, ctrlKeyIsDown, itemList, clickEvent, tmpClickEvent, panel, zoomR, mySketch as p } from "../app";
+import { mouseIsDragged, corner, x1, y1, diffPositionX, diffPositionY } from "../app";
 import getResizingCorner from '../math/getResizingCorner';
 import isRotatingCorner from '../math/isRotatingCorner';
 import getSelectedItem from '../math/getSelectedItem';
@@ -43,24 +43,41 @@ export default function handleMousePressed() {
         if (selectedItems.length > 0 && selectedItems.includes(selectedItem)) {
             tmpItem = selectedItems.map(_item => ({ ..._item }));
             createPanel(selectedItems[0]);
+            diffPositionX = mouseXR - panel.getValue('x') + 0.01;
+            diffPositionY = mouseYR - panel.getValue('y') + 0.01;
+            p.cursor(p.MOVE);
         }
         else {
-            if (activeItem) activeItem.selected = false;
-            if (selectedItems.length > 0) {
-                selectedItems.forEach(_item => _item.selected = false);
-                selectedItems = [];
+            if (ctrlKeyIsDown) {
+                if (activeItem != selectedItem) {
+                    if (selectedItems.length == 0) {
+                        activeItem.selected = true;
+                        selectedItems.push(activeItem);
+                    }
+                    selectedItem.selected = true;
+                    selectedItems.push(selectedItem);
+                    p.draw();
+                }
             }
-            activeItem = selectedItem;
-            activeItem.selected = true;
-            refreshLayers();
-            tmpItem = { ...activeItem };
-            createPanel(tmpItem);
-            activeItem.visibility = false;
-            itemList.splice(activeItem.index, 0, tmpItem);
+            else {
+                if (activeItem) activeItem.selected = false;
+                if (selectedItems.length > 0) {
+                    selectedItems.forEach(_item => _item.selected = false);
+                    selectedItems = [];
+                }
+                activeItem = selectedItem;
+                activeItem.selected = true;
+                refreshLayers();
+                tmpItem = { ...activeItem };
+                createPanel(tmpItem);
+                activeItem.visibility = false;
+                itemList.splice(activeItem.index, 0, tmpItem);
+                p.draw();
+                diffPositionX = mouseXR - panel.getValue('x') + 0.01;
+                diffPositionY = mouseYR - panel.getValue('y') + 0.01;
+                p.cursor(p.MOVE);
+            }
         }
-        diffPositionX = mouseXR - panel.getValue('x') + 0.01;
-        diffPositionY = mouseYR - panel.getValue('y') + 0.01;
-        p.cursor(p.MOVE);
     }
     else if (!selectedItem) {
         x1 = mouseXR;
