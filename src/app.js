@@ -215,7 +215,8 @@ const sketch = (p) => {
         "Ctrl + +: Zoom In\n" +
         "Ctrl + -: Zoom Out\n" +
         "DELETE: Delete Item\n" +
-        "Hold Ctrl + Click: Select Multiple Items\n\n" +
+        "Hold Ctrl + Click: Select Multiple Items\n" +
+        "Arrow keys: Move Selection\n\n" +
         "Explore these shortcuts to enhance your productivity!");
     });
     btnHelp.class('topButton');

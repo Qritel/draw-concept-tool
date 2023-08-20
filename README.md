@@ -1,20 +1,36 @@
 # Draw Concept Tool
 
-[The Draw Concept Tool](https://qritel.github.io/draw-concept-tool/) is a minimalist web-based application for creating, editing, and exploring graphical concepts on a canvas. Powered by p5.js and Quicksettings libraries, it offers an intuitive interface and essential features for interactive manipulation of graphical elements.
+[The Draw Concept Tool](https://qritel.github.io/draw-concept-tool/) is a minimalist web-based application for creating, editing, and exploring graphical concepts on a canvas. Powered by p5.js and Quicksettings libraries.
 
 ## Features
 
-- **Canvas Interaction:** Draw, resize, rotate, and move various graphical elements (e.g., rectangle, ellipse, chairs, doors, tables, etc.) on the canvas.
-- **User Interface:** Enjoy an easy-to-use interface with essential buttons, panels, and toolbars that provide quick access to necessary functionalities and tools.
-- **Save & Load:** Save and load your creations, including graphical element positions, using JSON format for future use.
-- **Layers:** Organize graphical elements into layers with convenient options for reordering and visibility adjustments.
+- **Canvas Interaction:** Draw, resize, rotate, and move various graphical elements (e.g., rectangle, ellipse, images, symbols, etc.) on the canvas.
+- **User Interface:** Easy-to-use interface with essential buttons, panels, and toolbars that provide quick access to necessary functionalities and tools.
+- **Copy-Paste:** Copy and paste elements using keyboard shortcuts (Ctrl + C, Ctrl + V).
+- **Undo & Redo:** Maintain control over your edits with the undo and redo functionality to revert or reapply changes.
+- **Keyboard Shortcuts:** Accelerate your workflow with customizable keyboard shortcuts for various actions, more details in 'Help' button.
+- **Multiple Selection:** Select multiple elements by holding Ctrl and clicking, or by using the 'Select' tool to draw a rectangle around items.
+- **Save & Load:** Save and load your creations, using JSON format + '✔️' save button to restore work even after refreshing the page using browser storage.
+- **Layers:** Organize graphical elements into layers with convenient options for reordering.
 - **Ruler and Grid:** Achieve precise positioning and alignment of graphical elements with built-in rulers and grid support.
-- **Exporting:** Share your concept drawings with others by exporting them as image files for use in other projects.
+- **Exporting:** Share your concept drawings by exporting them as image file or JSON data for use in various contexts.
 - **Interactive Settings:** Adjust parameters and properties of graphical elements in real-time using the interactive Quicksettings library.
 
 ## Demo
 
 Check out the live demo [here](https://qritel.github.io/draw-concept-tool/).
+
+**Floor Plan Creation:**
+- [Floor Plan Demo GIF](/demos/Floor_plan.gif)
+- [Download JSON](/demos/floor_plan.json).
+
+- **Image Annotation:**
+- [Image Annotation Demo GIF](/demos/image_annotation.gif)
+- [Download JSON](/demos/image_annotation.json).
+
+- **Concept Mapping:**
+- [Concept Map Demo GIF](/demos/concept_map.gif)
+- [Download JSON](/demos/concept_map.json).
 
 ## Getting Started
 1. Clone the repository.
