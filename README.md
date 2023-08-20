@@ -21,7 +21,7 @@
 Check out the live demo [here](https://qritel.github.io/draw-concept-tool/).
 
 **Floor Plan Creation:**
-- [Floor Plan Demo GIF](/demos/Floor_plan.gif)
+- [Floor Plan Demo GIF](/demos/floor_plan.gif)
 - [Download JSON](/demos/floor_plan.json).
 
 - **Image Annotation:**
