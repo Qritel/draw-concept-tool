@@ -21,15 +21,15 @@
 Check out the live demo [here](https://qritel.github.io/draw-concept-tool/).
 
 **Floor Plan Creation:**
-- [Floor Plan Demo GIF](/demos/floor_plan.gif)
+![Floor Plan Demo GIF](/demos/floor_plan.gif)
 - [Download JSON](/demos/floor_plan.json).
 
 - **Image Annotation:**
-- [Image Annotation Demo GIF](/demos/image_annotation.gif)
+![Image Annotation Demo GIF](/demos/image_annotation.gif)
 - [Download JSON](/demos/image_annotation.json).
 
 - **Concept Mapping:**
-- [Concept Map Demo GIF](/demos/concept_map.gif)
+![Concept Map Demo GIF](/demos/concept_map.gif)
 - [Download JSON](/demos/concept_map.json).
 
 ## Getting Started
