@@ -1,6 +1,6 @@
 # 🖌️ ConceptCanvas
 
-[ConceptCanvas](https://qritel.github.io/draw-concept-tool/) is a simple and intuitive web application designed to help you quickly sketch, edit, and explore visual concepts right in your browser. Built using **p5.js** and **Quicksettings**, this tool offers a seamless way to turn your ideas into clear, visual representations.
+The [ConceptCanvas](https://qritel.github.io/draw-concept-tool/) is a simple and intuitive web application designed to help you quickly sketch, edit, and explore visual concepts right in your browser. Built using **p5.js** and **Quicksettings**, this tool offers a seamless way to turn your ideas into clear, visual representations.
 
 ##
 ## ✨ What You Can Do
